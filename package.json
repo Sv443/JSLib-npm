@@ -1,6 +1,6 @@
 {
   "name": "svjsl",
-  "version": "1.5.0",
+  "version": "1.5.1",
   "description": "A JavaScript library that makes coding a bit faster by taking away a bit of the workarounds and the resulting pain in the ass",
   "main": "test.js",
   "scripts": {
