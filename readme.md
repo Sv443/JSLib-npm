@@ -1,6 +1,11 @@
 # JSLib (v1.5.0 - npm version) by Sv443
 ## A JavaScript library that makes coding a bit faster by taking away a bit of the workarounds and the resulting pain in the ass
 
+# Dependencies:
+- fs
+
+<br><br><br><br><br>
+
 # Installation:
 ```
 $ npm i --save svjsl
