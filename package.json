@@ -1,0 +1,26 @@
+{
+  "name": "svjsl",
+  "version": "1.5.0",
+  "description": "A JavaScript library that makes coding a bit faster by taking away a bit of the workarounds and the resulting pain in the ass",
+  "main": "test.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Sv443/JSLib.git"
+  },
+  "keywords": [
+    "javascript",
+    "js"
+  ],
+  "author": "Sv443",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/Sv443/JSLib/issues"
+  },
+  "homepage": "https://github.com/Sv443/JSLib#readme",
+  "dependencies": {
+    "fs": "0.0.1-security"
+  }
+}
