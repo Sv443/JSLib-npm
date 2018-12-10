@@ -3,6 +3,7 @@
 const fs = require("fs");
 const http = require("http");
 const https = require("https");
+const { performance } = require('perf_hooks');
 
 var noShutdown = false;
 
@@ -23,7 +24,7 @@ module.exports.settings = "(deprecated)";
  * @since 1.5.0
  */
 const jsli = {
-    version: "1.6.0",
+    version: "1.6.1",
     name: "JSLib",
     desc: "A fairly lightweight JavaScript library that makes coding a bit faster by taking away some of the complicated / complex functions",
     authors: "Sv443",
@@ -201,20 +202,31 @@ module.exports.randRange = (min, max) => {
 
 /**
  * Pings the specified URL and returns the status code
- * @param {String} http_version must be either "http" or "https"
- * @param {String} host the host you want to ping
- * @param {String} path the path you want to ping
+ * @param {String} URL the URL that should be pinged
  * @param {*} [timeout=5000] time in milliseconds after which the ping will time out and return a 404 error
- * @returns {Promise} promise gets passed the HTTP status code (for example 200 or 404)
+ * @returns {Promise<Object>} promise object gets passed the HTTP status code (for example 200 or 404), the status message and the response duration in ms
  * @since 1.6.0
+ * @version 1.6.1 update - changed attributes
  */
-module.exports.ping = (http_version, host, path, timeout) => {
-    if(typeof http_version != "string" || typeof host != "string" || typeof path != "string") return "wrong arguments provided";
-    if(isEmpty(timeout)) timeout = 5000;
+module.exports.ping = (URL, timeout) => {
+    if(typeof URL != "string") return "wrong arguments provided";
+    if(isEmpty(timeout) || typeof timeout != "number") timeout = 5000;
+
+    let http_version = (URL.match(/(http:\/\/)/gm) || URL.match(/(https:\/\/)/gm))[0].replace("://", "");
+
+    let host = URL.split("://")[1].split("/")[0];
+    let path = URL.split("://")[1].split("/");
+    if(isEmpty(path[1])) path = "/";
+    else {
+        path.shift();
+        path = path.join("/");
+    }
+
     if(http_version == "https") {
         try {
             return new Promise((resolve, reject) => {
                 try {
+                    performance.mark('pingA');
                     https.get({
                         host: host,
                         path: path,
@@ -222,7 +234,15 @@ module.exports.ping = (http_version, host, path, timeout) => {
                     }, function(res) {
                         res.on('data', function(d) {});
                         res.on('end', function() {
-                            resolve(res.statusCode);
+                            performance.mark('pingB');
+                            performance.measure('pingDuration', 'pingA', 'pingB');
+                            let measure = performance.getEntriesByName('pingDuration')[0];
+                            let returnval = {
+                                statusCode: res.statusCode,
+                                statusMessage: res.statusMessage,
+                                responseTime: measure.duration
+                            }
+                            resolve(returnval);
                         });
                     });
                 }
@@ -239,6 +259,7 @@ module.exports.ping = (http_version, host, path, timeout) => {
         try {
             return new Promise((resolve, reject) => {
                 try {
+                    performance.mark('pingA');
                     http.get({
                         host: host,
                         path: path,
@@ -246,7 +267,15 @@ module.exports.ping = (http_version, host, path, timeout) => {
                     }, function(res) {
                         res.on('data', function(d) {});
                         res.on('end', function() {
-                            resolve(res.statusCode);
+                            performance.mark('pingB');
+                            performance.measure('pingDuration', 'pingA', 'pingB');
+                            let measure = performance.getEntriesByName('pingDuration')[0];
+                            let returnval = {
+                                statusCode: res.statusCode,
+                                statusMessage: res.statusMessage,
+                                responseTime: measure.duration
+                            }
+                            resolve(returnval);
                         });
                     });
                 }

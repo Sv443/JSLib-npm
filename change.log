@@ -25,3 +25,8 @@
     - Added ping() function to ping URLs and return the status code
 	- Added counterpart of noShutdown(): yesShutdown()
     - Removed settings object because it didn't work correctly
+
+
+[1.6.1]:
+	- Changed attributes of ping() function from ping(http_version, host, path, timeout) to ping(URL, timeout)
+	- Fixed readme.md

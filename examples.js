@@ -2,8 +2,8 @@
 // this is a script containing examples for JSLib. You can run it and see how everything works.
 
 
-const jsl = require("jslib");
-//const jsl = require("./index.js");
+//const jsl = require("jslib");
+const jsl = require("./index.js");
 
 console.log("JSLib v" + jsl.version());
 
@@ -62,29 +62,22 @@ jsl.consoleColor("Underlined text", "bgyellow ul fgblack");
 
 
 console.log("\nPing:");
-jsl.ping("http", "sv443.ddns.net", "/", 5000).then(res => {
+jsl.ping("http://sv443.ddns.net/", 5000).then(res => {
     // Success
-    console.log("HTTP: " + res);
+    console.log("HTTP - status: " + res.statusCode + " - time: " + res.responseTime + " - message: " + res.statusMessage);
 }, res => {
     // Error
     console.log("HTTP - Error: " + res);
 });
 
-jsl.ping("https", "www.google.com", "/", 5000).then(res => {
+jsl.ping("https://www.google.com/", 5000).then(res => {
     // Success
-    console.log("HTTPS: " + res);
+    console.log("HTTPS - status: " + res.statusCode + " - time: " + res.responseTime + " - message: " + res.statusMessage);
 }, res => {
     // Error
     console.log("HTTPS - Error: " + res);
 });
 
-jsl.ping("https", "www.google.com", "/succ", 5000).then(res => {
-    // Success
-    console.log("Invalid URL: " + res);
-}, res => {
-    // Error
-    console.log("Invalid URL - Error: " + res);
-});
 
 
 setTimeout(()=>{

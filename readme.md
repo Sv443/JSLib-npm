@@ -1,13 +1,17 @@
-<img src="https://raw.githubusercontent.com/Sv443/JSLib/master/icon_v1.png" style="width: 5vw;height: 5vw;"><br>
-# JSLib (v1.6.0 - npm version) by Sv443
+
+# <img src="https://raw.githubusercontent.com/Sv443/JSLib/master/icon_v1.png" style="width: 5vw;height: 5vw;">&nbsp;&nbsp; JSLib-npm (v1.6.1) by [Sv443](https://www.sv443.net/)
 ## A fairly lightweight JavaScript library that makes coding a bit faster by taking away some of the complicated / complex functions
-## <span style="color:orange;">Note: this library supports [JSDoc](http://usejsdoc.org/) so you will get all information as tooltips and autocorrection while coding if your IDE supports it</span>
-## License: [MIT](https://github.com/Sv443/JSLib-npm/blob/master/LICENSE)
+
 
 <br><br><br>
+[![](https://img.shields.io/github/license/Sv443/JSLib-npm.svg?style=flat-square)](https://github.com/Sv443/JSLib-npm/blob/master/LICENSE)
+![](https://img.shields.io/badge/documentation-full-green.svg?style=flat-square)
+[![](https://img.shields.io/badge/JSDoc-supported-green.svg?style=flat-square)](http://usejsdoc.org/)
+[![](https://img.shields.io/github/issues/Sv443/JSLib-npm.svg?style=flat-square)](https://github.com/Sv443/JSLib-npm/issues)
+[![](https://img.shields.io/github/stars/Sv443/JSLib-npm.svg?style=flat-square)](https://github.com/Sv443/JSLib-npm/)
 
 ---
-## <span style="color:orange;">Menu</span>: [Dependencies](#dependencies)  -  [Installation](#installation) -  [Functions](#functions) -  [JSON Objects](#useful-json-ojects) - [Deprecated Functions](#deprecated-functions)
+## <span style="color:orange;">Menu:</span> [Dependencies](#dependencies)  -  [Installation](#installation) -  [Functions](#functions) -  [Useful Objects](#useful-json-ojects) - [Deprecated Functions](#deprecated-functions)
 ---
 
 <br><br><br><br><br><br><br><br><br>
@@ -32,6 +36,7 @@ const jsl = require("svjsl");
 # Functions:
 
 ## <span style="color:orange;">Note: All arguments that are prefixed with a question mark are optional and will be set to a default value if left empty</span>
+## <span style="color:orange;">Note 2: This documentation uses TypeScript type declarations to let you know of what type the variable can be (variable&lt;type&gt;)</span>
 
 ## Get all available functions
 ```javascript
@@ -151,14 +156,25 @@ jsl.randRange(min<Number>, max<Number>); // returns a highly randomized number b
 
 ## Ping:
 ```javascript
-jsl.ping(http_version<String>, host<String>, path<String>, ?timeout<Number>); // pings the specified URL and returns the status code (for example 200 or 404) - also has an optional timeout value
+jsl.ping(URL<String>, ?timeout<Number>); // pings the specified URL and returns an object through a promise. This contains the status code (for example 200 or 404), the response time and also the status message - also has an optional timeout value
 
-// examples:
-jsl.ping("https", "www.google.com", "/", 3000); // pings "https://www.google.com/" with a timeout of 3000 milliseconds
-// returns -> 200
+// example (HTTP):
+jsl.ping("http://sv443.ddns.net/", 5000).then(res => {
+    // success:
+    console.log("HTTP - status: " + res.statusCode + " - time: " + res.responseTime + " - message: " + res.statusMessage); // logs to console: HTTP - status: 200 - time: 342.620033 - message: OK
+}, res => {
+    // error:
+    console.log("HTTP - Error: " + res);
+});
 
-jsl.ping("https", "www.google.com", "/non_existant_path", 3000); // pings "https://www.google.com/non_existant_path" with a timeout of 3000 milliseconds
-// returns -> 404
+// example (HTTPS):
+jsl.ping("https://www.google.com/", 5000).then(res => {
+    // success:
+    console.log("HTTPS - status: " + res.statusCode + " - time: " + res.responseTime + " - message: " + res.statusMessage); // logs to console: HTTPS - status: 200 - time: 385.460315 - message: OK
+}, res => {
+    // error:
+    console.log("HTTPS - Error: " + res);
+});
 ```
 
 <br><br><br><br><br><br>
