@@ -3,6 +3,7 @@
 
 
 const jsl = require("jslib");
+//const jsl = require("./index.js");
 
 console.log("JSLib v" + jsl.version());
 
@@ -22,8 +23,8 @@ console.log(jsl.isArrayEmpty([1, "test", [1, 2, 3]]));
 
 
 console.log("\nError log:");
-jsl.error("error: address is in use!");
-jsl.error("error: address is in use!", "error.log");
+jsl.error("error 158: I am an example error!");
+jsl.error("error 158: I am an example error that gets logged to the error.log file!", "./error.log");
 
 
 
@@ -48,22 +49,59 @@ console.log(jsl.allEqual(["a", "a", "a"]));
 
 
 
-setInterval(()=>{}, 500);
-jsl.softShutdown(()=>{
-    console.log("\n\nGracefully shutting down running processes...\n\n");
+console.log("\nRandRange:");
+console.log(jsl.randRange(40, 50, false));
+
+
+
+console.log("Console color:");
+jsl.consoleColor("I am a text with color", "fggreen bgblue");
+jsl.consoleColor("I am an error message", "fgred bright");
+jsl.consoleColor("Underlined text", "bgyellow ul fgblack");
+
+
+
+console.log("\nPing:");
+jsl.ping("http", "sv443.ddns.net", "/", 5000).then(res => {
+    // Success
+    console.log("HTTP: " + res);
+}, res => {
+    // Error
+    console.log("HTTP - Error: " + res);
+});
+
+jsl.ping("https", "www.google.com", "/", 5000).then(res => {
+    // Success
+    console.log("HTTPS: " + res);
+}, res => {
+    // Error
+    console.log("HTTPS - Error: " + res);
+});
+
+jsl.ping("https", "www.google.com", "/succ", 5000).then(res => {
+    // Success
+    console.log("Invalid URL: " + res);
+}, res => {
+    // Error
+    console.log("Invalid URL - Error: " + res);
 });
 
 
+setTimeout(()=>{
+    console.log("\nNow the script can shut down gracefully");
+    var running_process = setInterval(()=>{}, 500); // <- this is to simulate a running process
+    jsl.softShutdown(()=>{
+        clearInterval(running_process);
+        console.log("\n\n\x1b[33mGracefully shutting down running processes...\x1b[0m\n\n");
+    });
+}, 3000);
 
-console.log("\nSettings.json:");
-try{
-    console.log(jsl.settings.httpconnection.url);
-}
-catch(x){
-    console.log("Couldn't find settings.json");
-}
+setTimeout(()=>{
+    console.log("\nShudown with CTRL+C is impossible now");
+    jsl.noShutdown();
+}, 6000);
 
-
-
-console.log("\nRandRange:");
-console.log(jsl.randRange(40, 50, false));
+setTimeout(()=> {
+    console.log("\nShutdown is now possible again");
+    jsl.yesShutdown();
+}, 9000);
