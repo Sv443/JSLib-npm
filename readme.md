@@ -1,10 +1,23 @@
-# JSLib (v1.5.0 - npm version) by Sv443
-## A JavaScript library that makes coding a bit faster by taking away a bit of the workarounds and the resulting pain in the ass
-
-## Dependencies:
-- fs
+<img src="https://raw.githubusercontent.com/Sv443/JSLib/master/icon_v1.png" style="width: 5vw;height: 5vw;"><br>
+# JSLib (v1.6.0 - npm version) by Sv443
+## A fairly lightweight JavaScript library that makes coding a bit faster by taking away some of the complicated / complex functions
+## <span style="color:orange;">Note: this library supports [JSDoc](http://usejsdoc.org/) so you will get all information as tooltips and autocorrection while coding if your IDE supports it</span>
+## License: [MIT](https://github.com/Sv443/JSLib-npm/blob/master/LICENSE)
 
 <br><br><br>
+
+---
+## <span style="color:orange;">Menu</span>: [Dependencies](#dependencies)  -  [Installation](#installation) -  [Functions](#functions) -  [JSON Objects](#useful-json-ojects) - [Deprecated Functions](#deprecated-functions)
+---
+
+<br><br><br><br><br><br><br><br><br>
+
+# Dependencies:
+- fs
+- http
+- https
+
+<br><br><br><br><br>
 
 # Installation:
 ```
@@ -16,45 +29,49 @@ Importing it in the script:
 const jsl = require("svjsl");
 ```
 <br><br><br><br><br>
-# Features:
+# Functions:
+
+## <span style="color:orange;">Note: All arguments that are prefixed with a question mark are optional and will be set to a default value if left empty</span>
 
 ## Get all available functions
 ```javascript
-jsl.help(); // this logs all available functions to the console
+jsl.help(); // this logs all available functions to the console (this is just the result of module.exports)
 ```
 
 ## Get JSLib's version:
 ```javascript
-jsl.version(); // returns the version of JSLib
+jsl.version(); // returns -> version of JSLib (as string)
 ```
 
 ## Check if a variable is empty:
 ```javascript
-jsl.isEmpty(variable); // returns true, if the variable is empty and false if not. This function can NOT check a JSON object - please stringify it first
+jsl.isEmpty(variable<Any>); // returns true, if the variable is empty and false if not. This function can NOT check a JSON object - please stringify it first
+// alias: jsl.isempty(variable<Any>)
 
 // examples:
-jsl.isEmpty("");        // true
-jsl.isEmpty(5);         // false
-jsl.isEmpty([]);        // true
-jsl.isEmpty(undefined); // true
-jsl.isEmpty(null);      // false
-jsl.isEmpty(NaN);       // false
-jsl.isEmpty("foo");     // false
+jsl.isEmpty("");        // returns -> true
+jsl.isEmpty(5);         // returns -> false
+jsl.isEmpty([]);        // returns -> true
+jsl.isEmpty(undefined); // returns -> true
+jsl.isEmpty(null);      // returns -> true
+jsl.isEmpty(NaN);       // returns -> false (NaN is not considered empty!)
+jsl.isEmpty("foo");     // returns -> false
+jsl.isEmpty(0);         // returns -> true (0 will also count as empty!)
 ```
 
 ## Check how many values in an array are empty:
 ```javascript
-jsl.isArrayEmpty(array<Array>); // returns true if all values in array are empty, false if none are empty. If only some are empty, will return integer value of how many they are
+jsl.isArrayEmpty(array<Array>); // returns true if all values in array are empty, false if none are empty. If only some are empty, will return integer value of how many they are - note: the number 0 will also count as empty
 
 // examples:
-jsl.isArrayEmpty(["", "", undefined, [], null, ""]); // true     (all are empty)
-jsl.isArrayEmpty(["", "test", undefined, null]);     // 3        (three are empty)
-jsl.isArrayEmpty([1, "test", [1, 2, 3]]);            // false    (none are empty)
+jsl.isArrayEmpty(["", "", undefined, [], null, ""]); // returns -> true     (all are empty)
+jsl.isArrayEmpty(["", "test", undefined, null]);     // returns -> 3        (three are empty)
+jsl.isArrayEmpty([1, "test", [1, 2, 3]]);            // returns -> false    (none are empty)
 ```
 
 ## Log something to a file:
 ```javascript
-jsl.logger(path<String>, content<String>, options<Object>); // logs the content to the file specified with path
+jsl.logger(path<String>, content<String>, ?options<Object>); // logs the content to the file specified with path
 
 // options (optional):
 {
@@ -73,7 +90,7 @@ jsl.logger("./logs/error.log", "XY error was encountered", {    //  ─┐
 
 ## Log a red error message to the console and optionally to a file:
 ```javascript
-jsl.error(error_message<String>, log_file_path<String>, shutdown<Boolean>, status<Number>); // will log a red error message to the console and shut down the process if argument shutdown is set to true. Can also log the error message to a specified log file (also optional)
+jsl.error(error_message<String>, ?log_file_path<String>, ?shutdown<Boolean>, ?status<Number>); // will log a red error message to the console and shut down the process if argument shutdown is set to true. Can also log the error message to a specified log file (also optional)
 
 // examples:
 jsl.error("Couldn't start listener. Trying again...");                             // just logs error message. Script keeps running
@@ -87,64 +104,66 @@ jsl.error("Fatal error encountered.", "./error.log", true, 1);                  
 jsl.generateUUID(uuid_format<String>); // generates a highly randomized UUID in the specified format (x's and y's are being replaced with random numbers or characters) - the used RNG gets manipulated by the system time and is therefor extremely random - the charset of the UUID is hexadecimal (0-9 and a-f)
 
 // examples:
-jsl.generateUUID("xxxx-yyyy");    // 5a7f-ca19    (this is just an example, as normally the output is random)
-jsl.generateUUID("x");            // 3            (can be scaled up and down how much you like)
-jsl.generateUUID("$%?_x##");      // $%?_5##      (only x and y will be replaced)
+jsl.generateUUID("xxxx-yyyy");    // returns -> 5a7f-ca19    (this is just an example, as normally the output is random)
+jsl.generateUUID("x");            // returns -> 3            (can be scaled up and down how much you like)
+jsl.generateUUID("$%?_x##");      // returns -> $%?_5##      (only x and y will be replaced)
 ```
 
 ## Test if all values in an array are equal:
 ```javascript
-jsl.allEqual(array<Array>); // returns true if all values of the array are equal and false if not
+jsl.allEqual(array<Array>); // returns -> true if all values of the array are equal and false if not
 
 // examples:
-jsl.allEqual([1, 1, 1, 1, 9, 1]));    // false
-jsl.allEqual([1, 1, 1, 1, 1, 1]));    // true
-jsl.allEqual(["a", "b", "c"]));       // false
-jsl.allEqual(["a", "a", "a"]));       // true
+jsl.allEqual([1, 1, 1, 1, 9, 1]));    // returns -> false
+jsl.allEqual([1, 1, 1, 1, 1, 1]));    // returns -> true
+jsl.allEqual(["a", "b", "c"]));       // returns -> false
+jsl.allEqual(["a", "a", "a"]));       // returns -> true
 ```
 
 ## Soft shutdown:
 ```javascript
-jsl.softShutdown(funct<Function>); // funct gets executed before the script shuts down. This is useful to terminate connections or services gracefully before shutting down.
+jsl.softShutdown(funct<Function>); // funct gets executed before the script shuts down. This is useful to terminate connections or services gracefully or starting another script before shutting down.
+// note: funct gets executed synchronously! (I don't know how to implement it correctly. If you know how to, please make a pull request on GitHub)
 
 // example:
 jsl.softShutdown(()=>{
     http_server.close();
-    mysql.connection.end();
+    mysql_connection.end();
     console.log("Goodbye!");
 });
 ```
 
 ## Prevent shutdown on `CTRL + C`:
 ```javascript
-jsl.preventShutdown(); // this completely removes the ability to shut down the script with CTRL + C. It has to be killed within the script (using process.exit()) or with the task manager
+jsl.noShutdown(); // this completely removes the ability to shut down the script with CTRL + C. It has to be killed within the script (using process.exit()) or with the task manager
+```
+
+## Re-enable shutdown on `CTRL + C`:
+```javascript
+jsl.yesShutdown(); // this re-enables the ability to shut down the script with CTRL + C if it has been disabled before with jsl.noShutdown()
+// note: this function also prevents jsl.softShutdown() from shutting down the script
 ```
 
 ## Random Range:
 ```javascript
-jsl.randRange(min<Number>, max<Number>);    // returns a highly randomized number between the two specified boundaries
+jsl.randRange(min<Number>, max<Number>); // returns a highly randomized number between the two specified boundaries
+```
+
+## Ping:
+```javascript
+jsl.ping(http_version<String>, host<String>, path<String>, ?timeout<Number>); // pings the specified URL and returns the status code (for example 200 or 404) - also has an optional timeout value
+
+// examples:
+jsl.ping("https", "www.google.com", "/", 3000); // pings "https://www.google.com/" with a timeout of 3000 milliseconds
+// returns -> 200
+
+jsl.ping("https", "www.google.com", "/non_existant_path", 3000); // pings "https://www.google.com/non_existant_path" with a timeout of 3000 milliseconds
+// returns -> 404
 ```
 
 <br><br><br><br><br><br>
 
 # Useful JSON objects:
-
-## Read settings from settings.json file:
-```javascript
-jsl.settings; // this is an object that gets assigned the content of the settings.json file at the root directory.
-```
-Example what settings.json might look like:
-```json
-{
-    "http_connection": {
-        "url": "http://example.org/"
-    }
-}
-```
-Example of pulling data from the above example:
-```javascript
-jsl.settings.http_connection.url;    // = "http://example.org"
-```
 
 ## JSLib information:
 ```javascript
@@ -163,6 +182,15 @@ This is how it looks like:
 
 <br><br><br><br><br><br>
 
-### Disclaimer:
-This is the "corrected" npm version of my JSLib. I published the first one while not knowing how Node.js even works.<br>
-This version is **NOT cross-compatible with v1.4.0**
+# Deprecated Functions:
+
+## Settings (since 1.6.0):
+```javascript
+// this function used to create a JSON object from a settings.json file but due to it not working correctly it was removed
+jsl.settings.your_setting; // would have returned the value of that setting
+```
+
+<br><br><br><br><br><br>
+
+## Disclaimer:
+I don't claim any legal responsibility if this library is used in a malicious manner or if this library breaks your project. Please create a backup before using this library and report any issues to the [GitHub issue tracker](https://github.com/Sv443/JSLib-npm/issues) and I will try my best to fix it ASAP.
