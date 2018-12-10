@@ -1,0 +1,27 @@
+[1.4.0]:
+	- Function isempty() to test if something is undefined, null or an empty string
+	- Other HTML related stuff that can't be used in Node
+
+
+[1.5.0]:
+	- Added jsli.info object that stores info about JSLib
+	- Added settings object that mimics the JSON object from a settings.json file
+	- Added help() function that lists all available functions
+	- Added version() function that retunrs the version of JSLib
+	- Added isArrayEmpty() function that checks if and how many empty values an array contains
+	- Added error() function that logs a red error message to the console and optionally also to an error file
+	- Added logger() function that logs a string to a file with an optional timestamp
+	- Added generateUUID() function that uses an advanced RNG and a template to create a UUID
+	- Added allEqual() function that checks if all values inside an array are equal or not
+	- Added softShutdown() function that executes a function before the script shuts down
+	- Added noShutdown() function that prevents the script from being shut down with CTRL + C
+	- Added randRange() function that also uses the advanced RNG to return a random value between the specified boundaries
+	- Added alias isEmpty() to function isempty() and made it so it also checks for empty arrays
+
+
+[1.6.0]:
+	- Added LICENSE which I initially forgot (sorry)
+    - Added consoleColor() function to log a colored message to the console
+    - Added ping() function to ping URLs and return the status code
+	- Added counterpart of noShutdown(): yesShutdown()
+    - Removed settings object because it didn't work correctly
