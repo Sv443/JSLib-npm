@@ -5,7 +5,7 @@
 
 <br><br><br>
 [![](https://img.shields.io/github/license/Sv443/JSLib-npm.svg?style=flat-square)](https://github.com/Sv443/JSLib-npm/blob/master/LICENSE)
-[![Coverage Status](https://coveralls.io/repos/github/Sv443/JSLib-npm/badge.svg?branch=master)](https://coveralls.io/github/Sv443/JSLib-npm?branch=master)
+![](https://img.shields.io/badge/documentation-full-green.svg?style=flat-square)
 [![](https://img.shields.io/badge/JSDoc-supported-green.svg?style=flat-square)](http://usejsdoc.org/)
 [![](https://img.shields.io/github/issues/Sv443/JSLib-npm.svg?style=flat-square)](https://github.com/Sv443/JSLib-npm/issues)
 [![](https://img.shields.io/github/stars/Sv443/JSLib-npm.svg?style=flat-square)](https://github.com/Sv443/JSLib-npm/)
