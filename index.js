@@ -1,6 +1,16 @@
-// JSLib v1.5.0-npm by Sv443 - licensed under the MIT license
+// JSLib v1.6.0-npm by Sv443 - licensed under the MIT license
 
 const fs = require("fs");
+const http = require("http");
+const https = require("https");
+
+var noShutdown = false;
+
+/**
+ * DEPRECATED! Don't use this anymore!
+ * @deprecated since 1.6.0 since it doesn't work correctly
+ */
+module.exports.settings = "(deprecated)";
 
 /**
  * Info about JSLib
@@ -10,21 +20,16 @@ const fs = require("fs");
  * @param {string} jsli.desc short description
  * @param {string} jsli.authors authors of JSLib
  * @param {string} jsli.license license of JSLib
+ * @since 1.5.0
  */
 const jsli = {
-    version: "1.5.1",
+    version: "1.6.0",
     name: "JSLib",
-    desc: "JavaScript simplified",
+    desc: "A fairly lightweight JavaScript library that makes coding a bit faster by taking away some of the complicated / complex functions",
     authors: "Sv443",
     license: "MIT"
 };
 module.exports.info = jsli;
-
-try {
-    var settings = {};
-    settings = JSON.parse(fs.readFileSync("./settings.json"));
-    module.exports.settings = settings;
-} catch(err) {}
 
 /**
  * Returns all available functions of JSLib
@@ -36,15 +41,26 @@ module.exports.help = () => {
 }
 
 /**
+ * Returns the current version of JSLib
+ * @returns {String} version
+ * @since 1.5.0
+ */
+module.exports.version = () => {
+    return jsli.version;
+}
+
+/**
  * Returns true, if the input is undefined, null, an empty string or an empty array. Otherwise returns false.
  * @param {*} input Variable that should be checked
  * @returns {boolean} true or false
  * @since 1.4.0
  */
-function isEmpty(input) {
+const isEmpty = input => {
 	if(input === undefined || input === null || input == "" || input == []) return true;
 	else return false;
-} module.exports.isEmpty = isEmpty;
+}
+module.exports.isEmpty = isEmpty;
+module.exports.isempty = isEmpty;
 
 /**
  * Checks if and how many values of the array are empty (undefined, null, "" or [])
@@ -137,9 +153,9 @@ module.exports.allEqual = (array) => {
  * @since 1.5.0
  */
 module.exports.softShutdown = funct => {
-    process.on("SIGINT", ()=>{funct();process.exit();});
-    process.on("SIGTERM", ()=>{funct();process.exit();});
-    process.on("SIGKILL", ()=>{funct();process.exit();});
+    process.on("SIGINT", ()=>{if(!noShutdown){funct();process.exit();}});
+    process.on("SIGTERM", ()=>{if(!noShutdown){funct();process.exit();}});
+    process.on("SIGKILL", ()=>{if(!noShutdown){funct();process.exit();}});
 }
 
 /**
@@ -147,18 +163,32 @@ module.exports.softShutdown = funct => {
  * @since 1.5.0
  */
 module.exports.noShutdown = () => {
+    noShutdown = true;
     process.on("SIGINT", ()=>{});
     process.on("SIGTERM", ()=>{});
     process.on("SIGKILL", ()=>{});
 }
 
 /**
+ * Removes the script shut down prevention that was previously enabled with noShutdown()
+ * @since 1.6.0
+ */
+module.exports.yesShutdown = () => {
+    noShutdown = false;
+    process.on("SIGINT", ()=>{process.exit();});
+    process.on("SIGTERM", ()=>{process.exit();});
+    process.on("SIGKILL", ()=>{process.exit();});
+}
+
+/**
  * Highly random RNG with upper and lower boundary
  * @param {number} min lower boundary of the RNG
  * @param {number} max upper boundary of the RNG
+ * @since 1.5.0
  */
 module.exports.randRange = (min, max) => {
-    if(min > max) return "out of range: lower boundary can't be less than upper boundary";
+    if(min > max) return "out of range: lower boundary can't be higher than upper boundary";
+    max++;
     if(typeof min != "number" || typeof max != "number") return "wrong arguments provided";
 
     var d = new Date().getTime();
@@ -167,4 +197,105 @@ module.exports.randRange = (min, max) => {
     }
     var r = (d + Math.random() * (max - min)) % (max - min) | 0;
     return r += min;
+}
+
+/**
+ * Pings the specified URL and returns the status code
+ * @param {String} http_version must be either "http" or "https"
+ * @param {String} host the host you want to ping
+ * @param {String} path the path you want to ping
+ * @param {*} [timeout=5000] time in milliseconds after which the ping will time out and return a 404 error
+ * @returns {Promise} promise gets passed the HTTP status code (for example 200 or 404)
+ * @since 1.6.0
+ */
+module.exports.ping = (http_version, host, path, timeout) => {
+    if(typeof http_version != "string" || typeof host != "string" || typeof path != "string") return "wrong arguments provided";
+    if(isEmpty(timeout)) timeout = 5000;
+    if(http_version == "https") {
+        try {
+            return new Promise((resolve, reject) => {
+                try {
+                    https.get({
+                        host: host,
+                        path: path,
+                        timeout: timeout
+                    }, function(res) {
+                        res.on('data', function(d) {});
+                        res.on('end', function() {
+                            resolve(res.statusCode);
+                        });
+                    });
+                }
+                catch(err) {
+                    reject(err);
+                }
+            });
+        }
+        catch(err) {
+            reject(err);
+        }
+    }
+    else {
+        try {
+            return new Promise((resolve, reject) => {
+                try {
+                    http.get({
+                        host: host,
+                        path: path,
+                        timeout: timeout
+                    }, function(res) {
+                        res.on('data', function(d) {});
+                        res.on('end', function() {
+                            resolve(res.statusCode);
+                        });
+                    });
+                }
+                catch(err) {
+                    reject(err);
+                }
+            });
+        }
+        catch(err) {
+            reject(err);
+        }
+    }
+}
+
+/**
+ * Adds color(s) to the input text and sends that colored text to the console
+ * @param {String} text the text that should be colored and sent as a console message
+ * @param {String} colors space separated list of color(s). (Available colors are: "rst/reset, bright, dim, underscore/ul/underline, blink, reverse, hidden, fgblack, fgred, fggreen, fgyellow, fgblue, fgmagenta, fgcyan, fgwhite, bgblack, bgred, bggreen, bgyellow, bgblue, bgmagenta, bgcyan, bgwhite")
+ * @returns executes console.log() function
+ * @since 1.6.0
+ */
+module.exports.consoleColor = (text, colors) => {
+    let cnbr = [];
+    if(colors.includes("rst") || colors.includes("reset")) cnbr.push(0);
+    if(colors.includes("bright")) cnbr.push(1);
+    if(colors.includes("dim")) cnbr.push(2);
+    if(colors.includes("underscore") || colors.includes("ul") || colors.includes("underline")) cnbr.push(4);
+    if(colors.includes("blink")) cnbr.push(5);
+    if(colors.includes("reverse")) cnbr.push(7);
+    if(colors.includes("hidden")) cnbr.push(8);
+
+    if(colors.includes("fgblack")) cnbr.push(30);
+    if(colors.includes("fgred")) cnbr.push(31);
+    if(colors.includes("fggreen")) cnbr.push(32);
+    if(colors.includes("fgyellow")) cnbr.push(33);
+    if(colors.includes("fgblue")) cnbr.push(34);
+    if(colors.includes("fgmagenta")) cnbr.push(35);
+    if(colors.includes("fgcyan")) cnbr.push(36);
+    if(colors.includes("fgwhite")) cnbr.push(37);
+
+    if(colors.includes("bgblack")) cnbr.push(40);
+    if(colors.includes("bgred")) cnbr.push(41);
+    if(colors.includes("bggreen")) cnbr.push(42);
+    if(colors.includes("bgyellow")) cnbr.push(43);
+    if(colors.includes("bgblue")) cnbr.push(44);
+    if(colors.includes("bgmagenta")) cnbr.push(45);
+    if(colors.includes("bgcyan")) cnbr.push(46);
+    if(colors.includes("bgwhite")) cnbr.push(47);
+
+    for(let i = 0; i < cnbr.length; i++) cnbr[i] = "\x1b[" + cnbr[i] + "m";
+    return console.log(cnbr.join("") + text + "\x1b[0m");
 }
