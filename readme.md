@@ -1,14 +1,10 @@
 
-# <img src="https://raw.githubusercontent.com/Sv443/JSLib/master/icon_v1.png" style="width: 5vw;height: 5vw;">&nbsp;&nbsp; JSLib-npm (v1.6.1) by [Sv443](https://www.sv443.net/)
+# <img src="https://raw.githubusercontent.com/Sv443/JSLib/master/icon_v1.png" style="width: 5vw;height: 5vw;">&nbsp;&nbsp;JSLib-npm (v1.6.2) by [Sv443](https://www.sv443.net/) <br> [![](https://img.shields.io/github/license/Sv443/JSLib-npm.svg?style=flat-square)](https://github.com/Sv443/JSLib-npm/blob/master/LICENSE) ![](https://img.shields.io/badge/documentation-full-green.svg?style=flat-square) [![](https://img.shields.io/badge/JSDoc-supported-green.svg?style=flat-square)](http://usejsdoc.org/) [![](https://img.shields.io/github/issues/Sv443/JSLib-npm.svg?style=flat-square)](https://github.com/Sv443/JSLib-npm/issues) [![](https://img.shields.io/github/stars/Sv443/JSLib-npm.svg?style=flat-square)](https://github.com/Sv443/JSLib-npm/)
 ## A fairly lightweight JavaScript library that makes coding a bit faster by taking away some of the complicated / complex functions
 
 
 <br><br><br>
-[![](https://img.shields.io/github/license/Sv443/JSLib-npm.svg?style=flat-square)](https://github.com/Sv443/JSLib-npm/blob/master/LICENSE)
-![](https://img.shields.io/badge/documentation-full-green.svg?style=flat-square)
-[![](https://img.shields.io/badge/JSDoc-supported-green.svg?style=flat-square)](http://usejsdoc.org/)
-[![](https://img.shields.io/github/issues/Sv443/JSLib-npm.svg?style=flat-square)](https://github.com/Sv443/JSLib-npm/issues)
-[![](https://img.shields.io/github/stars/Sv443/JSLib-npm.svg?style=flat-square)](https://github.com/Sv443/JSLib-npm/)
+
 
 ---
 ## <span style="color:orange;">Menu:</span> [Dependencies](#dependencies)  -  [Installation](#installation) -  [Functions](#functions) -  [Useful Objects](#useful-json-ojects) - [Deprecated Functions](#deprecated-functions)

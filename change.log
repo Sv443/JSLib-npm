@@ -30,3 +30,8 @@
 [1.6.1]:
 	- Changed attributes of ping() function from ping(http_version, host, path, timeout) to ping(URL, timeout)
 	- Fixed readme.md
+
+
+[1.6.2]:
+	- Fixed a very big bug that made it impossible to import and use the library
+	- Changed readme.md a bit
