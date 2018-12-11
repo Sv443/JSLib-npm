@@ -1,3 +1,6 @@
+// Rename this script to examples.js to run it
+
+
 
 // this is a script containing examples for JSLib. You can run it and see how everything works.
 

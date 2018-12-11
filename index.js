@@ -24,7 +24,7 @@ module.exports.settings = "(deprecated)";
  * @since 1.5.0
  */
 const jsli = {
-    version: "1.6.2",
+    version: "1.6.4",
     name: "JSLib",
     desc: "A fairly lightweight JavaScript library that makes coding a bit faster by taking away some of the complicated / complex functions",
     authors: "Sv443",

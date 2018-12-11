@@ -1,6 +1,6 @@
 {
   "name": "svjsl",
-  "version": "1.6.2",
+  "version": "1.6.4",
   "description": "A fairly lightweight JavaScript library that makes coding a bit faster by taking away some of the complicated / complex functions",
   "main": "examples.js",
   "scripts": {
@@ -23,6 +23,7 @@
   "dependencies": {
     "fs": "0.0.1-security",
     "http": "0.0.0",
-    "https": "^1.0.0"
+    "https": "^1.0.0",
+    "perf_hooks": "0.0.1"
   }
 }
