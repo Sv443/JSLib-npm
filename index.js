@@ -3,7 +3,7 @@
 const fs = require("fs");
 const http = require("http");
 const https = require("https");
-const { performance } = require('perf_hooks');
+const perf = require('execution-time')();
 
 var noShutdown = false;
 
@@ -51,17 +51,17 @@ module.exports.version = () => {
 }
 
 /**
- * Returns true, if the input is undefined, null, an empty string or an empty array. Otherwise returns false.
+ * Returns true, if the input is undefined, null, an empty string or an empty array. Otherwise returns false. 0 will return true and NaN will return false though!
  * @param {*} input Variable that should be checked
  * @returns {boolean} true or false
  * @since 1.4.0
+ * @version 1.6.5 lowercase alias jsl.isempty was removed
  */
 const isEmpty = input => {
 	if(input === undefined || input === null || input == "" || input == []) return true;
 	else return false;
 }
 module.exports.isEmpty = isEmpty;
-module.exports.isempty = isEmpty;
 
 /**
  * Checks if and how many values of the array are empty (undefined, null, "" or [])
@@ -206,7 +206,8 @@ module.exports.randRange = (min, max) => {
  * @param {*} [timeout=5000] time in milliseconds after which the ping will time out and return a 404 error
  * @returns {Promise<Object>} promise object gets passed the HTTP status code (for example 200 or 404), the status message and the response duration in ms
  * @since 1.6.0
- * @version 1.6.1 update - changed attributes
+ * @version 1.6.1 changed attributes
+ * @version 1.6.5 changed time measurement dependency due to deprecation
  */
 module.exports.ping = (URL, timeout) => {
     if(typeof URL != "string") return "wrong arguments provided";
@@ -226,21 +227,20 @@ module.exports.ping = (URL, timeout) => {
         try {
             return new Promise((resolve, reject) => {
                 try {
-                    performance.mark('pingA');
+                    perf.start("ping");
                     https.get({
                         host: host,
                         path: path,
                         timeout: timeout
-                    }, function(res) {
-                        res.on('data', function(d) {});
-                        res.on('end', function() {
-                            performance.mark('pingB');
-                            performance.measure('pingDuration', 'pingA', 'pingB');
-                            let measure = performance.getEntriesByName('pingDuration')[0];
+                    }, res => {
+                        res.on('data', d => {});
+                        res.on('end', () => {
+                            var tResults = perf.stop("ping");
+                            var measure = Math.round(tResults.time);
                             let returnval = {
-                                statusCode: res.statusCode,
-                                statusMessage: res.statusMessage,
-                                responseTime: measure.duration
+                                "statusCode": res.statusCode,
+                                "statusMessage": res.statusMessage,
+                                "responseTime": measure
                             }
                             resolve(returnval);
                         });
@@ -264,16 +264,16 @@ module.exports.ping = (URL, timeout) => {
                         host: host,
                         path: path,
                         timeout: timeout
-                    }, function(res) {
-                        res.on('data', function(d) {});
-                        res.on('end', function() {
+                    }, res => {
+                        res.on('data', d => {});
+                        res.on('end', () => {
                             performance.mark('pingB');
                             performance.measure('pingDuration', 'pingA', 'pingB');
                             let measure = performance.getEntriesByName('pingDuration')[0];
                             let returnval = {
-                                statusCode: res.statusCode,
-                                statusMessage: res.statusMessage,
-                                responseTime: measure.duration
+                                "statusCode": res.statusCode,
+                                "statusMessage": res.statusMessage,
+                                "responseTime": measure.duration
                             }
                             resolve(returnval);
                         });
