@@ -1,4 +1,4 @@
-// JSLib v1.6.0-npm by Sv443 - licensed under the MIT license
+// JSLib v1.6.6-npm by Sv443 - licensed under the MIT license
 
 const fs = require("fs");
 const http = require("http");
@@ -7,11 +7,6 @@ const perf = require('execution-time')();
 
 var noShutdown = false;
 
-/**
- * DEPRECATED! Don't use this anymore!
- * @deprecated since 1.6.0 since it doesn't work correctly
- */
-module.exports.settings = "(deprecated)";
 
 /**
  * Info about JSLib
@@ -24,7 +19,7 @@ module.exports.settings = "(deprecated)";
  * @since 1.5.0
  */
 const jsli = {
-    version: "1.6.4",
+    version: "1.6.6",
     name: "JSLib",
     desc: "A fairly lightweight JavaScript library that makes coding a bit faster by taking away some of the complicated / complex functions",
     authors: "Sv443",
@@ -52,15 +47,13 @@ module.exports.version = () => {
 
 /**
  * Returns true, if the input is undefined, null, an empty string or an empty array. Otherwise returns false. 0 will return true and NaN will return false though!
- * @param {*} input Variable that should be checked
+ * @param {*} input Variable that should be checked, can be anything except JSON, stringify it first
  * @returns {boolean} true or false
  * @since 1.4.0
  * @version 1.6.5 lowercase alias jsl.isempty was removed
  */
-const isEmpty = input => {
-	if(input === undefined || input === null || input == "" || input == []) return true;
-	else return false;
-}
+const isEmpty = input => (input === undefined || input === null || input == "" || input == [] || input == "{}" || input == "{[]}") ? true : false;
+
 module.exports.isEmpty = isEmpty;
 
 /**
@@ -71,15 +64,15 @@ module.exports.isEmpty = isEmpty;
  */
 module.exports.isArrayEmpty = array => {
     if(isEmpty(array) || typeof array != "object") return "argument has to be of type array";
-    let emptyness = 0;
+    let emptiness = 0;
     for(let i = 0; i < array.length; i++) {
-        if(isEmpty(array[i])) emptyness++;
+        if(isEmpty(array[i])) emptiness++;
     }
-    if(emptyness == array.length) return true;
-    else if(emptyness == 0) return false;
-    else return emptyness;
+    if(emptiness == array.length) return true;
+    else if(emptiness == 0) return false;
+    else return emptiness;
 }
- 
+
 /**
  * Sends a red console message and optionally exits the process with an optional status code.
  * @param {string} cause The cause of the error
@@ -200,14 +193,24 @@ module.exports.randRange = (min, max) => {
     return r += min;
 }
 
+// type and properties definition for the returned object of the ping function
+/**
+ * @typedef {Object} pingReturnValues An object containing the ping's results
+ * @property {Number} statusCode The ping's returned status code (eg. 200 or 404)
+ * @property {String} statusMessage The status message of the ping
+ * @property {Number} responseTime The response time in milliseconds
+ */
+let returnval={"statusCode":0,"statusMessage":0,"responseTime":0};
+
 /**
  * Pings the specified URL and returns the status code
  * @param {String} URL the URL that should be pinged
  * @param {*} [timeout=5000] time in milliseconds after which the ping will time out and return a 404 error
- * @returns {Promise<Object>} promise object gets passed the HTTP status code (for example 200 or 404), the status message and the response duration in ms
+ * @returns {Promise<pingReturnValues>} promise object gets passed the HTTP status code (for example 200 or 404), the status message and the response duration in ms; if errored returns a string with the error message
  * @since 1.6.0
  * @version 1.6.1 changed attributes
  * @version 1.6.5 changed time measurement dependency due to deprecation
+ * @version 1.6.6 updated documentation for the resulting object
  */
 module.exports.ping = (URL, timeout) => {
     if(typeof URL != "string") return "wrong arguments provided";
@@ -226,6 +229,7 @@ module.exports.ping = (URL, timeout) => {
     if(http_version == "https") {
         try {
             return new Promise((resolve, reject) => {
+                if(isEmpty(host)) return reject("URL is formatted incorrectly");
                 try {
                     perf.start("ping");
                     https.get({
@@ -238,28 +242,29 @@ module.exports.ping = (URL, timeout) => {
                             var tResults = perf.stop("ping");
                             var measure = Math.round(tResults.time);
                             let returnval = {
-                                "statusCode": res.statusCode,
+                                "statusCode": parseInt(res.statusCode),
                                 "statusMessage": res.statusMessage,
-                                "responseTime": measure
+                                "responseTime": parseInt(measure)
                             }
-                            resolve(returnval);
+                            return resolve(returnval);
                         });
                     });
                 }
                 catch(err) {
-                    reject(err);
+                    return reject(err);
                 }
             });
         }
         catch(err) {
-            reject(err);
+            return reject(err);
         }
     }
     else {
         try {
             return new Promise((resolve, reject) => {
+                if(isEmpty(host)) return reject("URL is formatted incorrectly");
                 try {
-                    performance.mark('pingA');
+                    perf.start("ping");
                     http.get({
                         host: host,
                         path: path,
@@ -267,25 +272,24 @@ module.exports.ping = (URL, timeout) => {
                     }, res => {
                         res.on('data', d => {});
                         res.on('end', () => {
-                            performance.mark('pingB');
-                            performance.measure('pingDuration', 'pingA', 'pingB');
-                            let measure = performance.getEntriesByName('pingDuration')[0];
+                            var tResults = perf.stop("ping");
+                            var measure = Math.round(tResults.time);
                             let returnval = {
-                                "statusCode": res.statusCode,
+                                "statusCode": parseInt(res.statusCode),
                                 "statusMessage": res.statusMessage,
-                                "responseTime": measure.duration
+                                "responseTime": parseInt(measure)
                             }
-                            resolve(returnval);
+                            return resolve(returnval);
                         });
                     });
                 }
                 catch(err) {
-                    reject(err);
+                    return reject(err);
                 }
             });
         }
         catch(err) {
-            reject(err);
+            return reject(err);
         }
     }
 }

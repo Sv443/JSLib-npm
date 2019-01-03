@@ -2,3 +2,10 @@
     - changed dependency "perf_hooks" to "execution-time" because a feature was deprecated
     - completely deprecated the all-lowercase alias "jsl.isempty" of the function "jsl.isEmpty"
     - cleaned up the code a bit
+
+[1.6.6]
+    - removed "jsl.settings" completely
+    - updated documentation for "jsl.ping"
+
+[next]
+    - fixed typo in "readme.md"

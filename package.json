@@ -1,6 +1,6 @@
 {
   "_from": "svjsl",
-  "_id": "svjsl@1.6.5",
+  "_id": "svjsl@1.6.6",
   "_inBundle": false,
   "_integrity": "sha512-K5CmPNT8oVMYclLISRzDWjvQSe0ZcrNFmCoSo7wE8ggGkMp0xWHtTN0+RDFVxn9eFK6dIiH82zSRfXCxm6RPdw==",
   "_location": "/svjsl",
@@ -19,7 +19,7 @@
     "#USER",
     "/"
   ],
-  "_resolved": "https://registry.npmjs.org/svjsl/-/svjsl-1.6.5.tgz",
+  "_resolved": "https://registry.npmjs.org/svjsl/-/svjsl-1.6.6.tgz",
   "_shasum": "7f9d91b6b8315c1a256132f13e95ae9b78c434e9",
   "_spec": "svjsl",
   "_where": "C:\\Users\\Sven\\Desktop\\jslnpm",
@@ -53,5 +53,5 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "version": "1.6.5"
+  "version": "1.6.6"
 }
