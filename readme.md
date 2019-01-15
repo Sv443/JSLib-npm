@@ -13,9 +13,9 @@
 <br><br><br><br><br><br><br><br><br>
 
 # Dependencies:
-- fs
-- http
-- https
+- (fs)
+- (http)
+- (https)
 - execution-time
     - pretty-hrtime
 
