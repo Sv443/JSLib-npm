@@ -7,5 +7,11 @@
     - removed "jsl.settings" completely
     - updated documentation for "jsl.ping"
 
-[next]
+[1.7.0]
     - fixed typo in "readme.md"
+    - added "ProgressBar" class to create a dynamic progress bar
+    - added function "jsl.readdirRecursive(folder, callback(err, result){})" to read a folder and its subfolders asynchronously
+    - added function "jsl.readdirRecursiveSync(folder)" to read a folder and its subfolders synchronously
+    - added function "jsl.readableArray(array, separators, lastSeparator)" to make an array more easily human-readable
+    - split the package up into three separate files
+    - removed all dependencies because they are either included by default or their effect was easily recreatable in vanilla JS

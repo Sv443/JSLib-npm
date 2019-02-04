@@ -22,7 +22,6 @@
   "_resolved": "https://registry.npmjs.org/svjsl/-/svjsl-1.7.0.tgz",
   "_shasum": "0803828015b2043a2276353e9107f74e605ee51f",
   "_spec": "svjsl",
-  "_where": "S:\\njs\\jslib",
   "author": {
     "name": "Sv443"
   },
@@ -30,12 +29,6 @@
     "url": "https://github.com/Sv443/JSLib-npm/issues"
   },
   "bundleDependencies": false,
-  "dependencies": {
-    "execution-time": "^1.3.0",
-    "fs": "0.0.1-security",
-    "http": "0.0.0",
-    "https": "^1.0.0"
-  },
   "deprecated": false,
   "description": "A fairly lightweight JavaScript library that makes coding a bit faster by taking away some of the complicated / complex functions",
   "homepage": "https://github.com/Sv443/JSLib-npm#readme",
@@ -44,7 +37,7 @@
     "js"
   ],
   "license": "MIT",
-  "main": "examples.js",
+  "main": "JSLib.js",
   "name": "svjsl",
   "repository": {
     "type": "git",
