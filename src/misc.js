@@ -19,12 +19,14 @@ module.exports.logger = logger;
  * @param {String} folder The folder that should be recursively read
  * @param {Function} callback The function that gets called after the folder has been read - has two arguments: error and result
  * @async
+ * @since 1.7.0
  */
 module.exports.readdirRecursive = require("./files").readdirRecursive;
 
 /**
  * Reads a folder synchronously and recursively and returns all absolute file paths (starting at the drive letter (eg. "C:/Users/...")) in the callback - Warning! Large amounts of files (like letting it run on "C:/") can freeze the process completely or exceed the maximum possible index of a JS array
  * @param {String} folder The folder that should be recursively read
+ * @since 1.7.0
  */
 module.exports.readdirRecursiveSync = require("./files").readdirRecursiveSync;
 
@@ -42,9 +44,9 @@ module.exports.readdirRecursiveSync = require("./files").readdirRecursiveSync;
  * @since 1.5.0
  */
 const jsli = {
-    version: "1.6.6",
+    version: "1.7.0",
     name: "JSLib",
-    desc: "A fairly lightweight JavaScript library that makes coding a bit faster by taking away some of the complicated / complex functions",
+    desc: "A dependency free JavaScript library that makes coding a bit faster by taking away some of the complex functions",
     authors: "Sv443",
     license: "MIT"
 };

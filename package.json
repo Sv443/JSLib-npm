@@ -30,7 +30,7 @@
   },
   "bundleDependencies": false,
   "deprecated": false,
-  "description": "A fairly lightweight JavaScript library that makes coding a bit faster by taking away some of the complicated / complex functions",
+  "description": "A fairly lightweight JavaScript library that makes coding a bit faster by taking away some of the complex functions",
   "homepage": "https://github.com/Sv443/JSLib-npm#readme",
   "keywords": [
     "javascript",
