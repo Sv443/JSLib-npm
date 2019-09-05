@@ -1,11 +1,11 @@
-# <img src="https://raw.githubusercontent.com/Sv443/JSLib/master/icon_v1.png" style="width: 5vw;height: 5vw;">&nbsp;&nbsp;JSLib-npm (v1.7.0) by [Sv443](https://www.sv443.net/) <br> [![](https://img.shields.io/github/license/Sv443/JSLib-npm.svg?style=flat-square)](https://github.com/Sv443/JSLib-npm/blob/master/LICENSE) ![](https://img.shields.io/badge/documentation-full-green.svg?style=flat-square) [![dependencies Status](https://david-dm.org/sv443/jslib-npm/status.svg?style=flat-square)](https://david-dm.org/sv443/jslib-npm) [![](https://img.shields.io/badge/JSDoc-supported-green.svg?style=flat-square)](http://usejsdoc.org/) [![Percentage of issues still open](http://isitmaintained.com/badge/open/sv443/jslib-npm.svg)](https://github.com/Sv443/JSLib-npm/issues "Percentage of issues still open") [![Average time to resolve an issue](http://isitmaintained.com/badge/resolution/sv443/jslib-npm.svg)](https://github.com/Sv443/JSLib-npm/issues "Average time to resolve an issue") [![](https://img.shields.io/github/stars/Sv443/JSLib-npm.svg?style=flat-square)](https://github.com/Sv443/JSLib-npm/)
+# <img src="https://raw.githubusercontent.com/Sv443/JSLib/master/icon_v1.png" style="width: 5vw;height: 5vw;">&nbsp;&nbsp;JSLib-npm (v1.8.0) by [Sv443](https://www.sv443.net/) <br> [![](https://img.shields.io/github/license/Sv443/JSLib-npm.svg?style=flat-square)](https://sv443.net/LICENSE) [![](https://img.shields.io/badge/jsdoc-v3.5.5-green.svg?style=flat-square)](https://jsdoc.app/) [![Percentage of issues still open](http://isitmaintained.com/badge/open/sv443/jslib-npm.svg)](https://github.com/Sv443/JSLib-npm/issues "Percentage of issues still open") [![Average time to resolve an issue](http://isitmaintained.com/badge/resolution/sv443/jslib-npm.svg)](https://github.com/Sv443/JSLib-npm/issues "Average time to resolve an issue") [![](https://img.shields.io/github/stars/Sv443/JSLib-npm.svg?style=flat-square)](https://github.com/Sv443/JSLib-npm/)
 ## A dependency-free JavaScript library that makes coding a bit faster by taking away some of the complex functions
 
 
 <br><br><br>
 
 # Menu:
-## [Installation](#installation) -  [Dependencies](#dependencies)  -  [Functions](#functions) - [Classes](#classes) -  [Useful Objects](#useful-json-ojects) - [Deprecated Functions](#deprecated-functions) - [Disclaimer](#disclaimer)
+## [Installation](#installation) - [Functions](#functions) - [Classes](#classes) - [Objects](#objects) - [Deprecated Functions](#deprecated-functions) - [Disclaimer](#disclaimer)
 ---
 
 
@@ -14,7 +14,7 @@
 <br><br><br><br>
 # Installation:
 ```
->  npm i --save svjsl
+>  npm i svjsl
 ```
 
 <br>
@@ -50,61 +50,28 @@ const jsl = require("svjsl");
 
 
 
-<br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br>
-### [Back to Menu](#menu)
-# Dependencies:
-Parentheses mean the package is already included in NodeJS by default and they don't need to be imported
-- (fs)
-- (http)
-- (https)
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-<br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br>
+<br><br><br><br><br><br><br><br><br><br>
 ### [Back to Menu](#menu)
 # Functions:
 
 ## <span style="color:orange;">Note: All arguments that are prefixed with a question mark are optional and will be set to a default value if left empty</span>
 ## <span style="color:orange;">Note 2: This documentation uses type declarations to let you know of what type the variable can be (eg. variable&lt;type&gt;)</span>
 
-<br><br>
+<br><br><br>
 ## Get all available functions
 ```javascript
 jsl.help(); // this logs all available functions to the console (this is just the result of module.exports)
 ```
 
-<br><br>
+<br><br><br>
 ## Get JSLib's version:
 ```javascript
 jsl.version(); // returns -> version of JSLib (as string)
 ```
 
-<br><br>
+<br><br><br>
 ## Check if a variable is empty:
 ```javascript
 jsl.isEmpty(variable<Any>); // returns true, if the variable is empty and false if not. This function can NOT check a JSON object - please stringify it first
@@ -122,7 +89,7 @@ jsl.isEmpty("foo");     // returns -> false
 jsl.isEmpty(0);         // returns -> true (0 will also count as empty!)
 ```
 
-<br><br>
+<br><br><br>
 ## Check how many values in an array are empty:
 ```javascript
 jsl.isArrayEmpty(array<Array>); // returns true if all values in array are empty, false if none are empty. If only some are empty, will return integer value of how many they are - note: the number 0 will also count as empty
@@ -134,7 +101,7 @@ jsl.isArrayEmpty(["", "test", undefined, null]);     // returns -> 3        (thr
 jsl.isArrayEmpty([1, "test", [1, 2, 3]]);            // returns -> false    (none are empty)
 ```
 
-<br><br>
+<br><br><br>
 ## Log something to a file:
 ```javascript
 jsl.logger(path<String>, content<String>, ?options<Object>); // logs the content to the file specified with path
@@ -155,7 +122,7 @@ jsl.logger("./logs/error.log", "XY error was encountered", {    //  ─┐
 });                                                             // overwrites the content of the file at "./logs/error.log" to "XY error was encountered" and includes a timestamp
 ```
 
-<br><br>
+<br><br><br>
 ## Log a red error message to the console and optionally to a file:
 ```javascript
 jsl.error(error_message<String>, ?log_file_path<String>, ?shutdown<Boolean>, ?status<Number>); // will log a red error message to the console and shut down the process if argument shutdown is set to true. Can also log the error message to a specified log file (also optional)
@@ -168,7 +135,7 @@ jsl.error("Fatal error encountered.", true, 1);                                 
 jsl.error("Fatal error encountered.", "./error.log", true, 1);                     // logs error message to console, logs error message to log file and shuts down script with status code 1 (crashed)
 ```
 
-<br><br>
+<br><br><br>
 ## Highly random UUID generator:
 ```javascript
 jsl.generateUUID(uuid_format<String>); // generates a highly randomized UUID in the specified format (x's and y's are being replaced with random numbers or characters) - the used RNG gets manipulated by the system time and is therefor extremely random - the charset of the UUID is hexadecimal (0-9 and a-f)
@@ -180,7 +147,7 @@ jsl.generateUUID("x");            // returns -> 3            (can be scaled up a
 jsl.generateUUID("$%?_x##");      // returns -> $%?_5##      (only x and y will be replaced)
 ```
 
-<br><br>
+<br><br><br>
 ## Test if all values in an array are equal:
 ```javascript
 jsl.allEqual(array<Array>); // returns -> true if all values of the array are equal and false if not
@@ -193,7 +160,7 @@ jsl.allEqual(["a", "b", "c"]);       // returns -> false
 jsl.allEqual(["a", "a", "a"]);       // returns -> true
 ```
 
-<br><br>
+<br><br><br>
 ## Soft shutdown:
 ```javascript
 jsl.softShutdown(funct<Function>); // funct gets executed before the script shuts down. This is useful to terminate connections or services gracefully or starting another script before shutting down.
@@ -208,26 +175,26 @@ jsl.softShutdown(()=>{
 });
 ```
 
-<br><br>
+<br><br><br>
 ## Prevent shutdown on `CTRL + C`:
 ```javascript
 jsl.noShutdown(); // this completely removes the ability to shut down the script with CTRL + C. It has to be killed within the script (using process.exit()) or with the task manager
 ```
 
-<br><br>
+<br><br><br>
 ## Re-enable shutdown on `CTRL + C`:
 ```javascript
 jsl.yesShutdown(); // this re-enables the ability to shut down the script with CTRL + C if it has been disabled before with jsl.noShutdown()
 // note: this function also prevents jsl.softShutdown() from shutting down the script
 ```
 
-<br><br>
+<br><br><br>
 ## Random Range:
 ```javascript
 jsl.randRange(min<Number>, max<Number>); // returns a highly randomized number between the two specified boundaries
 ```
 
-<br><br>
+<br><br><br>
 ## Ping:
 ```javascript
 jsl.ping(URL<String>, ?timeout<Number>); // pings the specified URL and returns an object through a promise. This contains the status code (for example 200 or 404), the response time and also the status message - also has an optional timeout value
@@ -253,7 +220,7 @@ jsl.ping("https://www.google.com/", 5000).then(res => {
 });
 ```
 
-<br><br>
+<br><br><br>
 ## Read Directories Recursively:
 ```js
 // asynchronous
@@ -303,7 +270,7 @@ var result = jsl.readdirRecursiveSync("C:/Users/Sv443/Desktop/Something"); // co
 
 
 
-<br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br>
+<br><br><br><br><br><br><br><br><br><br>
 ### [Back to Menu](#menu)
 # Classes:
 ## ProgressBar:
@@ -386,9 +353,9 @@ Do not log anything to the stdout / console while the progress bar is running!
 
 
 
-<br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br>
+<br><br><br><br><br><br><br><br><br><br>
 ### [Back to Menu](#menu)
-# Useful JSON objects:
+# Objects:
 
 ## JSLib information:
 ```javascript
@@ -399,7 +366,7 @@ This is how it looks like:
 {
     "version": "x.x.x",
     "name": "JSLib",
-    "desc": "JavaScript simplified",
+    "desc": "[Description]",
     "authors": "Sv443",
     "license": "MIT"
 }
@@ -433,7 +400,7 @@ This is how it looks like:
 
 
 
-<br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br>
+<br><br><br><br><br><br><br><br><br><br>
 ### [Back to Menu](#menu)
 # Deprecated Functions:
 
@@ -477,7 +444,8 @@ jsl.settings.your_setting; // would have returned the value of that setting
 
 
 
-<br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br>
+<br><br><br><br><br><br><br><br><br><br>
 ### [Back to Menu](#menu)
 ## Disclaimer:
-I don't claim any legal responsibility if this library is used in a malicious manner or if this library breaks your project. Please create a backup before using this library and report any issues to the [GitHub issue tracker](https://github.com/Sv443/JSLib-npm/issues) and I will try my best to fix it ASAP.
+I don't claim any legal responsibility if this library is used in a malicious manner or if this library breaks your project.  
+Please create a backup before using this library and report any issues to the [GitHub issue tracker](https://github.com/Sv443/JSLib-npm/issues) and I will try my best to fix it ASAP.

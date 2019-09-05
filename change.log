@@ -1,11 +1,11 @@
 [1.6.5]
     - changed dependency "perf_hooks" to "execution-time" because a feature was deprecated
-    - completely deprecated the all-lowercase alias "jsl.isempty" of the function "jsl.isEmpty"
+    - completely deprecated the all-lowercase alias "jsl.isempty()" of the function "jsl.isEmpty()"
     - cleaned up the code a bit
 
 [1.6.6]
     - removed "jsl.settings" completely
-    - updated documentation for "jsl.ping"
+    - updated documentation for "jsl.ping()"
 
 [1.7.0]
     - fixed typo in "readme.md"
@@ -15,3 +15,13 @@
     - added function "jsl.readableArray(array, separators, lastSeparator)" to make an array more easily human-readable
     - split the package up into three separate files
     - removed all dependencies because they are either included by default or their effect was easily recreatable in vanilla JS
+
+[1.8.0]
+    - put all random number generator related stuff in a separate file ("rng.js")
+    - added function "jsl.generateSeededNumbers(count, seed)" to generate "random" numbers based on a passed seed
+    - added function "jsl.generateRandomSeed(digitCount)" to generate a random seed to be used in "jsl.generateSeededNumbers()"
+    - added function "jsl.validateSeed(seed)" to check whether or not a seed is valid
+    - added function "jsl.mapRange(value, range_1_min, range_1_max, range_2_min, range_2_max)" to transform a value from one numerical range to another
+    - improved time measurement system for "jsl.ping()"
+    - improved the background stuff in "jsl.ping()" to improve performance
+    - added "contentType" property to "jsl.ping()"'s promise callback

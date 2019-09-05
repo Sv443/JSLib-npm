@@ -1,6 +1,6 @@
 {
   "_from": "svjsl",
-  "_id": "svjsl@1.7.0",
+  "_id": "svjsl@1.8.0",
   "_inBundle": false,
   "_integrity": "sha512-UAm8fK4ukDkmQ935ASQUCiBpjPflvhX7XUq597eI8UKFBkJ9Yc/bAzUFLv+qL4E4+fOQesodb7QOjwJ+IdgB4A==",
   "_location": "/svjsl",
@@ -19,22 +19,30 @@
     "#USER",
     "/"
   ],
-  "_resolved": "https://registry.npmjs.org/svjsl/-/svjsl-1.7.0.tgz",
+  "_resolved": "https://registry.npmjs.org/svjsl/-/svjsl-1.8.0.tgz",
   "_shasum": "0803828015b2043a2276353e9107f74e605ee51f",
   "_spec": "svjsl",
   "author": {
-    "name": "Sv443"
+    "name": "Sv443",
+    "email": "sven.fehler@web.de",
+    "url": "https://sv443.net/"
   },
   "bugs": {
     "url": "https://github.com/Sv443/JSLib-npm/issues"
   },
-  "bundleDependencies": false,
   "deprecated": false,
-  "description": "A fairly lightweight JavaScript library that makes coding a bit faster by taking away some of the complex functions",
+  "description": "A general-purpose, lightweight and dependency-free JavaScript library that makes coding a bit faster by providing many easy to use functions",
   "homepage": "https://github.com/Sv443/JSLib-npm#readme",
   "keywords": [
     "javascript",
-    "js"
+    "js",
+    "library",
+    "general-purpose",
+    "miscellaneous",
+    "network",
+    "networking",
+    "files",
+    "filesystem"
   ],
   "license": "MIT",
   "main": "JSLib.js",
@@ -46,5 +54,5 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "version": "1.7.0"
+  "version": "1.8.0"
 }

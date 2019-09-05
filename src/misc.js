@@ -3,6 +3,18 @@ var noShutdown = false;
 var logger = require("./files").logger;
 module.exports.ping = require("./networking").ping;
 
+
+let rng = require("./rng");
+module.exports.randRange = rng.randRange;
+module.exports.generateUUID = rng.generateUUID;
+
+module.exports.seededRNG = {
+    generateSeededNumbers: rng.seededRNG.generateSeededNumbers,
+    generateRandomSeed: rng.seededRNG.generateRandomSeed,
+    validateSeed: rng.seededRNG.validateSeed
+}
+
+
 /**
  * Logs a string to a specified log file
  * @param {string} path Relative path to the log file
@@ -44,9 +56,9 @@ module.exports.readdirRecursiveSync = require("./files").readdirRecursiveSync;
  * @since 1.5.0
  */
 const jsli = {
-    version: "1.7.0",
+    version: "1.8.0",
     name: "JSLib",
-    desc: "A dependency free JavaScript library that makes coding a bit faster by taking away some of the complex functions",
+    desc: "A general-purpose, lightweight and dependency-free JavaScript library that makes coding a bit faster by providing many easy to use functions",
     authors: "Sv443",
     license: "MIT"
 };
@@ -116,26 +128,6 @@ module.exports.error = (cause, log_file_path, shutdown, status) => {
 }
 
 /**
- * Creates a UUID with a given format. This uses a RNG that is even more random than the standard Math.random()
- * @param {string} uuid_format the format of the UUID. All x's or y's will be affected by the RNG. Example: "xxxx-yyyy-xxxx-yyyy"
- * @returns {string} randomized UUID
- * @since 1.5.0
- */
-module.exports.generateUUID = (uuid_format) => {
-    if(isEmpty(uuid_format) || typeof uuid_format != "string") return "wrong attribute type - has to be of type string";
-
-    var d = new Date().getTime();
-    if (typeof performance !== 'undefined' && typeof performance.now === 'function'){
-        d += performance.now();
-    }
-    return uuid_format.replace(/[xy]/g, function (c) {
-        var r = (d + Math.random() * 16) % 16 | 0;
-        d = Math.floor(d / 16);
-        return (c === 'x' ? r : (r & 0x3 | 0x8)).toString(16);
-    });
-}
-
-/**
  * Tests an array and returns true if all values are equal.
  * @param {array} array
  * @returns {boolean} true if all values are equal, false if not
@@ -177,25 +169,6 @@ module.exports.yesShutdown = () => {
     process.on("SIGINT", ()=>{process.exit();});
     process.on("SIGTERM", ()=>{process.exit();});
     process.on("SIGKILL", ()=>{process.exit();});
-}
-
-/**
- * Highly random RNG with upper and lower boundary
- * @param {number} min lower boundary of the RNG
- * @param {number} max upper boundary of the RNG
- * @since 1.5.0
- */
-module.exports.randRange = (min, max) => {
-    if(min > max) return "out of range: lower boundary can't be higher than upper boundary";
-    max++;
-    if(typeof min != "number" || typeof max != "number") return "wrong arguments provided";
-
-    var d = new Date().getTime();
-    if (typeof performance !== 'undefined' && typeof performance.now === 'function'){
-        d += performance.now();
-    }
-    var r = (d + Math.random() * (max - min)) % (max - min) | 0;
-    return r += min;
 }
 
 /**
@@ -303,7 +276,9 @@ const ProgressBar = class {
 
     _update(message) { // private method to update the console message
         if(this.iteration <= this.timesToUpdate) {
-            if(message != "" && message != undefined) message = "- " + message;
+            if(!isEmpty(message)) message = "- " + message;
+            else message = "";
+
             process.stdout.cursorTo(0);
             process.stdout.clearLine();
             process.stdout.write(`${(this.progress != 1.0 ? "\x1b[33m" : "\x1b[32m")}\x1b[1m${Math.round(this.progress * 100)}%\x1b[0m ${(Math.round(this.progress * 100) < 10 ? "  " : (Math.round(this.progress * 100) < 100 ? " " : ""))}[${this.progressDisplay.replace(new RegExp(this.filledChar, "gm"), "\x1b[32m\x1b[1m" + this.filledChar + "\x1b[0m")}] ${message}${(this.progress != 1.0 ? "" : "\n")}`);
@@ -337,3 +312,31 @@ const ProgressBar = class {
     }
 }
 module.exports.ProgressBar = ProgressBar;
+
+
+/**
+ * Transforms the `value` parameter from the numerical range [`range_1_min`-`range_1_max`] to the numerical range [`range_2_min`-`range_2_max`]
+ * @param {Number} value 
+ * @param {Number} range_1_min 
+ * @param {Number} range_1_max 
+ * @param {Number} range_2_min 
+ * @param {Number} range_2_max 
+ * @returns {Number} Floating point number of `value` inside the numerical range [`range_2_min`-`range_2_max`]
+ * @throws Throws an error if the arguments are not of type `Number` or the `*_max` argument(s) is/are equal to 0
+ * @since 1.8.0
+ */
+const mapRange = (value, range_1_min, range_1_max, range_2_min, range_2_max) => {
+    [value, range_1_min, range_1_max, range_2_min, range_2_max].forEach(arg => {
+        if(isEmpty(arg) || isNaN(parseInt(arg)) || typeof arg != "number")
+            throw new Error("Wrong argument(s) provided for mapRange() - (expected: \"Number\", got: \"" + typeof arg + "\")");
+    });
+
+    if(range_1_max === 0 || range_2_max === 0)
+        throw new Error("Division by zero error in mapRange() - make sure the \"*_max\" arguments are not 0");
+
+    if(range_1_min === 0 && range_2_min === 0)
+        return value * (range_2_max / range_1_max);
+
+    return ((value - range_1_min) * ((range_2_max - range_2_min) / (range_1_max - range_1_min)) + range_2_min);
+}
+module.exports.mapRange = mapRange;
