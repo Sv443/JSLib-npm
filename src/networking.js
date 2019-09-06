@@ -70,3 +70,67 @@ module.exports.ping = (URL, timeout) => {
         return reject(err);
     }
 }
+
+/**
+ * @typedef {Object} DownloadOptions
+ * @prop {String} fileName The name that the downloaded file should be saved as
+ * @prop {String} fileType The file type / extension - for example: ""
+ */
+let downloadOpts = {
+    fileName: "[filename from website]",
+    fileType: "txt",
+    progressCallback: () => {},
+    finishedCallback: () => {}
+}
+
+/**
+ * Downloads a file from the specified URL, to the specified destination path, according to the specified options
+ * @param {String} url The URL to the file you want to download
+ * @param {String} [destPath] Can be absolute or relative - If left empty, it will default to "./"
+ * @param {DownloadOptions} [options]
+ */
+const downloadFile = (url, destPath = "./", options) => {
+    if(isEmpty(options))
+    {
+
+    }
+    else
+    {
+        if(isEmpty(options.fileName)) options.fileName = 
+    }
+
+    let lastM = false;
+
+    let dest = `${destPath}${destPath.endsWith("/") ? "" : "/"}${options.fileName}${options.fileType}`;
+    let file = fs.createWriteStream(dest);
+
+    let req = https.get(url, res => {
+        let totalSize = (res.headers["content-length"] / 1e+6).toFixed(2);
+        let sizeUpdateIv = setInterval(() => {
+            if(!isEmpty(options) && !isEmpty(options.progressCallback))
+                options.progressCallback({
+                    current: (fs.statSync(dest).size / 1e+6).toFixed(2),
+                    total: totalSize
+                });
+        }, 100);
+        res.pipe(file);
+
+        file.on("finish", () => {
+            clearInterval(sizeUpdateIv);
+            if((fs.statSync(dest).size / 1e+6).toFixed(2) == totalSize && !lastM)
+            {
+                lastM = true;
+                fileSizeUpd(totalSize, totalSize);
+            }
+
+            let cb = () => setTimeout(() => {
+                resolve();
+            }, 300);
+            file.close(cb);
+        });
+    });
+
+    req.on("error", err => {
+        fs.unlink(dest, () => reject(`Couldn't download file due to error: ${err}`));
+    });
+}

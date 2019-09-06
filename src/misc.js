@@ -177,6 +177,7 @@ module.exports.yesShutdown = () => {
  * @param {String} colors space separated list of color(s). (Available colors are: "rst/reset, bright, dim, underscore/ul/underline, blink, reverse, hidden, fgblack, fgred, fggreen, fgyellow, fgblue, fgmagenta, fgcyan, fgwhite, bgblack, bgred, bggreen, bgyellow, bgblue, bgmagenta, bgcyan, bgwhite")
  * @returns executes console.log() function
  * @since 1.6.0
+ * @deprecated This function will soon be deprecated. Please use the object `jsl.col` instead - This function will soon redirect to that object too
  */
 module.exports.consoleColor = (text, colors) => {
     let cnbr = [];
@@ -340,3 +341,49 @@ const mapRange = (value, range_1_min, range_1_max, range_2_min, range_2_max) => 
     return ((value - range_1_min) * ((range_2_max - range_2_min) / (range_1_max - range_1_min)) + range_2_min);
 }
 module.exports.mapRange = mapRange;
+
+
+
+/**
+ * Use this to add color to your console output
+ * @prop {String} rst
+ * @prop {String} reset
+ * @prop {String} fat
+ * @prop {Object} fg Foreground / font color
+ * @prop {String} fg.red
+ * @prop {String} fg.green
+ * @prop {String} fg.yellow
+ * @prop {String} fg.blue
+ * @prop {String} fg.pink
+ * @prop {String} fg.cyan
+ * @prop {Object} bg Background color
+ * @prop {String} bg.red
+ * @prop {String} bg.green
+ * @prop {String} bg.yellow
+ * @prop {String} bg.blue
+ * @prop {String} bg.pink
+ * @prop {String} bg.cyan
+ * @since 1.8.0
+ */
+const colors = {
+    rst:   "\x1b[0m",
+    reset: "\x1b[0m",
+    fat:   "\x1b[37m",
+    fg: {
+        red:    "\x1b[31m\x1b[1m",
+        green:  "\x1b[32m\x1b[1m",
+        yellow: "\x1b[33m\x1b[1m",
+        blue:   "\x1b[34m\x1b[1m",
+        pink:   "\x1b[35m\x1b[1m",
+        cyan:   "\x1b[36m\x1b[1m"
+    },
+    bg: {
+        red:    "\x1b[41m\x1b[1m",
+        green:  "\x1b[42m\x1b[1m",
+        yellow: "\x1b[43m\x1b[1m",
+        blue:   "\x1b[44m\x1b[1m",
+        pink:   "\x1b[45m\x1b[1m",
+        cyan:   "\x1b[46m\x1b[1m"
+    }
+}
+module.exports.colors = colors;
