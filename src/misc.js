@@ -2,6 +2,7 @@ var noShutdown = false;
 
 var logger = require("./files").logger;
 module.exports.ping = require("./networking").ping;
+module.exports.downloadFile = require("./networking").downloadFile;
 
 
 let rng = require("./rng");

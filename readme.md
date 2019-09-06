@@ -57,7 +57,7 @@ const jsl = require("svjsl");
 # Functions:
 
 ## <span style="color:orange;">Note: All arguments that are prefixed with a question mark are optional and will be set to a default value if left empty</span>
-## <span style="color:orange;">Note 2: This documentation uses type declarations to let you know of what type the variable can be (eg. variable&lt;type&gt;)</span>
+## <span style="color:orange;">Note 2: This documentation uses type declarations to let you know of what type the variable is or can be (eg. variable&lt;type&gt;)</span>
 
 <br><br><br>
 ## Get all available functions

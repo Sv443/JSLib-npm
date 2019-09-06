@@ -72,65 +72,135 @@ module.exports.ping = (URL, timeout) => {
 }
 
 /**
- * @typedef {Object} DownloadOptions
- * @prop {String} fileName The name that the downloaded file should be saved as
- * @prop {String} fileType The file type / extension - for example: ""
+ * @typedef {Object} DownloadProgress
+ * @prop {Number} current The current download progress in kilobytes
+ * @prop {Number} total The total file size in kilobytes
  */
-let downloadOpts = {
-    fileName: "[filename from website]",
-    fileType: "txt",
-    progressCallback: () => {},
-    finishedCallback: () => {}
-}
+
+/**
+ * @typedef {Function} ProgressCallback
+ * @param {DownloadProgress} DownloadProgress
+ */
+
+ /**
+ * @typedef {Function} FinishedCallback
+ * @param {(String|undefined)} error This parameter is null if no error was encountered, or contains a string if an error was encountered
+ */
+
+/**
+ * @typedef {Object} DownloadOptions
+ * @prop {String} fileName The name that the downloaded file should be saved as including the file extension, for example: "image.png"
+ * @prop {ProgressCallback} progressCallback A callback function that gets called every 50 milliseconds that gets passed an object containing info on the download progress
+ * @prop {FinishedCallback} finishedCallback A callback function that gets passed an parameter that is null if no error was encountered, or contains a string if an error was encountered
+ */
 
 /**
  * Downloads a file from the specified URL, to the specified destination path, according to the specified options
  * @param {String} url The URL to the file you want to download
- * @param {String} [destPath] Can be absolute or relative - If left empty, it will default to "./"
+ * @param {String} [destPath] The path where the file should be saved to - can be absolute or relative - If left empty, it will default to "./"
  * @param {DownloadOptions} [options]
+ * @since 1.8.0
  */
-const downloadFile = (url, destPath = "./", options) => {
+module.exports.downloadFile = (url, destPath = "./", options) => {
+    let isEmpty = require("./misc").isEmpty;
+    let fs = require("fs");
+    let https = require("https");
+
     if(isEmpty(options))
     {
-
+        options = {
+            fileName: "download.txt",
+            progressCallback: () => {},
+            finishedCallback: () => {}
+        }
     }
     else
     {
-        if(isEmpty(options.fileName)) options.fileName = 
+        if(isEmpty(options.fileName)) options.fileName = "download.txt";
+        if(isEmpty(options.progressCallback)) options.progressCallback = () => {};
+        if(isEmpty(options.finishedCallback)) options.finishedCallback = () => {};
     }
 
     let lastM = false;
 
-    let dest = `${destPath}${destPath.endsWith("/") ? "" : "/"}${options.fileName}${options.fileType}`;
+    let dest = `${destPath}${destPath.endsWith("/") ? "" : "/"}${options.fileName}`;
+
+
+    let urlCl = new URL(url);
+    let opts = {
+        hostname: urlCl.hostname,
+        port: 443,
+        path: urlCl.pathname,
+        method: "HEAD"
+    };
+
     let file = fs.createWriteStream(dest);
+    
+    let req2 = https.request(opts, res2 => {
+        if(res2.statusCode >= 300 && res2.statusCode < 400)
+            return this.downloadFile(res2.headers["location"], destPath, options);
 
-    let req = https.get(url, res => {
-        let totalSize = (res.headers["content-length"] / 1e+6).toFixed(2);
-        let sizeUpdateIv = setInterval(() => {
-            if(!isEmpty(options) && !isEmpty(options.progressCallback))
-                options.progressCallback({
-                    current: (fs.statSync(dest).size / 1e+6).toFixed(2),
-                    total: totalSize
-                });
-        }, 100);
-        res.pipe(file);
+        if(res2.statusCode >= 400)
+            return options.finishedCallback("Status Code: " + res2.statusCode);
 
-        file.on("finish", () => {
-            clearInterval(sizeUpdateIv);
-            if((fs.statSync(dest).size / 1e+6).toFixed(2) == totalSize && !lastM)
-            {
-                lastM = true;
-                fileSizeUpd(totalSize, totalSize);
-            }
+        let totalSize = null;
+        if(!isEmpty(res2.headers) && !isEmpty(res2.headers["content-length"]))
+            totalSize = parseInt(res2.headers["content-length"]);
+            
 
-            let cb = () => setTimeout(() => {
-                resolve();
-            }, 300);
-            file.close(cb);
+        let req = https.get(url, res => {
+            let sizeUpdateIv;
+            if(!isEmpty(totalSize) && !isEmpty(options) && !isEmpty(options.progressCallback))
+                sizeUpdateIv = setInterval(() => {
+                    let curSize = fs.statSync(dest).size;
+                    options.progressCallback({
+                        currentB: curSize,
+                        currentKB: (curSize / 1000).toFixed(3),
+                        currentMB: (curSize / 1000000).toFixed(3),
+                        totalB: totalSize,
+                        totalKB: (totalSize / 1000).toFixed(3),
+                        totalMB: (totalSize / 1000000).toFixed(3)
+                    });
+                }, 50);
+            res.pipe(file);
+    
+            file.on("finish", () => {
+                if(!isEmpty(options.progressCallback)) clearInterval(sizeUpdateIv);
+                if(fs.statSync(dest).size == totalSize && !lastM)
+                {
+                    lastM = true;
+                    if(!isEmpty(totalSize) && !isEmpty(options) && !isEmpty(options.progressCallback))
+                        options.progressCallback({
+                            currentB: totalSize,
+                            currentKB: (totalSize / 1000).toFixed(3),
+                            currentMB: (totalSize / 1000000).toFixed(3),
+                            totalB: totalSize,
+                            totalKB: (totalSize / 1000).toFixed(3),
+                            totalMB: (totalSize / 1000000).toFixed(3)
+                        });
+                }
+    
+                let cb = () => {
+                    if(!isEmpty(options) && !isEmpty(options.finishedCallback))
+                        return options.finishedCallback(null);
+                };
+                file.close(cb);
+            });
         });
+    
+        req.on("error", err => {
+            fs.unlink(dest, () => {
+                if(!isEmpty(options) && !isEmpty(options.finishedCallback))
+                    return options.finishedCallback(err);
+            });
+        });
+
+        req.end();
     });
 
-    req.on("error", err => {
-        fs.unlink(dest, () => reject(`Couldn't download file due to error: ${err}`));
+    req2.on("error", (e) => {
+        console.error(e);
     });
+
+    req2.end();
 }
