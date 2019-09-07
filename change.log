@@ -16,7 +16,7 @@
     - split the package up into three separate files
     - removed all dependencies because they are either included by default or their effect was easily recreatable in vanilla JS
 
-[1.8.0]:
+> [1.8.0]:
     - new features:
         - function "jsl.generateSeededNumbers(count, seed)" to generate "random" numbers based on a passed seed
         - function "jsl.generateRandomSeed(digitCount)" to generate a random seed to be used in "jsl.generateSeededNumbers()"
