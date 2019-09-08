@@ -241,7 +241,7 @@ function isEmptyWithoutString(variable) {
 
 /**
  * Creates a dynamic progress bar with a percentage and custom message display
- * @param {Number} timesToUpdate How many times you will call ProgressBar.next() in total - example: 4 means you will need to call ProgressBar.next() exactly four times to reach 100% progress
+ * @param {Number} timesToUpdate How many times you will call ProgressBar.next() in total - example: 4 means you will need to call ProgressBar.next() exactly four times to reach 100% progress 
  * @param {String} [initialMessage=""] Initial message that appears at 0% progress
  * @since 1.7.0
  */
@@ -371,6 +371,9 @@ const colors = {
     reset: "\x1b[0m",
     fat:   "\x1b[37m",
     fg: {
+        rst:    "\x1b[0m",
+        reset:  "\x1b[0m",
+        fat:    "\x1b[37m",
         red:    "\x1b[31m\x1b[1m",
         green:  "\x1b[32m\x1b[1m",
         yellow: "\x1b[33m\x1b[1m",
@@ -379,6 +382,9 @@ const colors = {
         cyan:   "\x1b[36m\x1b[1m"
     },
     bg: {
+        rst:    "\x1b[0m",
+        reset:  "\x1b[0m",
+        fat:    "\x1b[37m",
         red:    "\x1b[41m\x1b[1m",
         green:  "\x1b[42m\x1b[1m",
         yellow: "\x1b[43m\x1b[1m",
@@ -388,3 +394,122 @@ const colors = {
     }
 }
 module.exports.colors = colors;
+
+
+
+/**
+ * 
+ */
+const MenuPrompt = class {
+    /**
+     * Constructs a new MenuPrompt object
+     */
+    constructor()
+    {
+
+    }
+
+    /**
+     * 
+     */
+    open()
+    {
+
+    }
+
+    /**
+     * 
+     */
+    close()
+    {
+
+    }
+
+    /**
+     * @param {MenuPropmtMenu} menu
+     */
+    addMenu(menu)
+    {
+
+    }
+
+    /**
+     * 
+     */
+    currentMenu()
+    {
+
+    }
+
+    /**
+     * 
+     */
+    result()
+    {
+
+    }
+}
+
+
+let options = {
+    "exitKey": "x",
+    "optionSeparator": ")",
+    "retryOnInvalid": true,
+    "onOptionSelected": function() {},
+    "onFinished": function() {},
+};
+
+let menus = [
+    {
+        "title": "Test Menu",
+        "options": [
+            {
+                "key": "1",
+                "description": "Test"
+            },
+            {
+                "key": "2",
+                "description": "Foo"
+            },
+            {
+                "key": "3",
+                "description": "Bar"
+            }
+        ]
+    },
+    {
+        "title": "Test Menu 2",
+        "options": [
+            {
+                "key": "1",
+                "description": "Bla"
+            },
+            {
+                "key": "2",
+                "description": "Bloo"
+            },
+            {
+                "key": "3",
+                "description": "Blar"
+            }
+        ]
+    }
+];
+
+let mp = new MenuPrompt(options, menus);
+
+mp.addMenu({
+    "title": "Test Menu 3",
+    "options": [
+        {
+            "key": "1",
+            "description": "Lala"
+        },
+        {
+            "key": "2",
+            "description": "Tata"
+        }
+    ]
+});
+
+mp.open();

@@ -37,3 +37,10 @@
             - "uuid.generateDecimal(format: str)" [0-9]
             - "uuid.generateBinary(format: str)" [0-1]
             - "uuid.generateAlphanumerical(format: str, upperAndLowerCase: bool)" [0-9,A-Z,(a-z)]
+        - new class "MenuPrompt" for an interactive menu (directly in the CLI)
+            - methods:
+                - "open()" to open the prompt
+                - "addMenu()" to add a new menu to the prompt
+                - "currentMenu()" to get current menu index
+                - "close()" to close the prompt
+                - "result()" to prematurely get the results of the prompt
