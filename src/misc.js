@@ -1,6 +1,3 @@
-const readLine = require("readline");
-
-
 var noShutdown = false;
 
 let net = require("./net");
@@ -70,14 +67,13 @@ module.exports.version = () => {
 /**
  * 🔹 Returns true, if the input is undefined, null, an empty string, an empty array or an object with length = 0.
  * Otherwise returns false. The number 0 and NaN will return false though, so check them independently if needed! 🔹
- * @param {*} input Variable that should be checked, can be anything except JSON, stringify it first
+ * @param {*} input Variable that should be checked - this can be of any type but the basic types will work best
  * @returns {Boolean} true or false
  * @since 1.4.0
  * @version 1.6.5 lowercase alias jsl.isempty was removed
  * @version 1.8.0 Added check for objects with length = 0
  */
-const isEmpty = input => (input === undefined || input === null || input === "" || input === [] || input === "{}" || (typeof input == "object" && input.length > 0)) ? true : false;
-
+const isEmpty = input => (input === undefined || input === null || input === "" || (typeof input == "object" && input.length > 0)) ? true : false;
 module.exports.isEmpty = isEmpty;
 
 /**
@@ -94,10 +90,14 @@ module.exports.isArrayEmpty = array => {
 
     let emptiness = 0;
     array.forEach(item => {
-        if(isEmpty(item)) emptiness++;
+        if(isEmpty(item))
+            emptiness++;
     });
-    if(emptiness == array.length) return true;
-    else if(emptiness == 0) return false;
+
+    if(emptiness == array.length)
+        return true;
+    else if(emptiness == 0)
+        return false;
     else return emptiness;
 }
 

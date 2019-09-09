@@ -34,6 +34,13 @@ const MenuPrompt = class {
      */
     constructor(options, menus)
     {
+        let isEmpty = require("../misc").isEmpty;
+        let readline = require("readline");
+        this._rl = readline.createInterface({
+            input: process.stdin,
+            output: process.stdout
+        });
+
         if(isEmpty(options))
         {
             options = {
@@ -56,11 +63,19 @@ const MenuPrompt = class {
         }
         this._options = options;
 
+        // TODO: validate menus
+        let invalidMenus = [];
+        menus.forEach((menu, i) => {
+            if(!this._validateMenu(menu))
+                invalidMenus.push(i);
+        });
+
+        if(!isEmpty(invalidMenus))
+            throw new Error(`Invalid menu${invalidMenus.length == 1 ? "" : "s"} provided in the construction of a MenuPrompt object. The index${invalidMenus.length == 1 ? "" : "es"} of the invalid menu${invalidMenus.length == 1 ? "" : "s"} ${invalidMenus.length == 1 ? "is" : "are"}: ${invalidMenus.length == 1 ? invalidMenus[0] : require("../misc").readableArray(invalidMenus)}`);
+        
         this._menus = menus;
 
         this._currentMenu = -1;
-
-        this._rl = null;
 
         this._oldStdout = process.stdout.write;
         this._oldStderr = process.stderr.write;
@@ -173,6 +188,11 @@ const MenuPrompt = class {
         if(!isEmpty(this._result))
             return this._result;
         else return null;
+    }
+
+    _validateMenu(menu)
+    {
+
     }
 }
 module.exports.MenuPrompt = MenuPrompt;

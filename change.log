@@ -35,11 +35,11 @@
         - improved time measurement system for "jsl.ping()"
         - improved the background stuff in "jsl.ping()" to improve performance
         - added "contentType" property to "jsl.ping()"'s promise callback
+        - edited a bunch of functions and methods to throw an error instead of returning it as a string, which could've caused unwanted and unpredictable behavior
+        - put the UUID generation inside an object, renamed it and added two new ones:
+            - "generateUUID.hexadecimal(format: str)" [0-9,a-f]
+            - "generateUUID.decimal(format: str)" [0-9]
+            - "generateUUID.binary(format: str)" [0-1]
 
-
-[#MARKER TODO]:
-        - make four versions of "generateUUID()"
-            - "uuid.generateHexadecimal(format: str, upperAndLowerCase: bool)" [0-9,A-F,(a-f)]
-            - "uuid.generateDecimal(format: str)" [0-9]
-            - "uuid.generateBinary(format: str)" [0-1]
-            - "uuid.generateAlphanumerical(format: str, upperAndLowerCase: bool)" [0-9,A-Z,(a-z)]
+[Next version / TODO]:
+    (nothing yet)
