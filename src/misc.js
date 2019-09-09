@@ -451,6 +451,14 @@ const MenuPrompt = class {
 }
 
 
+/**
+ * @typedef {Object} MenuPromptOptions The options of the menu prompt
+ * @prop {String} [exitKey="x"] The key or keys that need to be entered to exit the prompt
+ * @prop {String} [optionSeparator=")"] The separator character(s) between the option key and the option description
+ * @prop {Boolean} [retryOnInvalid=true] Whether the menu should be retried if the user entered a wrong option - if false, continues to next menu
+ * @prop {Function} [onOptionSelected] A function that gets called whenever the user selects an option. The only passed parameter is the "key" value of the option
+ * @prop {Function} [onFinished] A function that gets called when the user is done with all of the menus of the prompt or entered the exit key(s). The only passed parameter is an array containing all selected option keys
+ */
 let options = {
     "exitKey": "x",
     "optionSeparator": ")",
