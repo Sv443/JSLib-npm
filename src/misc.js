@@ -3,8 +3,8 @@ const readLine = require("readline");
 var noShutdown = false;
 
 let logger = require("./files").logger;
-module.exports.ping = require("./network").ping;
-module.exports.downloadFile = require("./network").downloadFile;
+module.exports.ping = require("./net").ping;
+module.exports.downloadFile = require("./net").downloadFile;
 
 
 let rng = require("./rng");
