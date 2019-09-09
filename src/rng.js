@@ -1,5 +1,5 @@
 /**
- * Creates a random seed
+ * 🔹 Creates a random seed 🔹
  * @param {Number} digitCount How many digits the seed should have
  * @returns {Number}
  * @since 1.8.0
@@ -27,7 +27,7 @@ const generateRandomSeed = (digitCount = 10) => {
  */
 
 /**
- * Generates random numbers based on a seed
+ * 🔹 Generates random numbers based on a seed 🔹
  * @param {Number} count How many random numbers should be generated
  * @param {Number} [seed] The seed to generate numbers from. Leave empty to use a random default seed
  * @returns {SeededRandomNumbers}
@@ -68,7 +68,7 @@ const generateSeededNumbers = (count, seed) => { // thanks to olsn for this code
 }
 
 /**
- * Validates a seed
+ * 🔹 Validates a seed 🔹
  * @param {(Number|String)} seed 
  * @returns {Boolean}
  * @since 1.8.0
@@ -94,7 +94,7 @@ const validateSeed = (seed) => {
 }
 
 /**
- * Highly random RNG with upper and lower boundary
+ * 🔹 Highly random RNG with upper and lower boundary 🔹
  * @param {number} min lower boundary of the RNG
  * @param {number} max upper boundary of the RNG
  * @since 1.5.0
@@ -114,7 +114,7 @@ const randRange = (min, max) => {
 }
 
 /**
- * Creates a UUID with a given format. This uses a RNG that is even more random than the standard Math.random()
+ * 🔹 Creates a UUID with a given format. This uses a RNG that is even more random than the standard Math.random() 🔹
  * @param {string} uuid_format the format of the UUID. All x's or y's will be affected by the RNG. Example: "xxxx-yyyy-xxxx-yyyy"
  * @returns {string} randomized UUID
  * @since 1.5.0
