@@ -1,8 +1,10 @@
+const readLine = require("readline");
+
 var noShutdown = false;
 
-var logger = require("./files").logger;
-module.exports.ping = require("./networking").ping;
-module.exports.downloadFile = require("./networking").downloadFile;
+let logger = require("./files").logger;
+module.exports.ping = require("./network").ping;
+module.exports.downloadFile = require("./network").downloadFile;
 
 
 let rng = require("./rng");
@@ -84,28 +86,34 @@ module.exports.version = () => {
 }
 
 /**
- * Returns true, if the input is undefined, null, an empty string or an empty array. Otherwise returns false. 0 will return true and NaN will return false though!
+ * Returns true, if the input is undefined, null, an empty string, an empty array or an object with length = 0.
+ * Otherwise returns false. The number 0 and NaN will return false though, so check them independently if needed!
  * @param {*} input Variable that should be checked, can be anything except JSON, stringify it first
- * @returns {boolean} true or false
+ * @returns {Boolean} true or false
  * @since 1.4.0
  * @version 1.6.5 lowercase alias jsl.isempty was removed
+ * @version 1.8.0 Added check for objects with length = 0
  */
-const isEmpty = input => (input === undefined || input === null || input === "" || input === [] || input === "{}") ? true : false;
+const isEmpty = input => (input === undefined || input === null || input === "" || input === [] || input === "{}" || (typeof input == "object" && input.length > 0)) ? true : false;
 
 module.exports.isEmpty = isEmpty;
 
 /**
- * Checks if and how many values of the array are empty (undefined, null, "" or [])
- * @param {array} array Array that should be checked
- * @returns {(boolean|number)} boolean if all or none are empty and number if only some are empty
+ * Checks how many values of the array are empty (does the same check as `jsl.isEmpty()`, but on each array item)
+ * @param {Array} array Array that should be checked
+ * @returns {(Boolean|Number)} true if all are empty, false if none are empty and number if only some are empty
+ * @throws Throws an error if the parameter isn't an array
  * @since 1.5.0
+ * @version 1.8.0 Throwing error now instead of returning string
  */
 module.exports.isArrayEmpty = array => {
-    if(isEmpty(array) || typeof array != "object") return "argument has to be of type array";
+    if(isEmpty(array) || typeof array != "object")
+        throw new Error(`Wrong arguments provided for jsl.isArrayEmpty() - (expected: \"Object/Array\", got: \"${typeof array}\")`);
+
     let emptiness = 0;
-    for(let i = 0; i < array.length; i++) {
-        if(isEmpty(array[i])) emptiness++;
-    }
+    array.forEach(item => {
+        if(isEmpty(item)) emptiness++;
+    });
     if(emptiness == array.length) return true;
     else if(emptiness == 0) return false;
     else return emptiness;
@@ -113,14 +121,17 @@ module.exports.isArrayEmpty = array => {
 
 /**
  * Sends a red console message and optionally exits the process with an optional status code.
- * @param {string} cause The cause of the error
- * @param {boolean} [shutdown=false] if the process should be exited or not
- * @param {number} [status=0] with which status code the process should be exited
- * @param {string} [log_file_path] if the error message should automatically be logged to the file with the specified path. undefined or null to disable.
+ * @param {String} cause The cause of the error
+ * @param {Boolean} [shutdown=false] if the process should be exited or not
+ * @param {Number} [status=0] with which status code the process should be exited
+ * @param {String} [log_file_path] if the error message should automatically be logged to the file with the specified path. undefined or null to disable.
+ * @throws Throws an error if the "cause" parameter isn't a string
  * @since 1.5.0
+ * @version 1.8.0 Throwing error now instead of logging to console and returning undefined
  */
 module.exports.error = (cause, log_file_path, shutdown, status) => {
-    if(isEmpty(cause) || typeof cause != "string"){console.log("cause can't be empty ");return;}
+    if(isEmpty(cause) || typeof cause != "string")
+        throw new Error(`Wrong arguments provided in "cause" for jsl.error() - (expected: \"String\", got: \"${typeof cause}\")`);
 
     if(!isEmpty(log_file_path) && typeof log_file_path == "string") logger(log_file_path, cause, {timestamp:true,append_bottom:true});
     console.log("\x1b[31m\x1b[1mThe following error occured:\n" + cause + "\x1b[0m\n");
@@ -130,12 +141,16 @@ module.exports.error = (cause, log_file_path, shutdown, status) => {
 
 /**
  * Tests an array and returns true if all values are equal.
- * @param {array} array
- * @returns {boolean} true if all values are equal, false if not
+ * @param {Array} array
+ * @returns {Boolean} true if all values are equal, false if not
+ * @throws Throws an error if the parameter is not an array
  * @since 1.5.0
+ * @version 1.8.0 Throwing error now instead of returning string
  */
-module.exports.allEqual = (array) => {
-    if(isEmpty(array) || typeof array != "object") return "wrong attribute type - has to be of type array";
+module.exports.allEqual = array => {
+    if(isEmpty(array) || typeof array != "object") 
+        throw new Error(`Wrong arguments provided for jsl.allEqual() - (expected: \"Object/Array\", got: \"${typeof array}\")`);
+
     return array.every(v => v === array[0]);
 }
 
@@ -151,7 +166,8 @@ module.exports.softShutdown = funct => {
 }
 
 /**
- * Prevents the script from shutting down with default commands (CTRL + C). It has to either be killed with the task manager or internally, through the script
+ * Prevents the script from shutting down with default commands (CTRL + C).
+ * It has to either be killed with the task manager or internally, through the script (using `process.exit()`)
  * @since 1.5.0
  */
 module.exports.noShutdown = () => {
@@ -163,6 +179,7 @@ module.exports.noShutdown = () => {
 
 /**
  * Removes the script shut down prevention that was previously enabled with noShutdown()
+ * Sorry for the name, I saw an opportunity and I took it, don't judge me
  * @since 1.6.0
  */
 module.exports.yesShutdown = () => {
@@ -178,7 +195,7 @@ module.exports.yesShutdown = () => {
  * @param {String} colors space separated list of color(s). (Available colors are: "rst/reset, bright, dim, underscore/ul/underline, blink, reverse, hidden, fgblack, fgred, fggreen, fgyellow, fgblue, fgmagenta, fgcyan, fgwhite, bgblack, bgred, bggreen, bgyellow, bgblue, bgmagenta, bgcyan, bgwhite")
  * @returns executes console.log() function
  * @since 1.6.0
- * @deprecated This function will soon be deprecated. Please use the object `jsl.col` instead - This function will soon redirect to that object too
+ * @deprecated This function will soon be deprecated. Please use the object `jsl.col` instead - This function will soon redirect to that object too and then get completely deprecated in a later version
  */
 module.exports.consoleColor = (text, colors) => {
     let cnbr = [];
@@ -221,7 +238,8 @@ module.exports.consoleColor = (text, colors) => {
  * @since 1.7.0
  */
 module.exports.readableArray = (array, separators, lastSeparator) => {
-    if(isEmpty(array) || typeof array != "object" || (!isEmpty(separators) && typeof separators != "string" && typeof separators != "boolean") || (!isEmpty(lastSeparator) && typeof lastSeparator != "string" && typeof lastSeparator != "boolean")) return "wrong or missing arguments";
+    if(isEmpty(array) || typeof array != "object" || (!isEmpty(separators) && typeof separators != "string" && typeof separators != "boolean") || (!isEmpty(lastSeparator) && typeof lastSeparator != "string" && typeof lastSeparator != "boolean"))
+        throw new Error(`Wrong or missing parameters in "jsl.readableArray()"`);
     if(isEmptyWithoutString(lastSeparator) || lastSeparator === false) lastSeparator = " and ";
     if(isEmptyWithoutString(separators) || separators === false) separators = ", ";
 
@@ -239,13 +257,13 @@ function isEmptyWithoutString(variable) {
     else return false;
 }
 
-/**
- * Creates a dynamic progress bar with a percentage and custom message display
- * @param {Number} timesToUpdate How many times you will call ProgressBar.next() in total - example: 4 means you will need to call ProgressBar.next() exactly four times to reach 100% progress 
- * @param {String} [initialMessage=""] Initial message that appears at 0% progress
- * @since 1.7.0
- */
 const ProgressBar = class {
+    /**
+     * Creates a dynamic progress bar with a percentage and custom message display
+     * @param {Number} timesToUpdate How many times you will call ProgressBar.next() in total - example: 4 means you will need to call ProgressBar.next() exactly four times to reach 100% progress 
+     * @param {String} [initialMessage=""] Initial message that appears at 0% progress
+     * @since 1.7.0
+     */
     constructor(timesToUpdate, initialMessage) {
         if(initialMessage == undefined) initialMessage = "";
         this.timesToUpdate = timesToUpdate;
@@ -264,6 +282,7 @@ const ProgressBar = class {
     /**
      * Increment the progress bar. The amount of these functions should be known at the point of initially creating the ProgressBar object.
      * @param {String} message Message that should be displayed
+     * @since 1.7.0
      */
     next(message) { // increments the progress bar
         this.progress = (1 / this.timesToUpdate) * this.iteration;
@@ -276,6 +295,10 @@ const ProgressBar = class {
         this.iteration++;
     }
 
+    /**
+     * ❌ Private method - please don't use ❌
+     * @private
+     */
     _update(message) { // private method to update the console message
         if(this.iteration <= this.timesToUpdate) {
             if(!isEmpty(message)) message = "- " + message;
@@ -291,6 +314,7 @@ const ProgressBar = class {
     /**
      * Executes a function once the progress reaches 100%
      * @param {Function} callback Function
+     * @since 1.7.0
      */
     onFinish(callback) {
         if(typeof callback != "function" || callback == undefined || callback == null) throw new Error("Wrong arguments provided for ProgressBar.onFinish() - (expected: \"Function\", got: \"" + typeof callback + "\")");
@@ -300,6 +324,7 @@ const ProgressBar = class {
     /**
      * Get the current progress as a float value
      * @returns {Float}
+     * @since 1.7.0
      */
     getProgress() {
         return this.progress;
@@ -308,6 +333,7 @@ const ProgressBar = class {
     /**
      * Get the amount of increments that are still needed to reach 100% progress
      * @returns {Number}
+     * @since 1.7.0
      */
     getRemainingIncrements() {
         return (this.timesToUpdate - this.iteration >= 0 ? this.timesToUpdate - this.iteration : 0);
@@ -318,12 +344,12 @@ module.exports.ProgressBar = ProgressBar;
 
 /**
  * Transforms the `value` parameter from the numerical range [`range_1_min`-`range_1_max`] to the numerical range [`range_2_min`-`range_2_max`]
- * @param {Number} value 
- * @param {Number} range_1_min 
- * @param {Number} range_1_max 
- * @param {Number} range_2_min 
- * @param {Number} range_2_max 
- * @returns {Number} Floating point number of `value` inside the numerical range [`range_2_min`-`range_2_max`]
+ * @param {Number} value The value from the first numerical range, that you want to transform to a value inside the second numerical range
+ * @param {Number} range_1_min The minimum possible value of the first numerical range
+ * @param {Number} range_1_max The maximum possible value of the first numerical range
+ * @param {Number} range_2_min The minimum possible value of the second numerical range
+ * @param {Number} range_2_max The maximum possible value of the second numerical range
+ * @returns {Number} Floating point number of `value` inside the second numerical range
  * @throws Throws an error if the arguments are not of type `Number` or the `*_max` argument(s) is/are equal to 0
  * @since 1.8.0
  */
@@ -347,6 +373,7 @@ module.exports.mapRange = mapRange;
 
 /**
  * Use this to add color to your console output
+ * ⚠️ "jsl.consoleColor()" will soon be deprecated - use this instead!
  * @prop {String} rst
  * @prop {String} reset
  * @prop {String} fat
@@ -396,128 +423,181 @@ const colors = {
 module.exports.colors = colors;
 
 
+/**
+ * @typedef {Object} MenuPromptMenuOption
+ * @prop {String} key The key(s) that need(s) to be pressed to select this option
+ * @prop {String} description The description of this option
+ */
 
 /**
- * 
+ * @typedef {Object} MenuPropmtMenu
+ * @prop {String} title The title of this menu
+ * @prop {Array<MenuPromptMenuOption>} options An array of options for this menu
  */
-const MenuPrompt = class {
-    /**
-     * Constructs a new MenuPrompt object
-     */
-    constructor()
-    {
-
-    }
-
-    /**
-     * 
-     */
-    open()
-    {
-
-    }
-
-    /**
-     * 
-     */
-    close()
-    {
-
-    }
-
-    /**
-     * @param {MenuPropmtMenu} menu
-     */
-    addMenu(menu)
-    {
-
-    }
-
-    /**
-     * 
-     */
-    currentMenu()
-    {
-
-    }
-
-    /**
-     * 
-     */
-    result()
-    {
-
-    }
-}
-
 
 /**
  * @typedef {Object} MenuPromptOptions The options of the menu prompt
  * @prop {String} [exitKey="x"] The key or keys that need to be entered to exit the prompt
  * @prop {String} [optionSeparator=")"] The separator character(s) between the option key and the option description
+ * @prop {String} [cursorPrefix="─►"] Character(s) that should be prefixed to the cursor. Will default to this arrow: "─►"
  * @prop {Boolean} [retryOnInvalid=true] Whether the menu should be retried if the user entered a wrong option - if false, continues to next menu
- * @prop {Function} [onOptionSelected] A function that gets called whenever the user selects an option. The only passed parameter is the "key" value of the option
+ * @prop {Function} [onOptionSelected] A function that gets called whenever the user selects an option. The only passed parameter is the `key` value of the option
  * @prop {Function} [onFinished] A function that gets called when the user is done with all of the menus of the prompt or entered the exit key(s). The only passed parameter is an array containing all selected option keys
  */
-let options = {
-    "exitKey": "x",
-    "optionSeparator": ")",
-    "retryOnInvalid": true,
-    "onOptionSelected": function() {},
-    "onFinished": function() {},
-};
 
-let menus = [
+/**
+ * @typedef {Array<String>} MenuPromptResult The results of the menu prompt
+ */
+
+const MenuPrompt = class {
+    /**
+     * Creates an interactive prompt with one or many menus
+     * @param {MenuPromptOptions} options The options for the prompt
+     * @param {Array<MenuPromptMenus>} menus An array of menus
+     * @returns {(Boolean|String)} Returns true, if the menu was successfully created, a string containing the error message, if not
+     * @since 1.8.0
+     */
+    constructor(options, menus)
     {
-        "title": "Test Menu",
-        "options": [
-            {
-                "key": "1",
-                "description": "Test"
-            },
-            {
-                "key": "2",
-                "description": "Foo"
-            },
-            {
-                "key": "3",
-                "description": "Bar"
-            }
-        ]
-    },
-    {
-        "title": "Test Menu 2",
-        "options": [
-            {
-                "key": "1",
-                "description": "Bla"
-            },
-            {
-                "key": "2",
-                "description": "Bloo"
-            },
-            {
-                "key": "3",
-                "description": "Blar"
-            }
-        ]
-    }
-];
-
-let mp = new MenuPrompt(options, menus);
-
-mp.addMenu({
-    "title": "Test Menu 3",
-    "options": [
+        if(isEmpty(options))
         {
-            "key": "1",
-            "description": "Lala"
-        },
-        {
-            "key": "2",
-            "description": "Tata"
+            options = {
+                exitKey: "x",
+                optionSeparator: ")",
+                cursorPrefix: "─►",
+                retryOnInvalid: true,
+                onOptionSelected: () => {},
+                onFinished: () => {},
+            };
         }
-    ]
-});
+        else
+        {
+            if(isEmpty(options.exitKey)) options.exitKey = "";
+            if(isEmpty(options.optionSeparator)) options.optionSeparator = ")";
+            if(options.cursorPrefix !== "" && isEmpty(options.cursorPrefix)) options.cursorPrefix = "─►";
+            if(isEmpty(options.retryOnInvalid)) options.retryOnInvalid = true;
+            if(isEmpty(options.onOptionSelected)) options.onOptionSelected = () => {};
+            if(isEmpty(options.onFinished)) options.onFinished = () => {};
+        }
+        this._options = options;
 
-mp.open();
+        this._menus = menus;
+
+        this._currentMenu = -1;
+
+        this._rl = null;
+
+        this._oldStdout = process.stdout.write;
+        this._oldStderr = process.stderr.write;
+
+        return true;
+    }
+
+    /**
+     * Opens the menu
+     * 
+     * Warning ⚠️
+     * This suppresses the processes' `stdout` and `stderr` streams.
+     * This means you can't print something to the console while the menu is opened.
+     * Use `MenuPrompt.close()` or wait until the user is done with the prompt to restore `stdout`'s and `stderr`'s function and be able to use the console normally again.
+     * @returns {Boolean} Returns true, if the menu could be opened or a string containing an error message, if not
+     * @since 1.8.0
+     */
+    open()
+    {
+        this._active = true;
+
+        this._oldStdout = process.stdout.write;
+        this._oldStderr = process.stderr.write;
+
+        process.stdout.write = x => {};
+        process.stderr.write = x => {};
+
+
+        let openMenu = idx => {
+            if(idx >= this._menus.length)
+            {
+                this._currentMenu = -1;
+                return this._options.onFinished();
+            }
+            else
+            {
+                this._currentMenu = idx;
+
+                // TODO: all of this shit
+
+                // ... async shit ...
+                // on option selected:
+
+                // if option valid OR this._options.retryOnInvalid === false:
+                return openMenu(++idx);
+
+                // else (option invalid):
+                userFeedback();
+                return openMenu(idx);
+            }
+        }
+
+        openMenu(0);
+    }
+
+    /**
+     * Closes the menu and returns the chosen options up to this point
+     * @returns {MenuPromptResult} Returns the results of the menu prompt
+     * @since 1.8.0
+     */
+    close()
+    {
+        process.stdout.write = this._oldStdout;
+        process.stderr.write = this._oldStderr;
+
+        this._active = false;
+        this._rl.close();
+        console.clear();
+    }
+
+    /**
+     * Adds a new menu to the menu prompt
+     * You can even call this method while the menu is opened
+     * @param {MenuPropmtMenu} menu
+     * @returns {(Boolean|String)} Returns true, if the menu could be added or a string containing an error message, if not
+     * @since 1.8.0
+     */
+    addMenu(menu)
+    {
+        // TODO: validate menu
+
+        try {
+            this._menus.push(menu);
+        }
+        catch(err)
+        {
+            return err;
+        }
+        return true;
+    }
+
+    /**
+     * Returns the (zero-based) index of the current menu
+     * @returns {Number} The zero-based index of the current menu or `-1` if the menu hasn't been opened yet
+     * @since 1.8.0
+     */
+    currentMenu()
+    {
+        return this._currentMenu;
+    }
+
+    /**
+     * Returns the current results of the menu prompt.
+     * Does NOT close the menu prompt.
+     * @returns {MenuPromptResult} Returns the results of the menu prompt or null, if there aren't any results yet
+     * @since 1.8.0
+     */
+    result()
+    {
+        if(!isEmpty(this._result))
+            return this._result;
+        else return null;
+    }
+}
+module.exports.MenuPrompt = MenuPrompt;

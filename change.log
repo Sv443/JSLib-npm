@@ -24,6 +24,12 @@
         - function "jsl.mapRange(value, range_1_min, range_1_max, range_2_min, range_2_max)" to transform a value from one numerical range to another
         - function "jsl.downloadFile(url, destPath, options)" to download a file from a URL
         - object "colors" to make it easier to add colors to the console output
+        - class "MenuPrompt" for an interactive menu (directly in the CLI) - methods:
+            - TODO: "open()" to open the prompt
+            - TODO: "addMenu()" to add a new menu to the prompt
+            - "currentMenu()" to get current menu index
+            - "close()" to close the prompt
+            - "result()" to prematurely get the results of the prompt
     - improvements / fixes:
         - put all random number generator related stuff in a separate file ("rng.js")
         - improved time measurement system for "jsl.ping()"
@@ -37,10 +43,3 @@
             - "uuid.generateDecimal(format: str)" [0-9]
             - "uuid.generateBinary(format: str)" [0-1]
             - "uuid.generateAlphanumerical(format: str, upperAndLowerCase: bool)" [0-9,A-Z,(a-z)]
-        - new class "MenuPrompt" for an interactive menu (directly in the CLI)
-            - methods:
-                - "open()" to open the prompt
-                - "addMenu()" to add a new menu to the prompt
-                - "currentMenu()" to get current menu index
-                - "close()" to close the prompt
-                - "result()" to prematurely get the results of the prompt
