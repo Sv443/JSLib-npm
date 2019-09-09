@@ -100,6 +100,8 @@ const validateSeed = (seed) => {
  * @since 1.5.0
  */
 const randRange = (min, max) => {
+    let {performance} = require("perf_hooks");
+
     min = parseInt(min);
     max = parseInt(max);
 
@@ -107,7 +109,7 @@ const randRange = (min, max) => {
         throw new Error(`Invalid parameters provided for "min" and/or "max" in jsl.randRange() - make sure "min" is not bigger than "max"`);
     max++;
     if(typeof min != "number" || typeof max != "number")
-        throw new Error(`Wrong parameter provided for "min" and/or "max" in jsl.randRange() - (expected: \"Number\" and \"Number\", got: \"${typeof min}\" and \"${typeof max}\")`);
+        throw new Error(`Wrong parameter provided for "min" and/or "max" in jsl.randRange() - (expected: "Number" and "Number", got: "${typeof min}" and "${typeof max}")`);
 
     let d = new Date().getTime();
     if (typeof performance !== 'undefined' && typeof performance.now === 'function'){
@@ -127,12 +129,14 @@ const randRange = (min, max) => {
  * @version 1.8.0 Renamed the function and moved it
  */
 const hexadecimal = (uuid_format, upperCase) => {
+    let {performance} = require("perf_hooks");
     let isEmpty = require("./misc").isEmpty;
+
     if(isEmpty(upperCase))
         upperCase = false;
     
     if(isEmpty(uuid_format) || typeof uuid_format != "string")
-        throw new Error(`Wrong parameter provided for "uuid_format" in jsl.generateUUID.hexadecimal() - (expected: \"String\", got: \"${typeof uuid_format}\")`);
+        throw new Error(`Wrong parameter provided for "uuid_format" in jsl.generateUUID.hexadecimal() - (expected: "String", got: "${typeof uuid_format}")`);
 
     let d = new Date().getTime();
     if (typeof performance !== 'undefined' && typeof performance.now === 'function'){
@@ -156,9 +160,11 @@ const hexadecimal = (uuid_format, upperCase) => {
  * @since 1.8.0
  */
 const decimal = (uuid_format) => {
+    let {performance} = require("perf_hooks");
     let isEmpty = require("./misc").isEmpty;
+    
     if(isEmpty(uuid_format) || typeof uuid_format != "string")
-        throw new Error(`Wrong parameter provided for "uuid_format" in jsl.generateUUID.decimal() - (expected: \"String\", got: \"${typeof uuid_format}\")`);
+        throw new Error(`Wrong parameter provided for "uuid_format" in jsl.generateUUID.decimal() - (expected: "String", got: "${typeof uuid_format}")`);
 
     let d = new Date().getTime();
     if (typeof performance !== 'undefined' && typeof performance.now === 'function'){
@@ -178,9 +184,11 @@ const decimal = (uuid_format) => {
  * @since 1.8.0
  */
 const binary = (uuid_format) => {
+    let {performance} = require("perf_hooks");
     let isEmpty = require("./misc").isEmpty;
+    
     if(isEmpty(uuid_format) || typeof uuid_format != "string")
-        throw new Error(`Wrong parameter provided for "uuid_format" in jsl.generateUUID.binary() - (expected: \"String\", got: \"${typeof uuid_format}\")`);
+        throw new Error(`Wrong parameter provided for "uuid_format" in jsl.generateUUID.binary() - (expected: "String", got: "${typeof uuid_format}")`);
 
     let d = new Date().getTime();
     if (typeof performance !== 'undefined' && typeof performance.now === 'function'){

@@ -100,8 +100,8 @@ const MenuPrompt = class {
         this._oldStdout = process.stdout.write;
         this._oldStderr = process.stderr.write;
 
-        process.stdout.write = x => {};
-        process.stderr.write = x => {};
+        process.stdout.write = () => {};
+        process.stderr.write = () => {};
 
 
         let openMenu = idx => {
@@ -123,8 +123,8 @@ const MenuPrompt = class {
                 return openMenu(++idx);
 
                 // else (option invalid):
-                userFeedback();
-                return openMenu(idx);
+                // userFeedback();
+                // return openMenu(idx);
             }
         }
 
@@ -185,6 +185,8 @@ const MenuPrompt = class {
      */
     result()
     {
+        let isEmpty = require("../misc").isEmpty;
+
         if(!isEmpty(this._result))
             return this._result;
         else return null;
@@ -192,7 +194,7 @@ const MenuPrompt = class {
 
     _validateMenu(menu)
     {
-
+        menu.toString();
     }
 }
 module.exports.MenuPrompt = MenuPrompt;

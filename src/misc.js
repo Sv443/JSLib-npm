@@ -25,8 +25,6 @@ module.exports.readdirRecursive = files.readdirRecursive;
 module.exports.readdirRecursiveSync = files.readdirRecursiveSync;
 
 
-
-
 /**
  * 🔹 Info about JSLib 🔹
  * @param {Object} jsli
@@ -86,7 +84,7 @@ module.exports.isEmpty = isEmpty;
  */
 module.exports.isArrayEmpty = array => {
     if(isEmpty(array) || typeof array != "object")
-        throw new Error(`Wrong arguments provided for jsl.isArrayEmpty() - (expected: \"Object/Array\", got: \"${typeof array}\")`);
+        throw new Error(`Wrong arguments provided for jsl.isArrayEmpty() - (expected: "Object/Array", got: "${typeof array}")`);
 
     let emptiness = 0;
     array.forEach(item => {
@@ -113,7 +111,7 @@ module.exports.isArrayEmpty = array => {
  */
 module.exports.error = (cause, log_file_path, shutdown, status) => {
     if(isEmpty(cause) || typeof cause != "string")
-        throw new Error(`Wrong arguments provided in "cause" for jsl.error() - (expected: \"String\", got: \"${typeof cause}\")`);
+        throw new Error(`Wrong arguments provided in "cause" for jsl.error() - (expected: "String", got: "${typeof cause}")`);
 
     if(!isEmpty(log_file_path) && typeof log_file_path == "string")
         logger(log_file_path, cause, {timestamp:true,append_bottom:true});
@@ -132,7 +130,7 @@ module.exports.error = (cause, log_file_path, shutdown, status) => {
  */
 module.exports.allEqual = array => {
     if(isEmpty(array) || typeof array != "object") 
-        throw new Error(`Wrong arguments provided for jsl.allEqual() - (expected: \"Object/Array\", got: \"${typeof array}\")`);
+        throw new Error(`Wrong arguments provided for jsl.allEqual() - (expected: "Object/Array", got: "${typeof array}")`);
 
     return array.every(v => v === array[0]);
 }

@@ -52,7 +52,10 @@
     "url": "git+https://github.com/Sv443/JSLib-npm.git"
   },
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "eslint ./"
   },
-  "version": "1.8.0"
+  "version": "1.8.0",
+  "devDependencies": {
+    "eslint": "^6.3.0"
+  }
 }

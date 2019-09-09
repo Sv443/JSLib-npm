@@ -39,36 +39,31 @@ module.exports.ping = (URL, timeout) => {
     if(http_version == "https")
         http = require("https");
 
-    try {
-        return new Promise((resolve, reject) => {
-            if(isEmpty(host)) return reject("URL is formatted incorrectly");
-            try {
-                http.get({
-                    host: host,
-                    path: path,
-                    timeout: timeout
-                }, res => {
-                    let measuredTime = (new Date().getTime() - pingTimestamp).toFixed(0);
-                    res.on('data', d => {});
-                    res.on('end', () => {
-                        let returnval = {
-                            "statusCode": parseInt(res.statusCode),
-                            "statusMessage": res.statusMessage,
-                            "responseTime": parseInt(measuredTime),
-                            "contentType": res.headers["content-type"]
-                        }
-                        return resolve(returnval);
-                    });
+    return new Promise((resolve, reject) => {
+        if(isEmpty(host)) return reject("URL is formatted incorrectly");
+        try {
+            http.get({
+                host: host,
+                path: path,
+                timeout: timeout
+            }, res => {
+                let measuredTime = (new Date().getTime() - pingTimestamp).toFixed(0);
+                res.on('data', () => {});
+                res.on('end', () => {
+                    let returnval = {
+                        "statusCode": parseInt(res.statusCode),
+                        "statusMessage": res.statusMessage,
+                        "responseTime": parseInt(measuredTime),
+                        "contentType": res.headers["content-type"]
+                    }
+                    return resolve(returnval);
                 });
-            }
-            catch(err) {
-                return reject(err);
-            }
-        });
-    }
-    catch(err) {
-        return reject(err);
-    }
+            });
+        }
+        catch(err) {
+            return reject(err);
+        }
+    });
 }
 
 /**
