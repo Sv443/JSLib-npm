@@ -28,12 +28,13 @@ module.exports.readdirRecursiveSync = files.readdirRecursiveSync;
 /**
  * 🔹 Info about JSLib 🔹
  * @param {Object} jsli
- * @param {string} jsli.version The current version
- * @param {string} jsli.name The name of JSLib
- * @param {string} jsli.desc A short description
- * @param {string} jsli.authors The author(s) of JSLib
- * @param {string} jsli.license The license of JSLib
+ * @param {String} jsli.version The current version
+ * @param {String} jsli.name The name of JSLib
+ * @param {String} jsli.desc A short description
+ * @param {Array<String>} jsli.authors The author(s) of JSLib
+ * @param {String} jsli.license The license of JSLib
  * @since 1.5.0
+ * @version 1.8.0 "authors" is now an array
  */
 const jsli = {
     version: "1.8.0",
