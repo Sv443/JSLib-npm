@@ -28,7 +28,7 @@ const MenuPrompt = class {
     /**
      * 🔹 Creates an interactive prompt with one or many menus 🔹
      * @param {MenuPromptOptions} options The options for the prompt
-     * @param {Array<MenuPromptMenus>} menus An array of menus
+     * @param {Array<MenuPromptMenu>} menus An array of menus
      * @returns {(Boolean|String)} Returns true, if the menu was successfully created, a string containing the error message, if not
      * @since 1.8.0
      */
@@ -63,7 +63,6 @@ const MenuPrompt = class {
         }
         this._options = options;
 
-        // TODO: validate menus
         let invalidMenus = [];
         menus.forEach((menu, i) => {
             if(!this._validateMenu(menu))
@@ -71,7 +70,7 @@ const MenuPrompt = class {
         });
 
         if(!isEmpty(invalidMenus))
-            throw new Error(`Invalid menu${invalidMenus.length == 1 ? "" : "s"} provided in the construction of a MenuPrompt object. The index${invalidMenus.length == 1 ? "" : "es"} of the invalid menu${invalidMenus.length == 1 ? "" : "s"} ${invalidMenus.length == 1 ? "is" : "are"}: ${invalidMenus.length == 1 ? invalidMenus[0] : require("../misc").readableArray(invalidMenus)}`);
+            return `Invalid menu${invalidMenus.length == 1 ? "" : "s"} provided in the construction of a MenuPrompt object. The index${invalidMenus.length == 1 ? "" : "es"} of the invalid menu${invalidMenus.length == 1 ? "" : "s"} ${invalidMenus.length == 1 ? "is" : "are"}: ${invalidMenus.length == 1 ? invalidMenus[0] : require("../misc").readableArray(invalidMenus)}`;
         
         this._menus = menus;
 
@@ -84,12 +83,12 @@ const MenuPrompt = class {
     }
 
     /**
-     * Opens the menu
+     * 🔹 Opens the menu
      * 
      * Warning ⚠️
      * This suppresses the processes' `stdout` and `stderr` streams.
      * This means you can't print something to the console while the menu is opened.
-     * Use `MenuPrompt.close()` or wait until the user is done with the prompt to restore `stdout`'s and `stderr`'s function and be able to use the console normally again.
+     * Use `MenuPrompt.close()` or wait until the user is done with the prompt to restore `stdout`'s and `stderr`'s function and be able to use the console normally again. 🔹
      * @returns {Boolean} Returns true, if the menu could be opened or a string containing an error message, if not
      * @since 1.8.0
      */
@@ -132,7 +131,7 @@ const MenuPrompt = class {
     }
 
     /**
-     * Closes the menu and returns the chosen options up to this point
+     * 🔹 Closes the menu and returns the chosen options up to this point 🔹
      * @returns {MenuPromptResult} Returns the results of the menu prompt
      * @since 1.8.0
      */
@@ -147,15 +146,16 @@ const MenuPrompt = class {
     }
 
     /**
-     * Adds a new menu to the menu prompt
-     * You can even call this method while the menu is opened
+     * 🔹 Adds a new menu to the menu prompt.
+     * You can even call this method while the menu is opened. 🔹
      * @param {MenuPropmtMenu} menu
      * @returns {(Boolean|String)} Returns true, if the menu could be added or a string containing an error message, if not
      * @since 1.8.0
      */
     addMenu(menu)
     {
-        // TODO: validate menu
+        if(!this._validateMenu(menu))
+            return `Invalid menu provided in "jsl.MenuPrompt.addMenu()"`;
 
         try {
             this._menus.push(menu);
@@ -168,7 +168,7 @@ const MenuPrompt = class {
     }
 
     /**
-     * Returns the (zero-based) index of the current menu
+     * 🔹 Returns the (zero-based) index of the current menu 🔹
      * @returns {Number} The zero-based index of the current menu or `-1` if the menu hasn't been opened yet
      * @since 1.8.0
      */
@@ -178,7 +178,7 @@ const MenuPrompt = class {
     }
 
     /**
-     * Returns the current results of the menu prompt.
+     * 🔹 Returns the current results of the menu prompt 🔹
      * Does NOT close the menu prompt.
      * @returns {MenuPromptResult} Returns the results of the menu prompt or null, if there aren't any results yet
      * @since 1.8.0
@@ -192,9 +192,19 @@ const MenuPrompt = class {
         else return null;
     }
 
+    /**
+     * ⚠️ Private method - please don't use ⚠️
+     * @param {MenuPropmtMenu} menu 
+     * @private
+     */
     _validateMenu(menu)
     {
-        menu.toString();
+        let isEmpty = require("../misc").isEmpty;
+        require("../misc").unused(menu);
+        require("../misc").unused(isEmpty);
+        // TODO: all of this shit
+
+        
     }
 }
 module.exports.MenuPrompt = MenuPrompt;

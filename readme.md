@@ -4,6 +4,10 @@
 
 <br><br><br>
 
+# This documentation will soon be reworked
+
+<br><br><br>
+
 # Menu:
 ## [Installation](#installation) - [Functions](#functions) - [Classes](#classes) - [Objects](#objects) - [Deprecated Functions](#deprecated-functions) - [Disclaimer](#disclaimer)
 ---
@@ -13,13 +17,12 @@
 
 <br><br><br><br>
 # Installation:
+To install JSLib-npm, enter this in your command line:
 ```
->  npm i svjsl
+npm i svjsl
 ```
-
-<br>
-Import it in your script:
-
+  
+Then you can import it in your script like this:
 ```js
 const jsl = require("svjsl");
 ```

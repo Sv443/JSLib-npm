@@ -29,6 +29,7 @@ module.exports.readdirRecursiveSync = files.readdirRecursiveSync;
  * 🔹 Info about JSLib 🔹
  * @param {Object} jsli
  * @param {String} jsli.version The current version
+ * @param {String} jsli.intVersion The current version of JSLib, but as an array for easier manipulation
  * @param {String} jsli.name The name of JSLib
  * @param {String} jsli.desc A short description
  * @param {Array<String>} jsli.authors The author(s) of JSLib
@@ -38,16 +39,17 @@ module.exports.readdirRecursiveSync = files.readdirRecursiveSync;
  */
 const jsli = {
     version: "1.8.0",
+    intVersion: [1, 8, 0],
     name: "JSLib",
     desc: "A general-purpose, lightweight and dependency-free JavaScript library that makes coding a bit faster by providing many easy to use functions",
     authors: ["Sv443 <sven.fehler@web.de> (https://sv443.net/)"],
-    license: "MIT"
+    license: "MIT (https://sv443.net/LICENSE)"
 };
 module.exports.info = jsli;
 
 /**
- * 🔹 Returns all available functions of JSLib 🔹
- * @returns {Object} all functions and objects
+ * 🔹 Returns all available functions, objects and classes of JSLib 🔹
+ * @returns {Object} Returns all functions, objects and classes
  * @since 1.5.0
  */
 module.exports.help = () => {
@@ -318,3 +320,15 @@ const colors = {
     }
 }
 module.exports.colors = colors;
+
+/**
+ * 🔹 Use this if you are using a linter that complains about unused vars.
+ * As this function basically does nothing, you can even leave it in once the variable is used again and nothing will break. 🔹
+ * @param {*} any_var Any variable of any type
+ */
+const unused = any_var => {
+    try{any_var.toString();}
+    catch(e){return;}
+    return;
+};
+module.exports.unused = unused;
