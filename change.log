@@ -24,11 +24,13 @@
         - function "jsl.mapRange(value, range_1_min, range_1_max, range_2_min, range_2_max)" to transform a value from one numerical range to another
         - function "jsl.downloadFile(url, destPath, options)" to download a file from a URL
         - function "jsl.unused(any_var)" to indicate an unused variable to a linter
+        - function "jsl.replaceAt(input: str, index: number, replacement: str)" to replace a character inside a string with a replacement string
         - object "colors" to make it easier to add colors to the console output
         - class "MenuPrompt" for an interactive menu (directly in the CLI) - methods:
             - TODO: "open()" to open the prompt
             - TODO: "addMenu()" to add a new menu to the prompt
-            - "currentMenu()" to get current menu index
+            - TODO:DEBUG "_validateMenu()" to check whether a menu is invalid
+            - "currentMenu()" to get the current menu index
             - "close()" to close the prompt
             - "result()" to prematurely get the results of the prompt
     - improvements / fixes:
@@ -37,8 +39,9 @@
         - improved the background stuff in "jsl.ping()" to improve performance
         - added "contentType" property to "jsl.ping()"'s promise callback
         - edited a bunch of functions and methods to throw an error instead of returning it as a string, which could've caused unwanted and unpredictable behavior
-        - put the UUID generation inside an object, renamed it and added two new ones:
-            - "generateUUID.hexadecimal(format: str)" [0-9,a-f]
+        - put the UUID generation inside an object, renamed it and added three new ones:
+            - "generateUUID.hexadecimal(format: str, upperCase: bool)" [0-9,a-f] / [0-9,A-F] (old UUID generation function)
+            - "generateUUID.alphanumerical(format: str, upperCase: bool)" [0-9,a-z] / [0-9,A-Z]
             - "generateUUID.decimal(format: str)" [0-9]
             - "generateUUID.binary(format: str)" [0-1]
 

@@ -22,18 +22,19 @@ const generateRandomSeed = (digitCount = 10) => {
 /**
  * @typedef {Object} SeededRandomNumbers
  * @prop {Array<Number>} numbers An array of the random numbers
- * @prop {Number} seed
- * @param {String} joined The random numbers, but as a string
+ * @prop {Number} seed The seed that was used to create the random numbers
+ * @param {String} stringified The random numbers, but as a string
+ * @param {Number} integer The random numbers, but as an integer
  */
 
 /**
- * 🔹 Generates random numbers based on a seed 🔹
- * @param {Number} count How many random numbers should be generated
- * @param {Number} [seed] The seed to generate numbers from. Leave empty to use a random default seed
- * @returns {SeededRandomNumbers}
+ * 🔹 Generates random numbers from the numerical range [0-9] based on a seed 🔹
+ * @param {Number} [count=16] How many random numbers should be generated - will default to 16 if left empty
+ * @param {Number} [seed] The seed to generate numbers from. Leave empty to use a random default seed. The used seed will be included in the returned object
+ * @returns {SeededRandomNumbers} An object containing the seed and the random number in three different formats
  * @since 1.8.0
  */
-const generateSeededNumbers = (count, seed) => { // thanks to olsn for this code snippet: http://indiegamr.com/generate-repeatable-random-numbers-in-js/
+const generateSeededNumbers = (count = 16, seed) => { // thanks to olsn for this code snippet: http://indiegamr.com/generate-repeatable-random-numbers-in-js/
     let isEmpty = require("./misc").isEmpty;
     let result = [];
 
@@ -63,7 +64,8 @@ const generateSeededNumbers = (count, seed) => { // thanks to olsn for this code
     return {
         numbers: result,
         seed: initialSeed,
-        joined: result.join("")
+        stringified: result.join(""),
+        integer: parseInt(result.join(""))
     }
 }
 
@@ -81,7 +83,7 @@ const validateSeed = (seed) => {
     else digitCount = parseInt(seed.toString().length);
 
     if(isEmpty(seed) || isEmpty(digitCount) || isNaN(parseInt(digitCount)))
-        throw new Error(`Invalid argument provided for validateSeed() - make sure it is not empty / null / undefined and is of the correct type.\nExpected: "number/string", got: "${typeof seed}"`);
+        throw new Error(`Invalid argument provided for validateSeed() - make sure it is not empty / null / undefined and is of the correct type.\nExpected: "number" or "string", got: "${typeof seed}"`);
 
     seed = seed.toString();
 
@@ -94,9 +96,11 @@ const validateSeed = (seed) => {
 }
 
 /**
- * 🔹 Highly random RNG with upper and lower boundary 🔹
- * @param {number} min lower boundary of the RNG
- * @param {number} max upper boundary of the RNG
+ * 🔹 Highly random number generator with upper and lower boundary.
+ * `Highly random` means that contrary to `Math.random()` which uses a seed, this RNG additionally uses a timestamp to calculate the number, making it much more random. 🔹
+ * ⚠️ Warning! This RNG is not cryptographically secure, so don't do any password hashing or stuff that needs to be highly secure with this function! ⚠️
+ * @param {number} min Lower boundary of the RNG
+ * @param {number} max Upper boundary of the RNG
  * @since 1.5.0
  */
 const randRange = (min, max) => {
@@ -112,9 +116,8 @@ const randRange = (min, max) => {
         throw new Error(`Wrong parameter provided for "min" and/or "max" in jsl.randRange() - (expected: "Number" and "Number", got: "${typeof min}" and "${typeof max}")`);
 
     let d = new Date().getTime();
-    if (typeof performance !== 'undefined' && typeof performance.now === 'function'){
+    if (typeof performance !== "undefined" && typeof performance.now === "function")
         d += performance.now();
-    }
     
     let r = (d + Math.random() * (max - min)) % (max - min) | 0;
     return r += min;
@@ -122,83 +125,183 @@ const randRange = (min, max) => {
 
 /**
  * 🔹 Creates a hexadecimal [0-9,A-F] UUID with a given format. This uses a RNG that is even more random than the standard Math.random() 🔹
- * @param {String} uuid_format The format of the UUID. All x's and y's will be affected by the RNG. Example: "xxxx-yyyy-xxxx-yyyy"
- * @param {Boolean} [upperCase]
+ * @param {String} uuidFormat The format of the UUID. All x's and y's will be affected by the RNG. Example: "xxxx-yyyy-xxxx-yyyy" - if you want an x or y to not be replaced, prefix it with this character: ^
+ * @param {Boolean} [upperCase] Set to true to have all letters in upper case, false for lower case
  * @returns {String}
  * @since 1.5.0
  * @version 1.8.0 Renamed the function and moved it
  */
-const hexadecimal = (uuid_format, upperCase) => {
-    let {performance} = require("perf_hooks");
+const hexadecimal = (uuidFormat, upperCase = false) => {
     let isEmpty = require("./misc").isEmpty;
+    let replaceAt = require("./misc").replaceAt;
+    let randRange = require("./misc").randRange;
 
-    if(isEmpty(upperCase))
-        upperCase = false;
+    uuidFormat = uuidFormat.replace(/\^x/gm, "ꮦ");
+    uuidFormat = uuidFormat.replace(/\^y/gm, "ꮧ");
+
+    let possible = "0123456789ABCDEF";
+    possible = possible.split("");
     
-    if(isEmpty(uuid_format) || typeof uuid_format != "string")
-        throw new Error(`Wrong parameter provided for "uuid_format" in jsl.generateUUID.hexadecimal() - (expected: "String", got: "${typeof uuid_format}")`);
+    if(isEmpty(uuidFormat) || typeof uuidFormat != "string")
+        throw new Error(`Wrong parameter provided for "uuidFormat" in jsl.generateUUID.decimal() - (expected: "String", got: "${typeof uuidFormat}")`);
 
-    let d = new Date().getTime();
-    if (typeof performance !== 'undefined' && typeof performance.now === 'function'){
-        d += performance.now();
-    }
-    let ret = uuid_format.replace(/[xy]/g, function (c) {
-        let r = (d + Math.random() * 16) % 16 | 0;
-        d = Math.floor(d / 16);
-        return (c === "x" || c === "y" ? r : (r & 0x3 | 0x8)).toString(16);
-    });
+    let regex = /[xy]/gm;
+    let match;
+    let matches = [];
 
-    if(upperCase === true)
-        return ret.toUpperCase();
-    return ret;
+    while((match = regex.exec(uuidFormat)) != null)
+        matches.push(match.index)
+
+    let result = uuidFormat;
+    matches.forEach(idx => result = replaceAt(result, idx, possible[randRange(0, possible.length - 1)]));
+
+    result = result.replace(/[\uABA6]/gmu, "x");
+    result = result.replace(/[\uABA7]/gmu, "y");
+    if(upperCase) return result;
+    else return result.toLowerCase();
 }
 
 /**
  * 🔹 Creates a decimal [0-9] UUID with a given format. This uses a RNG that is even more random than the standard Math.random() 🔹
- * @param {String} uuid_format The format of the UUID. All x's and y's will be affected by the RNG. Example: "xxxx-yyyy-xxxx-yyyy"
+ * @param {String} uuidFormat The format of the UUID. All x's and y's will be affected by the RNG. Example: "xxxx-yyyy-xxxx-yyyy" - if you want an x or y to not be replaced, prefix it with this character: ^
  * @returns {String}
  * @since 1.8.0
  */
-const decimal = (uuid_format) => {
-    let {performance} = require("perf_hooks");
+const decimal = (uuidFormat) => {
     let isEmpty = require("./misc").isEmpty;
-    
-    if(isEmpty(uuid_format) || typeof uuid_format != "string")
-        throw new Error(`Wrong parameter provided for "uuid_format" in jsl.generateUUID.decimal() - (expected: "String", got: "${typeof uuid_format}")`);
+    let replaceAt = require("./misc").replaceAt;
+    let randRange = require("./misc").randRange;
 
-    let d = new Date().getTime();
-    if (typeof performance !== 'undefined' && typeof performance.now === 'function'){
-        d += performance.now();
-    }
-    return uuid_format.replace(/[xy]/g, function (c) {
-        let r = (d + Math.random() * 9) % 9 | 0;
-        d = Math.floor(d / 9);
-        return (c === "x" || c === "y" ? r : (r & 0x3 | 0x5)).toString();
-    });
+    uuidFormat = uuidFormat.replace(/\^x/gm, "ꮦ");
+    uuidFormat = uuidFormat.replace(/\^y/gm, "ꮧ");
+
+    let possible = "0123456789";
+    possible = possible.split("");
+    
+    if(isEmpty(uuidFormat) || typeof uuidFormat != "string")
+        throw new Error(`Wrong parameter provided for "uuidFormat" in jsl.generateUUID.decimal() - (expected: "String", got: "${typeof uuidFormat}")`);
+
+    let regex = /[xy]/gm;
+    let match;
+    let matches = [];
+
+    while((match = regex.exec(uuidFormat)) != null)
+        matches.push(match.index)
+
+    let result = uuidFormat;
+    matches.forEach(idx => result = replaceAt(result, idx, possible[randRange(0, possible.length - 1)]));
+
+    result = result.replace(/[\uABA6]/gmu, "x");
+    result = result.replace(/[\uABA7]/gmu, "y");
+    return result;
+}
+
+/**
+ * 🔹 Creates an alphanumerical [0-9,A-Z] UUID with a given format. This uses a RNG that is even more random than the standard Math.random() 🔹
+ * @param {String} uuidFormat The format of the UUID. All x's and y's will be affected by the RNG. Example: "xxxx-yyyy-xxxx-yyyy" - if you want an x or y to not be replaced, prefix it with this character: ^
+ * @param {Boolean} [upperCase] Set to true to have all letters in upper case, false for lower case
+ * @returns {String}
+ * @since 1.8.0
+ */
+const alphanumerical = (uuidFormat, upperCase) => {
+    let isEmpty = require("./misc").isEmpty;
+    let replaceAt = require("./misc").replaceAt;
+    let randRange = require("./misc").randRange;
+
+    uuidFormat = uuidFormat.replace(/\^x/gm, "ꮦ");
+    uuidFormat = uuidFormat.replace(/\^y/gm, "ꮧ");
+
+    let possible = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+    possible = possible.split("");
+    
+    if(isEmpty(uuidFormat) || typeof uuidFormat != "string")
+        throw new Error(`Wrong parameter provided for "uuidFormat" in jsl.generateUUID.alphanumerical() - (expected: "String", got: "${typeof uuidFormat}")`);
+
+    let regex = /[xy]/gm;
+    let match;
+    let matches = [];
+
+    while((match = regex.exec(uuidFormat)) != null)
+        matches.push(match.index)
+
+    let result = uuidFormat;
+    matches.forEach(idx => result = replaceAt(result, parseInt(idx), possible[randRange(0, possible.length - 1)]));
+
+    result = result.replace(/[\uABA6]/gmu, "x");
+    result = result.replace(/[\uABA7]/gmu, "y");
+    if(upperCase) return result;
+    else return result.toLowerCase();
 }
 
 /**
  * 🔹 Creates a binary [0-1] UUID with a given format. This uses a RNG that is even more random than the standard Math.random() 🔹
- * @param {String} uuid_format The format of the UUID. All x's and y's will be affected by the RNG. Example: "xxxx-yyyy-xxxx-yyyy"
+ * @param {String} uuidFormat The format of the UUID. All x's and y's will be affected by the RNG. Example: "xxxx-yyyy-xxxx-yyyy" - if you want an x or y to not be replaced, prefix it with this character: ^
  * @returns {String}
  * @since 1.8.0
  */
-const binary = (uuid_format) => {
-    let {performance} = require("perf_hooks");
+const binary = (uuidFormat) => {
     let isEmpty = require("./misc").isEmpty;
-    
-    if(isEmpty(uuid_format) || typeof uuid_format != "string")
-        throw new Error(`Wrong parameter provided for "uuid_format" in jsl.generateUUID.binary() - (expected: "String", got: "${typeof uuid_format}")`);
+    let replaceAt = require("./misc").replaceAt;
+    let randRange = require("./misc").randRange;
 
-    let d = new Date().getTime();
-    if (typeof performance !== 'undefined' && typeof performance.now === 'function'){
-        d += performance.now();
-    }
-    return uuid_format.replace(/[xy]/g, function (c) {
-        let r = (d + Math.random() * 2) % 2 | 0;
-        d = Math.floor(d / 1);
-        return (c === "x" || c === "y" ? r : (r & 0x3 | 0x1)).toString();
-    });
+    uuidFormat = uuidFormat.replace(/\^x/gm, "ꮦ");
+    uuidFormat = uuidFormat.replace(/\^y/gm, "ꮧ");
+
+    let possible = "01";
+    possible = possible.split("");
+    
+    if(isEmpty(uuidFormat) || typeof uuidFormat != "string")
+        throw new Error(`Wrong parameter provided for "uuidFormat" in jsl.generateUUID.binary() - (expected: "String", got: "${typeof uuidFormat}")`);
+
+    let regex = /[xy]/gm;
+    let match;
+    let matches = [];
+
+    while((match = regex.exec(uuidFormat)) != null)
+        matches.push(match.index)
+
+    let result = uuidFormat;
+    matches.forEach(idx => result = replaceAt(result, idx, possible[randRange(0, possible.length - 1)]));
+
+    result = result.replace(/[\uABA6]/gmu, "x");
+    result = result.replace(/[\uABA7]/gmu, "y");
+    return result;
+}
+
+/**
+ * 🔹 Creates a custom UUID with a given format from a list of characters specified by the possibleValues parameter. This uses a RNG that is even more random than the standard Math.random() 🔹
+ * @param {String} uuidFormat The format of the UUID. All x's and y's will be affected by the RNG. Example: "xxxx-yyyy-xxxx-yyyy" - if you want an x or y to not be replaced, prefix it with this character: ^
+ * @param {String} possibleValues A string containing all characters that should be injected into the final UUID - (delimited by nothing) - Example: "ABCDEF01234$%&#"
+ * @returns {String}
+ * @since 1.8.0
+ */
+const custom = (uuidFormat, possibleValues) => {
+    let isEmpty = require("./misc").isEmpty;
+    let replaceAt = require("./misc").replaceAt;
+    let randRange = require("./misc").randRange;
+
+    uuidFormat = uuidFormat.replace(/\^x/gm, "ꮦ");
+    uuidFormat = uuidFormat.replace(/\^y/gm, "ꮧ");
+
+    let possible = possibleValues.toString();
+    possible = possible.split("");
+    
+    if(isEmpty(uuidFormat) || typeof uuidFormat != "string")
+        throw new Error(`Wrong parameter provided for "uuidFormat" in jsl.generateUUID.decimal() - (expected: "String", got: "${typeof uuidFormat}")`);
+
+    let regex = /[xy]/gm;
+    let match;
+    let matches = [];
+
+    while((match = regex.exec(uuidFormat)) != null)
+        matches.push(match.index)
+
+    let result = uuidFormat;
+    matches.forEach(idx => result = replaceAt(result, idx, possible[randRange(0, possible.length - 1)]));
+
+    result = result.replace(/[\uABA6]/gmu, "x");
+    result = result.replace(/[\uABA7]/gmu, "y");
+    return result;
 }
 
 module.exports = {
@@ -206,7 +309,9 @@ module.exports = {
     generateUUID: {
         hexadecimal,
         decimal,
-        binary
+        alphanumerical,
+        binary,
+        custom
     },
     seededRNG: {
         generateSeededNumbers,

@@ -325,6 +325,7 @@ module.exports.colors = colors;
  * 🔹 Use this if you are using a linter that complains about unused vars.
  * As this function basically does nothing, you can even leave it in once the variable is used again and nothing will break. 🔹
  * @param {*} any_var Any variable of any type
+ * @since 1.8.0
  */
 const unused = any_var => {
     try{any_var.toString();}
@@ -332,3 +333,15 @@ const unused = any_var => {
     return;
 };
 module.exports.unused = unused;
+
+/**
+ * 🔹 Replaces a character from the specified `string` at the specified `index` with the value of `replacement` 🔹
+ * @param {String} input
+ * @param {Number} index 
+ * @param {String} replacement 
+ * @returns {String}
+ * @since 1.8.0
+ */
+const replaceAt = (input, index, replacement) => input.substr(0, index) + replacement + input.substr(index + replacement.length);
+// thanks to Cem Kalyoncu on Stackoverflow for this one (I was just to lazy to code it myself): https://stackoverflow.com/a/1431113/8602926
+module.exports.replaceAt = replaceAt;
