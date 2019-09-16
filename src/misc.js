@@ -29,20 +29,22 @@ module.exports.readdirRecursiveSync = files.readdirRecursiveSync;
  * 🔹 Info about JSLib 🔹
  * @param {Object} jsli
  * @param {String} jsli.version The current version
- * @param {String} jsli.intVersion The current version of JSLib, but as an array for easier manipulation
+ * @param {Array<Number>} jsli.intVersion The current version of JSLib, but as an array of numbers for easier manipulation
  * @param {String} jsli.name The name of JSLib
- * @param {String} jsli.desc A short description
- * @param {Array<String>} jsli.authors The author(s) of JSLib
+ * @param {String} jsli.desc A short description of JSLib
+ * @param {String} jsli.author The author of JSLib - format: "name <email> (website)"
+ * @param {Array<String>} jsli.contributors People that contributed to JSLib - format: "name <email> (website)"
  * @param {String} jsli.license The license of JSLib
  * @since 1.5.0
- * @version 1.8.0 "authors" is now an array
+ * @version 1.8.0 added "contributors" array
  */
 const jsli = {
     version: "1.8.0",
     intVersion: [1, 8, 0],
     name: "JSLib",
     desc: "A general-purpose, lightweight and dependency-free JavaScript library that makes coding a bit faster by providing many easy to use functions",
-    authors: ["Sv443 <sven.fehler@web.de> (https://sv443.net/)"],
+    author: "Sv443 <sven.fehler@web.de> (https://sv443.net/)",
+    contributors: ["none yet :("],
     license: "MIT (https://sv443.net/LICENSE)"
 };
 module.exports.info = jsli;
@@ -52,21 +54,20 @@ module.exports.info = jsli;
  * @returns {Object} Returns all functions, objects and classes
  * @since 1.5.0
  */
-module.exports.help = () => {
-    console.log(module.exports);
-}
+module.exports.help = () => console.log(module.exports);
 
 /**
- * 🔹 Returns the current version of JSLib 🔹
+ * 🔹 Returns the current version of JSLib 🔹 
+ * ⚠️ This function will be deprecated - use `jsl.info.version` or `jsl.info.intVersion` instead ⚠️
  * @returns {String} version
  * @since 1.5.0
+ * @version 1.8.0 This function will be deprecated - use `jsl.info.version` or `jsl.info.intVersion` instead
+ * @deprecated
  */
-module.exports.version = () => {
-    return jsli.version;
-}
+module.exports.version = () => jsli.version;
 
 /**
- * 🔹 Returns true, if the input is undefined, null, an empty string, an empty array or an object with length = 0.
+ * 🔹 Returns true, if the input is undefined, null, an empty string, an empty array or an object with length = 0. 
  * Otherwise returns false. The number 0 and NaN will return false though, so check them independently if needed! 🔹
  * @param {*} input Variable that should be checked - this can be of any type but the basic types will work best
  * @returns {Boolean} true or false
@@ -139,14 +140,31 @@ module.exports.allEqual = array => {
 }
 
 /**
- * 🔹 Executes a function before the script gets shut down (on SIGINT, SIGTERM or SIGKILL) 🔹
- * @param {function} funct this function gets executed on script shutdown
+ * 🔹 Executes a synchronous function before the process gets shut down (on SIGINT or SIGTERM). 
+ * This can be used to close files, abort connections or just to print a console message before shutdown. 🔹 
+ * ⚠️ Asynchronous function execution is not supported (yet) 
+ * ⚠️ The "SIGKILL" signal will not be caught by this function, only "SIGINT" and "SIGTERM"
+ * @param {Function} funct This function will get executed before process shutdown
+ * @param {Number} [code=0] The exit code with which the process should be closed. Defaults to 0
  * @since 1.5.0
+ * @version 1.8.0 Added "code" parameter to specify an exit code
  */
-module.exports.softShutdown = funct => {
-    process.on("SIGINT", ()=>{if(!noShutdown){funct();process.exit();}});
-    process.on("SIGTERM", ()=>{if(!noShutdown){funct();process.exit();}});
-    process.on("SIGKILL", ()=>{if(!noShutdown){funct();process.exit();}});
+module.exports.softShutdown = (funct, code) => {
+    code = parseInt(code);
+
+    if(isNaN(code) || code < 0)
+        code = 0;
+
+    let onbeforeshutdown = exitCode => {
+        if(!noShutdown)
+        {
+            if(!isEmpty(funct) && typeof funct == "function")
+                funct();
+            process.exit(exitCode);
+        }
+    }
+    process.on("SIGINT", ()=>onbeforeshutdown(code));
+    process.on("SIGTERM", ()=>onbeforeshutdown(code));
 }
 
 /**
@@ -158,7 +176,6 @@ module.exports.noShutdown = () => {
     noShutdown = true;
     process.on("SIGINT", ()=>{});
     process.on("SIGTERM", ()=>{});
-    process.on("SIGKILL", ()=>{});
 }
 
 /**
@@ -168,9 +185,8 @@ module.exports.noShutdown = () => {
  */
 module.exports.yesShutdown = () => {
     noShutdown = false;
-    process.on("SIGINT", ()=>{process.exit();});
-    process.on("SIGTERM", ()=>{process.exit();});
-    process.on("SIGKILL", ()=>{process.exit();});
+    process.on("SIGINT", ()=>process.exit());
+    process.on("SIGTERM", ()=>process.exit());
 }
 
 /**
@@ -258,10 +274,10 @@ const mapRange = (value, range_1_min, range_1_max, range_2_min, range_2_max) => 
             throw new Error("Wrong argument(s) provided for mapRange() - (expected: \"Number\", got: \"" + typeof arg + "\")");
     });
 
-    if(range_1_max === 0 || range_2_max === 0)
-        throw new Error("Division by zero error in mapRange() - make sure the \"*_max\" arguments are not 0");
+    if(parseFloat(range_1_max) === 0.0 || parseFloat(range_2_max) === 0.0)
+        throw new Error("Division by zero error in mapRange() - make sure the \"range_1_max\" and \"range_2_max\" arguments are not 0");
 
-    if(range_1_min === 0 && range_2_min === 0)
+    if(parseFloat(range_1_min) === 0.0 && parseFloat(range_2_min) === 0.0)
         return value * (range_2_max / range_1_max);
 
     return ((value - range_1_min) * ((range_2_max - range_2_min) / (range_1_max - range_1_min)) + range_2_min);
@@ -324,13 +340,20 @@ module.exports.colors = colors;
 /**
  * 🔹 Use this if you are using a linter that complains about unused vars.
  * As this function basically does nothing, you can even leave it in once the variable is used again and nothing will break. 🔹
- * @param {*} any_var Any variable of any type
+ * @param {*} [any_var] Any variable of any type
+ * @returns {void}
  * @since 1.8.0
  */
 const unused = any_var => {
-    try{any_var.toString();}
-    catch(e){return;}
-    return;
+    try
+    {
+        this.x=any_var;
+        return;
+    }
+    catch(e)
+    {
+        return;
+    }
 };
 module.exports.unused = unused;
 

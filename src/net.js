@@ -84,15 +84,15 @@ module.exports.ping = (URL, timeout) => {
 
 /**
  * @typedef {Object} DownloadOptions
- * @prop {String} fileName The name that the downloaded file should be saved as including the file extension, for example: "image.png"
- * @prop {ProgressCallback} progressCallback A callback function that gets called every 50 milliseconds that gets passed an object containing info on the download progress
- * @prop {FinishedCallback} finishedCallback A callback function that gets passed an parameter that is null if no error was encountered, or contains a string if an error was encountered
+ * @prop {String} fileName The name that the downloaded file should be saved as, including the file extension - for example: "image.png" or "archive.zip" - defaults to "download.txt"
+ * @prop {ProgressCallback} progressCallback A callback function that gets called every 50 milliseconds that gets passed an object containing info on the download progress - sometimes the download progress can't be gotten so this callback won't contain the total size or will not be called a final time on finish. This behavior is normal.
+ * @prop {FinishedCallback} finishedCallback A callback function that gets called when the download finished and gets passed a parameter that is `null` if no error was encountered, or contains a string if an error was encountered
  */
 
 /**
  * Downloads a file from the specified URL, to the specified destination path, according to the specified options
  * @param {String} url The URL to the file you want to download
- * @param {String} [destPath] The path where the file should be saved to - can be absolute or relative - If left empty, it will default to "./"
+ * @param {String} [destPath] The path where the file should be saved to - can be absolute or relative - If left empty, it will default to the root directory of the project
  * @param {DownloadOptions} [options]
  * @since 1.8.0
  */
@@ -102,13 +102,11 @@ module.exports.downloadFile = (url, destPath = "./", options) => {
     let https = require("https");
 
     if(isEmpty(options))
-    {
         options = {
             fileName: "download.txt",
             progressCallback: () => {},
             finishedCallback: () => {}
         }
-    }
     else
     {
         if(isEmpty(options.fileName)) options.fileName = "download.txt";
@@ -119,12 +117,13 @@ module.exports.downloadFile = (url, destPath = "./", options) => {
     let lastM = false;
 
     let dest = `${destPath}${destPath.endsWith("/") ? "" : "/"}${options.fileName}`;
-
+    if(!fs.existsSync(destPath))
+        throw new Error(`Error in jsl.downloadFile() - The directory / directories at the path "${destPath}" doesn't / don't exist. Please make sure this directory / these directories exist nd try again.`);
 
     let urlCl = new URL(url);
     let opts = {
         hostname: urlCl.hostname,
-        port: 443,
+        port: urlCl.protocol === "https:" || urlCl.protocol.includes("https") ? 443 : 80,
         path: urlCl.pathname,
         method: "HEAD"
     };
@@ -145,17 +144,24 @@ module.exports.downloadFile = (url, destPath = "./", options) => {
 
         let req = https.get(url, res => {
             let sizeUpdateIv;
-            if(!isEmpty(totalSize) && !isEmpty(options) && !isEmpty(options.progressCallback))
+            if(!isEmpty(options) && !isEmpty(options.progressCallback))
                 sizeUpdateIv = setInterval(() => {
                     let curSize = fs.statSync(dest).size;
-                    options.progressCallback({
-                        currentB: curSize,
-                        currentKB: (curSize / 1000).toFixed(3),
-                        currentMB: (curSize / 1000000).toFixed(3),
-                        totalB: totalSize,
-                        totalKB: (totalSize / 1000).toFixed(3),
-                        totalMB: (totalSize / 1000000).toFixed(3)
-                    });
+                    if(!isEmpty(totalSize))
+                        options.progressCallback({
+                            currentB: curSize,
+                            currentKB: (curSize / 1000).toFixed(3),
+                            currentMB: (curSize / 1000000).toFixed(3),
+                            totalB: totalSize,
+                            totalKB: (totalSize / 1000).toFixed(3),
+                            totalMB: (totalSize / 1000000).toFixed(3)
+                        });
+                    else
+                        options.progressCallback({
+                            currentB: curSize,
+                            currentKB: (curSize / 1000).toFixed(3),
+                            currentMB: (curSize / 1000000).toFixed(3)
+                        });
                 }, 50);
             res.pipe(file);
     
@@ -193,8 +199,8 @@ module.exports.downloadFile = (url, destPath = "./", options) => {
         req.end();
     });
 
-    req2.on("error", (e) => {
-        console.error(e);
+    req2.on("error", e => {
+        throw new Error(`Error while reading file information: ${e}`);
     });
 
     req2.end();
