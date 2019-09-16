@@ -65,7 +65,7 @@ const MenuPrompt = class {
 
         let invalidMenus = [];
         menus.forEach((menu, i) => {
-            if(!this._validateMenu(menu))
+            if(!this.validateMenu(menu)) // TODO: parse mixed type bool|array<string> correctly
                 invalidMenus.push(i);
         });
 
@@ -154,7 +154,7 @@ const MenuPrompt = class {
      */
     addMenu(menu)
     {
-        if(!this._validateMenu(menu))
+        if(!this.validateMenu(menu)) // TODO: parse mixed type bool|array<string> correctly
             return `Invalid menu provided in "jsl.MenuPrompt.addMenu()"`;
 
         try {
@@ -193,18 +193,53 @@ const MenuPrompt = class {
     }
 
     /**
-     * ⚠️ Private method - please don't use ⚠️
-     * @param {MenuPropmtMenu} menu 
+     * 🔹 Checks a menu for valid syntax 🔹
+     * @param {MenuPropmtMenu} menu The menu that should be validated
+     * @returns {(Boolean|Array<String>)} Returns true if the menu is valid, a string array containing the error messages if not
+     * @throws Throws an error if a falsy parameter or no parameter at all was passed
      * @private
      */
-    _validateMenu(menu)
+    validateMenu(menu)
     {
         let isEmpty = require("../misc").isEmpty;
-        require("../misc").unused(menu);
-        require("../misc").unused(isEmpty);
-        // TODO: all of this shit
+        let isArrayEmpty = require("../misc").isArrayEmpty;
 
+        let errors = [];
+
+        if(isEmpty(menu))
+            throw new Error(`The passed parameter "menu" is not present or empty`);
+
+        if(typeof menu != "object")
+            errors.push(`Wrong variable type for parameter "menu". Expected: "object", got "${typeof menu}"`);
+
+        if(!isNaN(parseInt(menu.length)))
+            errors.push(`"menu" parameter can't be an array`);
         
+        if(isEmpty(menu.title) || typeof menu.title != "string")
+            errors.push(`"title" property is either not present, empty or not of type "string"`);
+
+        if(isEmpty(menu.options))
+            errors.push(`"options" property is not present or of the wrong type. Expected: "object", got: "${typeof menu.options}"`);
+
+        if(!isEmpty(menu.options) && (isNaN(parseInt(menu.options.length)) || menu.options.length <= 0))
+            errors.push(`"options" property has to be an array and has to contain at least one item`);
+
+        if(!isEmpty(menu.options))
+            menu.options.forEach((opt, i) => {
+                if(!isNaN(parseInt(opt.length)))
+                    errors.push(`The option with the index ${i} can't be an array`);
+
+                if(typeof opt.key != "string")
+                    errors.push(`Wrong variable type for option.key (at array index ${i}). Expected: "string", got "${typeof opt.key}"`);
+
+                if(typeof opt.description != "string")
+                    errors.push(`Wrong variable type for option.description (at array index ${i}). Expected: "string", got "${typeof opt.description}"`);
+            });
+
+
+        if(isArrayEmpty(errors))
+            return true;
+        else return errors;
     }
 }
 module.exports.MenuPrompt = MenuPrompt;

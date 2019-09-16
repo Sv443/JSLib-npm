@@ -75,7 +75,7 @@ module.exports.version = () => jsli.version;
  * @version 1.6.5 lowercase alias jsl.isempty was removed
  * @version 1.8.0 Added check for objects with length = 0
  */
-const isEmpty = input => (input === undefined || input === null || input === "" || (typeof input == "object" && input.length > 0)) ? true : false;
+const isEmpty = input => (input === undefined || input === null || input === "" || (typeof input == "object" && input.length < 0)) ? true : false;
 module.exports.isEmpty = isEmpty;
 
 /**
@@ -87,8 +87,8 @@ module.exports.isEmpty = isEmpty;
  * @version 1.8.0 Throwing error now instead of returning string
  */
 module.exports.isArrayEmpty = array => {
-    if(isEmpty(array) || typeof array != "object")
-        throw new Error(`Wrong arguments provided for jsl.isArrayEmpty() - (expected: "Object/Array", got: "${typeof array}")`);
+    if((array === "" || array == null) || typeof array != "object")
+        throw new Error(`Wrong or empty arguments provided for jsl.isArrayEmpty() - (expected: "object", got: "${typeof array}")`);
 
     let emptiness = 0;
     array.forEach(item => {
@@ -253,17 +253,18 @@ module.exports.readableArray = (array, separators, lastSeparator) => {
 }
 
 function isEmptyWithoutString(variable) {
-    if((variable == null || variable == undefined || variable == [] || isNaN(variable)) && variable != "") return true;
+    if((variable == null || variable == undefined || variable == [] || isNaN(variable)) && variable != "")
+        return true;
     else return false;
 }
 
 /**
  * 🔹 Transforms the `value` parameter from the numerical range [`range_1_min`-`range_1_max`] to the numerical range [`range_2_min`-`range_2_max`] 🔹
  * @param {Number} value The value from the first numerical range, that you want to transform to a value inside the second numerical range
- * @param {Number} range_1_min The minimum possible value of the first numerical range
- * @param {Number} range_1_max The maximum possible value of the first numerical range
- * @param {Number} range_2_min The minimum possible value of the second numerical range
- * @param {Number} range_2_max The maximum possible value of the second numerical range
+ * @param {Number} range_1_min The lowest possible value of the first numerical range
+ * @param {Number} range_1_max The highest possible value of the first numerical range
+ * @param {Number} range_2_min The lowest possible value of the second numerical range
+ * @param {Number} range_2_max The highest possible value of the second numerical range
  * @returns {Number} Floating point number of `value` inside the second numerical range
  * @throws Throws an error if the arguments are not of type `Number` or the `*_max` argument(s) is/are equal to 0
  * @since 1.8.0
