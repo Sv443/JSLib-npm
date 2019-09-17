@@ -15,9 +15,13 @@
     "js",
     "library",
     "general-purpose",
+    "multi-purpose",
     "miscellaneous",
+    "miscellaneous-utilities",
+    "miscellaneous-functions",
     "network",
     "networking",
+    "download-file",
     "files",
     "filesystem"
   ],

@@ -1,3 +1,5 @@
+//#MARKER typedefs
+
 /**
  * @typedef {Object} MenuPromptMenuOption
  * @prop {String} key The key(s) that need(s) to be pressed to select this option
@@ -16,19 +18,38 @@
  * @prop {String} [optionSeparator=")"] The separator character(s) between the option key and the option description
  * @prop {String} [cursorPrefix="─►"] Character(s) that should be prefixed to the cursor. Will default to this arrow: "─►"
  * @prop {Boolean} [retryOnInvalid=true] Whether the menu should be retried if the user entered a wrong option - if false, continues to next menu
- * @prop {Function} [onOptionSelected] A function that gets called whenever the user selects an option. The only passed parameter is the `key` value of the option
- * @prop {Function} [onFinished] A function that gets called when the user is done with all of the menus of the prompt or entered the exit key(s). The only passed parameter is an array containing all selected option keys
+ * @prop {MenuPromptOnFinishedCallback} [onFinished] A function that gets called when the user is done with all of the menus of the prompt or entered the exit key(s). The only passed parameter is an array containing all selected option keys
  */
 
 /**
- * @typedef {Array<String>} MenuPromptResult The results of the menu prompt
+ * @callback MenuPromptOnFinishedCallback A callback that gets executed once the MenuPrompt has finished
+ * @param {Array<MenuPromptResult>} results The results of the MenuPrompt (an array containing objects)
  */
 
+/**
+ * @typedef {Object} MenuPromptResult The results of the menu prompt
+ * @prop {String} key The key of the selected option
+ * @prop {String} description The description of the selected option
+ * @prop {String} menuTitle The title of the menu
+ * @prop {Number} optionIndex The zero-based index of the selected option
+ * @prop {Number} menuIndex The zero-based index of the menu
+ */
+
+/**
+ * 🔹 Creates an interactive prompt with one or many menus 🔹
+ * @class
+ * @param {MenuPromptOptions} options The options for the prompt
+ * @param {MenuPromptMenu} menus An array of menus
+ * @returns {(Boolean|String)} Returns true, if the menu was successfully created, a string containing the error message, if not
+ * @since 1.8.0
+ */
+//#MARKER constructor
 const MenuPrompt = class {
     /**
      * 🔹 Creates an interactive prompt with one or many menus 🔹
+     * ⚠️ Warning: After creating a MenuPrompt object, the process will no longer exit automatically until the MenuPrompt has finished or was explicitly closed. You have to explicitly use process.exit() until the menu has finished or is closed
      * @param {MenuPromptOptions} options The options for the prompt
-     * @param {Array<MenuPromptMenu>} menus An array of menus
+     * @param {MenuPromptMenu} menus An array of menus
      * @returns {(Boolean|String)} Returns true, if the menu was successfully created, a string containing the error message, if not
      * @since 1.8.0
      */
@@ -48,7 +69,6 @@ const MenuPrompt = class {
                 optionSeparator: ")",
                 cursorPrefix: "─►",
                 retryOnInvalid: true,
-                onOptionSelected: () => {},
                 onFinished: () => {},
             };
         }
@@ -58,93 +78,164 @@ const MenuPrompt = class {
             if(isEmpty(options.optionSeparator)) options.optionSeparator = ")";
             if(options.cursorPrefix !== "" && isEmpty(options.cursorPrefix)) options.cursorPrefix = "─►";
             if(isEmpty(options.retryOnInvalid)) options.retryOnInvalid = true;
-            if(isEmpty(options.onOptionSelected)) options.onOptionSelected = () => {};
             if(isEmpty(options.onFinished)) options.onFinished = () => {};
         }
         this._options = options;
 
         let invalidMenus = [];
-        menus.forEach((menu, i) => {
-            if(!this.validateMenu(menu)) // TODO: parse mixed type bool|array<string> correctly
+        if(!isEmpty(menus)) menus.forEach((menu, i) => {
+            if(this.validateMenu(menu) !== true)
                 invalidMenus.push(i);
         });
 
+        let retError = "";
         if(!isEmpty(invalidMenus))
-            return `Invalid menu${invalidMenus.length == 1 ? "" : "s"} provided in the construction of a MenuPrompt object. The index${invalidMenus.length == 1 ? "" : "es"} of the invalid menu${invalidMenus.length == 1 ? "" : "s"} ${invalidMenus.length == 1 ? "is" : "are"}: ${invalidMenus.length == 1 ? invalidMenus[0] : require("../misc").readableArray(invalidMenus)}`;
+            retError = `Invalid menu${invalidMenus.length == 1 ? "" : "s"} provided in the construction of a MenuPrompt object. The index${invalidMenus.length == 1 ? "" : "es"} of the invalid menu${invalidMenus.length == 1 ? "" : "s"} ${invalidMenus.length == 1 ? "is" : "are"}: ${invalidMenus.length == 1 ? invalidMenus[0] : require("../misc").readableArray(invalidMenus)}`;
         
-        this._menus = menus;
+        this._menus = [];
+        if(typeof menus == "object" && !isNaN(parseInt(menus.length)))
+            menus.forEach(men => this.addMenu(men));
+
+        this._results = [];
 
         this._currentMenu = -1;
 
-        this._oldStdout = process.stdout.write;
-        this._oldStderr = process.stderr.write;
-
-        return true;
+        if(isEmpty(retError))
+            return true;
+        else return retError;
     }
 
+    //#MARKER open
     /**
-     * 🔹 Opens the menu
-     * 
-     * Warning ⚠️
-     * This suppresses the processes' `stdout` and `stderr` streams.
-     * This means you can't print something to the console while the menu is opened.
-     * Use `MenuPrompt.close()` or wait until the user is done with the prompt to restore `stdout`'s and `stderr`'s function and be able to use the console normally again. 🔹
+     * 🔹 Opens the menu 🔹
+     * ⚠️ Warning: While the menu is opened you shouldn't write anything to the console / to the stdout and stderr as this could mess up the layout of the menu and/or make stuff unreadable
      * @returns {Boolean} Returns true, if the menu could be opened or a string containing an error message, if not
      * @since 1.8.0
      */
     open()
     {
+        let isEmpty = require("../misc").isEmpty;
+        let col = require("../misc").colors;
+
+        if(isEmpty(this._menus))
+            return `No menus were added to the MenuPrompt object. Please use the method "MenuPrompt.addMenu()" or supply the menu(s) in the construction of the MenuPrompt object before calling "MenuPrompt.open()"`;
+
         this._active = true;
 
-        this._oldStdout = process.stdout.write;
-        this._oldStderr = process.stderr.write;
 
-        process.stdout.write = () => {};
-        process.stderr.write = () => {};
-
-
-        let openMenu = idx => {
-            if(idx >= this._menus.length)
+        let openMenu = (idx, userFeedback) => {
+            if(idx >= this._menus.length || !this._active)
             {
-                this._currentMenu = -1;
-                return this._options.onFinished();
+                this.close();
+                this._options.onFinished(this._results);
+                return;
             }
             else
             {
                 this._currentMenu = idx;
 
-                // TODO: all of this shit
+                this._clearConsole();
 
-                // ... async shit ...
-                // on option selected:
+                let currentMenu = {
+                    title: "",
+                    options: ""
+                }
 
-                // if option valid OR this._options.retryOnInvalid === false:
-                return openMenu(++idx);
+                currentMenu.title = this._menus[idx].title;
 
-                // else (option invalid):
-                // userFeedback();
-                // return openMenu(idx);
+                let titleUL = "";
+                currentMenu.title.split("").forEach(() => titleUL += "‾");
+
+                let longestOption = 0;
+                this._menus[idx].options.forEach(option => longestOption = option.key.length > longestOption ? option.key.length : longestOption);
+
+                this._menus[idx].options.forEach(option => {
+                    let optionSpacer = "  ";
+                    let neededSpaces = longestOption - option.key.length;
+                    for(let i = 0; i < neededSpaces; i++)
+                        optionSpacer += " ";
+                    
+                    currentMenu.options += `${col.fg.green}${option.key}${col.rst}${this._options.optionSeparator}${optionSpacer}${option.description}\n`;
+                });
+
+                if(!isEmpty(this._options.exitKey))
+                {
+                    let exitSpacer = "  ";
+                    let neededExitSpaces = longestOption - this._options.exitKey.length;
+                    for(let i = 0; i < neededExitSpaces; i++)
+                        exitSpacer += " ";
+                
+                    currentMenu.options += `\n${col.fg.red}${this._options.exitKey}${col.rst}${this._options.optionSeparator}${exitSpacer}Exit\n`;
+                }
+
+let menuText = `\
+${isEmpty(userFeedback) ? "\n\n\n" : `${col.fg.red}❗️ > ${userFeedback}${col.rst}\n\n\n`}${col.fat}${col.fg.cyan}${currentMenu.title}${col.rst}
+${col.fg.cyan}${titleUL}${col.rst}
+${currentMenu.options}
+
+${this._options.cursorPrefix} \
+`;
+
+                this._rl.resume();
+                this._rl.question(menuText, answer => {
+                    this._rl.pause();
+
+                    if(!isEmpty(this._options.exitKey) && answer == this._options.exitKey)
+                        return openMenu(++idx);
+                    
+                    if(isEmpty(answer) && this._options.retryOnInvalid !== false)
+                    {
+                        return openMenu(idx, "Please type one of the green options and press enter");
+                    }
+                    else
+                    {
+                        let currentOptions = this._menus[idx].options;
+                        let selectedOption = null;
+                        currentOptions.forEach((opt, i) => {
+                            if(opt.key == answer)
+                            {
+                                selectedOption = opt;
+                                selectedOption["menuTitle"] = this._menus[idx].title;
+                                selectedOption["optionIndex"] = i;
+                                selectedOption["menuIndex"] = idx;
+                            }
+                        });
+
+                        if(selectedOption != null)
+                        {
+                            if(typeof this._results != "object" || isNaN(parseInt(this._results.length)))
+                                this._results = [selectedOption];
+                            else this._results.push(selectedOption);
+
+                            return openMenu(++idx);
+                        }
+                        else return openMenu(idx, `Invalid option "${answer}" selected`);
+                    }
+                });
             }
         }
 
         openMenu(0);
+        return true;
     }
 
+    //#MARKER close
     /**
      * 🔹 Closes the menu and returns the chosen options up to this point 🔹
-     * @returns {MenuPromptResult} Returns the results of the menu prompt
+     * @returns {Array<MenuPromptResult>} Returns the results of the menu prompt
      * @since 1.8.0
      */
     close()
     {
-        process.stdout.write = this._oldStdout;
-        process.stderr.write = this._oldStderr;
-
         this._active = false;
+        this._currentMenu = -1;
         this._rl.close();
         console.clear();
+
+        return this._results;
     }
 
+    //#MARKER addMenu
     /**
      * 🔹 Adds a new menu to the menu prompt.
      * You can even call this method while the menu is opened. 🔹
@@ -154,10 +245,12 @@ const MenuPrompt = class {
      */
     addMenu(menu)
     {
-        if(!this.validateMenu(menu)) // TODO: parse mixed type bool|array<string> correctly
+        if(this.validateMenu(menu) !== true)
             return `Invalid menu provided in "jsl.MenuPrompt.addMenu()"`;
 
         try {
+            if(this._menus == undefined)
+                this._menus = [];
             this._menus.push(menu);
         }
         catch(err)
@@ -167,6 +260,7 @@ const MenuPrompt = class {
         return true;
     }
 
+    //#MARKER currentMenu
     /**
      * 🔹 Returns the (zero-based) index of the current menu 🔹
      * @returns {Number} The zero-based index of the current menu or `-1` if the menu hasn't been opened yet
@@ -177,6 +271,7 @@ const MenuPrompt = class {
         return this._currentMenu;
     }
 
+    //#MARKER result
     /**
      * 🔹 Returns the current results of the menu prompt 🔹
      * Does NOT close the menu prompt.
@@ -192,12 +287,12 @@ const MenuPrompt = class {
         else return null;
     }
 
+    //#MARKER validateMenu
     /**
      * 🔹 Checks a menu for valid syntax 🔹
      * @param {MenuPropmtMenu} menu The menu that should be validated
      * @returns {(Boolean|Array<String>)} Returns true if the menu is valid, a string array containing the error messages if not
      * @throws Throws an error if a falsy parameter or no parameter at all was passed
-     * @private
      */
     validateMenu(menu)
     {
@@ -240,6 +335,21 @@ const MenuPrompt = class {
         if(isArrayEmpty(errors))
             return true;
         else return errors;
+    }
+
+    //#MARKER _clearConsole
+    /**
+     * ❌ Private method - please don't use ❌
+     * @private
+     */
+    _clearConsole()
+    {
+        if(console != undefined && console.clear != undefined && process.stdout.isTTY)
+            console.clear();
+        else if(console != undefined)
+            console.log("\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n");
+        else
+            process.stdout.write("\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n");
     }
 }
 module.exports.MenuPrompt = MenuPrompt;

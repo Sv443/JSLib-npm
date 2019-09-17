@@ -4,7 +4,7 @@
 
 <br><br><br>
 
-# This documentation will soon be reworked
+# This documentation will soon be reworked (currently it is only updated to version 1.7.0)
 
 <br><br><br>
 

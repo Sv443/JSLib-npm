@@ -113,7 +113,7 @@ const randRange = (min, max) => {
         throw new Error(`Invalid parameters provided for "min" and/or "max" in jsl.randRange() - make sure "min" is not bigger than "max"`);
     max++;
     if(typeof min != "number" || typeof max != "number")
-        throw new Error(`Wrong parameter provided for "min" and/or "max" in jsl.randRange() - (expected: "Number" and "Number", got: "${typeof min}" and "${typeof max}")`);
+        throw new Error(`Wrong parameter provided for "min" and/or "max" in jsl.randRange() - (expected: "number" and "number", got: "${typeof min}" and "${typeof max}")`);
 
     let d = new Date().getTime();
     if (typeof performance !== "undefined" && typeof performance.now === "function")
