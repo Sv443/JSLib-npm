@@ -42,7 +42,7 @@ const jsli = {
     version: "1.8.0",
     intVersion: [1, 8, 0],
     name: "JSLib",
-    desc: "A general-purpose, lightweight and dependency-free JavaScript library that makes coding a bit faster by providing many easy to use functions",
+    desc: "A multi-purpose, lightweight and dependency-free JavaScript library that makes coding a bit faster by providing many easy to use functions",
     author: "Sv443 <sven.fehler@web.de> (https://sv443.net/)",
     contributors: ["none yet :("],
     license: "MIT (https://sv443.net/LICENSE)"
