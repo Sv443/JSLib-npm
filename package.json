@@ -1,27 +1,4 @@
 {
-  "_from": "svjsl",
-  "_id": "svjsl@1.8.0",
-  "_inBundle": false,
-  "_integrity": "sha512-UAm8fK4ukDkmQ935ASQUCiBpjPflvhX7XUq597eI8UKFBkJ9Yc/bAzUFLv+qL4E4+fOQesodb7QOjwJ+IdgB4A==",
-  "_location": "/svjsl",
-  "_phantomChildren": {},
-  "_requested": {
-    "type": "tag",
-    "registry": true,
-    "raw": "svjsl",
-    "name": "svjsl",
-    "escapedName": "svjsl",
-    "rawSpec": "",
-    "saveSpec": null,
-    "fetchSpec": "latest"
-  },
-  "_requiredBy": [
-    "#USER",
-    "/"
-  ],
-  "_resolved": "https://registry.npmjs.org/svjsl/-/svjsl-1.8.0.tgz",
-  "_shasum": "0803828015b2043a2276353e9107f74e605ee51f",
-  "_spec": "svjsl",
   "author": {
     "name": "Sv443",
     "email": "sven.fehler@web.de",
@@ -46,7 +23,7 @@
   ],
   "license": "MIT",
   "main": "JSLib.js",
-  "name": "svjsl",
+  "name": "@sv443/svjsl",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/Sv443/JSLib-npm.git"
@@ -57,5 +34,8 @@
   "version": "1.8.0",
   "devDependencies": {
     "eslint": "^6.3.0"
+  },
+  "publishConfig": {
+    "registry": "https://npm.pkg.github.com/@Sv443"
   }
 }
