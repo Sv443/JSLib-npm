@@ -221,7 +221,7 @@ ${this._options.cursorPrefix} \
 
     //#MARKER close
     /**
-     * 🔹 Closes the menu and returns the chosen options up to this point 🔹
+     * 🔹 Closes the menu and returns the selected options up to this point 🔹
      * @returns {Array<MenuPromptResult>} Returns the results of the menu prompt
      * @since 1.8.0
      */
@@ -238,7 +238,7 @@ ${this._options.cursorPrefix} \
     //#MARKER addMenu
     /**
      * 🔹 Adds a new menu to the menu prompt.
-     * You can even call this method while the menu is opened. 🔹
+     * You can even add new menus while the MenuPrompt is already open. 🔹
      * @param {MenuPropmtMenu} menu
      * @returns {(Boolean|String)} Returns true, if the menu could be added or a string containing an error message, if not
      * @since 1.8.0
