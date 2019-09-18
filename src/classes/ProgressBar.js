@@ -41,10 +41,11 @@ const ProgressBar = class {
      * @private
      */
     _update(message) { // private method to update the console message
-        let isEmpty = require("../misc");
+        let isEmpty = require("../misc").isEmpty;
 
         if(this.iteration <= this.timesToUpdate) {
-            if(!isEmpty(message)) message = "- " + message;
+            if(!isEmpty(message))
+                message = "- " + message;
             else message = "";
 
             process.stdout.cursorTo(0);
