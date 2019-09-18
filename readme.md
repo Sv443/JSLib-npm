@@ -1,5 +1,5 @@
 # <img src="https://raw.githubusercontent.com/Sv443/JSLib/master/icon_v1.png" style="width: 5vw;height: 5vw;">&nbsp;&nbsp;JSLib-npm (v1.7.0) by [Sv443](https://www.sv443.net/) <br> [![](https://img.shields.io/github/license/Sv443/JSLib-npm.svg?style=flat-square)](https://sv443.net/LICENSE) [![](https://img.shields.io/badge/jsdoc-v3.5.5-green.svg?style=flat-square)](https://jsdoc.app/) [![Percentage of issues still open](http://isitmaintained.com/badge/open/sv443/jslib-npm.svg)](https://github.com/Sv443/JSLib-npm/issues "Percentage of issues still open") [![Average time to resolve an issue](http://isitmaintained.com/badge/resolution/sv443/jslib-npm.svg)](https://github.com/Sv443/JSLib-npm/issues "Average time to resolve an issue") [![](https://img.shields.io/github/stars/Sv443/JSLib-npm.svg?style=flat-square)](https://github.com/Sv443/JSLib-npm/)
-## A dependency-free JavaScript library that makes coding a bit faster by taking away some of the complex functions
+## This documentation is currently in the process of being rewritten. The below documentation is still valid though.
 
 
 <br><br><br>
