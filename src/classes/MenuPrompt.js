@@ -341,7 +341,7 @@ ${this._options.cursorPrefix} \
 
     //#MARKER _clearConsole
     /**
-     * ❌ Private method - please don't use ❌
+     * ❌ Private method - don't use ❌
      * @private
      */
     _clearConsole()
@@ -350,8 +350,7 @@ ${this._options.cursorPrefix} \
             console.clear();
         else if(console != undefined)
             console.log("\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n");
-        else
-            process.stdout.write("\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n");
+        else process.stdout.write("\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n");
     }
 }
 module.exports.MenuPrompt = MenuPrompt;
