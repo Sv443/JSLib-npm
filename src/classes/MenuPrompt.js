@@ -37,6 +37,7 @@
 
 /**
  * 🔹 Creates an interactive prompt with one or many menus 🔹
+ * ⚠️ Warning: After creating a MenuPrompt object, the process will no longer exit automatically until the MenuPrompt has finished or was explicitly closed. You have to explicitly use process.exit() until the menu has finished or is closed
  * @class
  * @param {MenuPromptOptions} options The options for the prompt
  * @param {MenuPromptMenu} menus An array of menus
@@ -48,6 +49,7 @@ const MenuPrompt = class {
     /**
      * 🔹 Creates an interactive prompt with one or many menus 🔹
      * ⚠️ Warning: After creating a MenuPrompt object, the process will no longer exit automatically until the MenuPrompt has finished or was explicitly closed. You have to explicitly use process.exit() until the menu has finished or is closed
+     * @class
      * @param {MenuPromptOptions} options The options for the prompt
      * @param {MenuPromptMenu} menus An array of menus
      * @returns {(Boolean|String)} Returns true, if the menu was successfully created, a string containing the error message, if not

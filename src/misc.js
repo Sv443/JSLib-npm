@@ -173,6 +173,8 @@ module.exports.softShutdown = (funct, code) => {
  * @since 1.5.0
  */
 module.exports.noShutdown = () => {
+    if(noShutdown) return;
+
     noShutdown = true;
     process.on("SIGINT", ()=>{});
     process.on("SIGTERM", ()=>{});
@@ -184,6 +186,8 @@ module.exports.noShutdown = () => {
  * @since 1.6.0
  */
 module.exports.yesShutdown = () => {
+    if(!noShutdown) return;
+
     noShutdown = false;
     process.on("SIGINT", ()=>process.exit());
     process.on("SIGTERM", ()=>process.exit());
@@ -191,11 +195,12 @@ module.exports.yesShutdown = () => {
 
 /**
  * 🔹 Adds color(s) to the input text and sends that colored text to the console 🔹
+ * ⚠️ This function will be deprecated - use `jsl.colors` instead ⚠️
  * @param {String} text the text that should be colored and sent as a console message
  * @param {String} colors space separated list of color(s). (Available colors are: "rst/reset, bright, dim, underscore/ul/underline, blink, reverse, hidden, fgblack, fgred, fggreen, fgyellow, fgblue, fgmagenta, fgcyan, fgwhite, bgblack, bgred, bggreen, bgyellow, bgblue, bgmagenta, bgcyan, bgwhite")
  * @returns executes console.log() function
  * @since 1.6.0
- * @deprecated This function will soon be deprecated. Please use the object `jsl.col` instead - This function will soon redirect to that object too and then get completely deprecated in a later version
+ * @deprecated This function will soon be deprecated. Please use the object `jsl.colors` instead - This function will soon redirect to that object too and then get completely deprecated in a later version
  */
 module.exports.consoleColor = (text, colors) => {
     let cnbr = [];
