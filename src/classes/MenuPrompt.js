@@ -23,7 +23,7 @@
 
 /**
  * @callback MenuPromptOnFinishedCallback A callback that gets executed once the MenuPrompt has finished
- * @param {Array<MenuPromptResult>} results The results of the MenuPrompt (an array containing objects)
+ * @param {Array<MenuPromptResult>} results The results of the MenuPrompt (an array containing objects) - will be an empty array if there aren't any results
  */
 
 /**
