@@ -42,7 +42,7 @@ const jsli = {
     version: "1.8.0",
     intVersion: [1, 8, 0],
     name: "JSLib",
-    desc: "A multi-purpose, lightweight and dependency-free JavaScript library that makes coding a bit faster by providing many easy to use functions",
+    desc: "A multi-purpose, lightweight and dependency-free JavaScript library that makes coding a bit faster by providing many easy to use functions and classes",
     author: "Sv443 <sven.fehler@web.de> (https://sv443.net/)",
     contributors: ["none yet :("],
     license: "MIT (https://sv443.net/LICENSE)"
@@ -119,9 +119,12 @@ module.exports.error = (cause, log_file_path, shutdown, status) => {
 
     if(!isEmpty(log_file_path) && typeof log_file_path == "string")
         logger(log_file_path, cause, {timestamp:true,append_bottom:true});
-    console.log("\x1b[31m\x1b[1mThe following error occured:\n" + cause + "\x1b[0m\n");
-    if(shutdown == true && !isEmpty(status)) process.exit(status);
-    else if(shutdown == true && isEmpty(status)) process.exit();
+    console.log("\x1b[31m\x1b[1mAn error occurred:\n" + cause + "\x1b[0m\n");
+
+    if(shutdown == true && !isEmpty(status))
+        process.exit(status);
+    else if(shutdown == true && isEmpty(status))
+        process.exit(1);
 }
 
 /**
@@ -245,11 +248,15 @@ module.exports.consoleColor = (text, colors) => {
 module.exports.readableArray = (array, separators, lastSeparator) => {
     if(isEmpty(array) || typeof array != "object" || (!isEmpty(separators) && typeof separators != "string" && typeof separators != "boolean") || (!isEmpty(lastSeparator) && typeof lastSeparator != "string" && typeof lastSeparator != "boolean"))
         throw new Error(`Wrong or missing parameters in "jsl.readableArray()"`);
-    if(isEmptyWithoutString(lastSeparator) || lastSeparator === false) lastSeparator = " and ";
-    if(isEmptyWithoutString(separators) || separators === false) separators = ", ";
+    if(isEmptyWithoutString(lastSeparator) || lastSeparator === false)
+        lastSeparator = " and ";
+    if(isEmptyWithoutString(separators) || separators === false)
+        separators = ", ";
 
-    if(array.length <= 1) return array.toString();
-    else if(array.length == 2) return array.join(separators);
+    if(array.length <= 1)
+        return array.toString();
+    else if(array.length == 2)
+        return array.join(separators);
     else {
         let ae = lastSeparator + array[array.length - 1];
         array.pop();

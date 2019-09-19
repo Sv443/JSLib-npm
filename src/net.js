@@ -1,4 +1,3 @@
-// type and properties definition for the returned object of the ping function
 /**
  * @typedef {Object} pingReturnValues An object containing the ping's results
  * @property {Number} statusCode The ping's returned status code (eg. 200 or 404)
@@ -8,39 +7,46 @@
 
 /**
  * Pings the specified URL and returns the status code
- * @param {String} URL the URL that should be pinged
- * @param {*} [timeout=5000] time in milliseconds after which the ping will time out and return a 404 error
+ * @param {String} url The URL that should be pinged
+ * @param {Number} [timeout=5000] time in milliseconds after which the ping will time out and return a 404 error
  * @returns {Promise<pingReturnValues>} Promise gets passed the HTTP status code (for example 200 or 404), the status message and the response duration in ms; if errored returns a string with the error message
+ * @throws Throws an error if the `url` parameter is not present
  * @since 1.6.0
  * @version 1.6.1 changed attributes
  * @version 1.6.5 changed time measurement dependency due to deprecation
  * @version 1.6.6 updated documentation for the resulting object
  * @version 1.8.0 changed time measurement method to be a much more accurate one
  */
-module.exports.ping = (URL, timeout) => {
+module.exports.ping = (url, timeout) => {
     let pingTimestamp = new Date().getTime();
     let isEmpty = require("./misc").isEmpty;
 
-    if(typeof URL != "string") return "wrong arguments provided";
-    if(isEmpty(timeout) || typeof timeout != "number") timeout = 5000;
+    if(typeof url != "string" || isEmpty(url))
+        throw new Error("Wrong or empty argument provided for ping() - (expected: \"string\", got: \"" + typeof url + "\")");
 
-    let http_version = (URL.match(/(http:\/\/)/gm) || URL.match(/(https:\/\/)/gm))[0].replace("://", "");
+    if(isEmpty(timeout) || typeof timeout != "number")
+        timeout = 5000;
 
-    let host = URL.split("://")[1].split("/")[0];
-    let path = URL.split("://")[1].split("/");
-    if(isEmpty(path[1])) path = "/";
+    let http_version = (url.match(/(http:\/\/)/gm) || url.match(/(https:\/\/)/gm))[0].replace("://", "");
+
+    let host = url.split("://")[1].split("/")[0];
+    let path = url.split("://")[1].split("/");
+    if(isEmpty(path[1]))
+        path = "/";
     else {
         path.shift();
         path = path.join("/");
     }
 
-    let http = require("http");
+    let http;
 
     if(http_version == "https")
         http = require("https");
+    else http = require("http");
 
     return new Promise((resolve, reject) => {
-        if(isEmpty(host)) return reject("URL is formatted incorrectly");
+        if(isEmpty(host))
+            return reject("URL is formatted incorrectly");
         try {
             http.get({
                 host: host,
@@ -50,13 +56,12 @@ module.exports.ping = (URL, timeout) => {
                 let measuredTime = (new Date().getTime() - pingTimestamp).toFixed(0);
                 res.on('data', () => {});
                 res.on('end', () => {
-                    let returnval = {
+                    return resolve({
                         "statusCode": parseInt(res.statusCode),
                         "statusMessage": res.statusMessage,
                         "responseTime": parseInt(measuredTime),
                         "contentType": res.headers["content-type"]
-                    }
-                    return resolve(returnval);
+                    });
                 });
             });
         }

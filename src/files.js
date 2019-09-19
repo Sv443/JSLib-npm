@@ -11,13 +11,16 @@ function logger(path, content, options) {
     let fs = require("fs");
     let isEmpty = require("./misc").isEmpty;
 
-    if(isEmpty(path) || isEmpty(content) || typeof path != "string" || typeof content != "string"){console.log("path and/or content are empty or of the wrong type");return;}
+    if(isEmpty(path) || isEmpty(content) || typeof path != "string" || typeof content != "string")
+        return console.log("path and/or content are empty or of the wrong type");
 
-    let timestamp = new Date();
+    let timestamp = new Date().toString();
 
-    if(options.timestamp) content = "[" + timestamp + "]  " + content;
+    if(options.timestamp)
+        content = `[${timestamp}]  ${content}`
 
-    if(!options.append_bottom) fs.writeFileSync(path, content);
+    if(!options.append_bottom)
+        fs.writeFileSync(path, content);
     else fs.appendFileSync(path, content + "\n");
 }
 module.exports.logger = logger;
@@ -35,9 +38,11 @@ function readdirRecursive(folder, callback) { // modified version of https://sta
     let walk = function(dir, done) {
         let results = [];
         fs.readdir(dir, function(err, list) {
-            if(err) return done(err);
+            if(err)
+                return done(err);
             let pending = list.length;
-            if(!pending) return done(null, results);
+            if(!pending)
+                return done(null, results);
             list.forEach(function(file) {
                 file = path.resolve(dir, file);
                 fs.stat(file, function(err, stat) {
