@@ -62,3 +62,8 @@ typings/
 
 
 test.js
+.stickler.yml
+.reglogin
+CODE_OF_CONDUCT.md
+SECURITY.md
+.github/
