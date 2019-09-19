@@ -2,7 +2,7 @@
 name: Bug report
 about: Create a bug report to help improve JSLib-npm
 title: "[Bug] "
-labels: bug
+labels: "\U0001F41B bug"
 assignees: Sv443
 
 ---
