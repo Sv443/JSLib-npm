@@ -346,11 +346,18 @@ ${this._options.cursorPrefix} \
      */
     _clearConsole()
     {
-        if(console != undefined && console.clear != undefined && process.stdout.isTTY)
-            console.clear();
-        else if(console != undefined)
-            console.log("\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n");
-        else process.stdout.write("\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n");
+        try {
+            let isEmpty = require("../misc").isEmpty;
+            if(!isEmpty(console) && !isEmpty(console.clear) && process.stdout.isTTY)
+                console.clear();
+            else if(!isEmpty(console))
+                console.log("\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n");
+            else process.stdout.write("\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n");
+        }
+        catch(err) // this might be too much but you can never be too safe with dynamically typed langs ¯\_(ツ)_/¯
+        {
+            return;
+        }
     }
 }
 module.exports.MenuPrompt = MenuPrompt;

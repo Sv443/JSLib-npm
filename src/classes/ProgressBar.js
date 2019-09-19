@@ -61,7 +61,9 @@ const ProgressBar = class {
      * @since 1.7.0
      */
     onFinish(callback) {
-        if(typeof callback != "function" || callback == undefined || callback == null) throw new Error("Wrong arguments provided for ProgressBar.onFinish() - (expected: \"Function\", got: \"" + typeof callback + "\")");
+        let isEmpty = require("../misc").isEmpty;
+        if(typeof callback != "function" || isEmpty(callback))
+            throw new Error("Wrong arguments provided for ProgressBar.onFinish() - (expected: \"Function\", got: \"" + typeof callback + "\")");
         this.finishFunction = callback;
     }
 
