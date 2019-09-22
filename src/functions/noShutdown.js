@@ -1,0 +1,13 @@
+/**
+ * 🔹 Prevents the script from shutting down with default commands (CTRL + C).
+ * It has to either be killed with the task manager or internally, through the script (using `process.exit()`) 🔹
+ * @since 1.5.0
+ */
+const noShutdown = () => {
+    if(process.jsl.noShutdown) return;
+
+    process.jsl.noShutdown = true;
+    process.on("SIGINT", ()=>{});
+    process.on("SIGTERM", ()=>{});
+}
+module.exports = noShutdown;

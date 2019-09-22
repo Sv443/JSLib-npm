@@ -41,7 +41,7 @@ const ProgressBar = class {
      * @private
      */
     _update(message) { // private method to update the console message
-        let isEmpty = require("../misc").isEmpty;
+        let isEmpty = require("../functions/isEmpty");
 
         if(this.iteration <= this.timesToUpdate) {
             if(!isEmpty(message))
@@ -61,7 +61,7 @@ const ProgressBar = class {
      * @since 1.7.0
      */
     onFinish(callback) {
-        let isEmpty = require("../misc").isEmpty;
+        let isEmpty = require("../functions/isEmpty");
         if(typeof callback != "function" || isEmpty(callback))
             throw new Error("Wrong arguments provided for ProgressBar.onFinish() - (expected: \"Function\", got: \"" + typeof callback + "\")");
         this.finishFunction = callback;

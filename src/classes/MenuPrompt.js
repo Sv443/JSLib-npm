@@ -57,7 +57,7 @@ const MenuPrompt = class {
      */
     constructor(options, menus)
     {
-        let isEmpty = require("../misc").isEmpty;
+        let isEmpty = require("../functions/isEmpty");
         let readline = require("readline");
         this._rl = readline.createInterface({
             input: process.stdin,
@@ -92,7 +92,7 @@ const MenuPrompt = class {
 
         let retError = "";
         if(!isEmpty(invalidMenus))
-            retError = `Invalid menu${invalidMenus.length == 1 ? "" : "s"} provided in the construction of a MenuPrompt object. The index${invalidMenus.length == 1 ? "" : "es"} of the invalid menu${invalidMenus.length == 1 ? "" : "s"} ${invalidMenus.length == 1 ? "is" : "are"}: ${invalidMenus.length == 1 ? invalidMenus[0] : require("../misc").readableArray(invalidMenus)}`;
+            retError = `Invalid menu${invalidMenus.length == 1 ? "" : "s"} provided in the construction of a MenuPrompt object. The index${invalidMenus.length == 1 ? "" : "es"} of the invalid menu${invalidMenus.length == 1 ? "" : "s"} ${invalidMenus.length == 1 ? "is" : "are"}: ${invalidMenus.length == 1 ? invalidMenus[0] : require("../functions/readableArray")(invalidMenus)}`;
         
         this._menus = [];
         if(typeof menus == "object" && !isNaN(parseInt(menus.length)))
@@ -116,8 +116,8 @@ const MenuPrompt = class {
      */
     open()
     {
-        let isEmpty = require("../misc").isEmpty;
-        let col = require("../misc").colors;
+        let isEmpty = require("../functions/isEmpty");
+        let col = require("../objects/colors");
 
         if(isEmpty(this._menus))
             return `No menus were added to the MenuPrompt object. Please use the method "MenuPrompt.addMenu()" or supply the menu(s) in the construction of the MenuPrompt object before calling "MenuPrompt.open()"`;
@@ -282,7 +282,7 @@ ${this._options.cursorPrefix} \
      */
     result()
     {
-        let isEmpty = require("../misc").isEmpty;
+        let isEmpty = require("../functions/isEmpty");
 
         if(!isEmpty(this._result))
             return this._result;
@@ -298,8 +298,8 @@ ${this._options.cursorPrefix} \
      */
     validateMenu(menu)
     {
-        let isEmpty = require("../misc").isEmpty;
-        let isArrayEmpty = require("../misc").isArrayEmpty;
+        let isEmpty = require("../functions/isEmpty");
+        let isArrayEmpty = require("../functions/isArrayEmpty");
 
         let errors = [];
 
@@ -347,7 +347,7 @@ ${this._options.cursorPrefix} \
     _clearConsole()
     {
         try {
-            let isEmpty = require("../misc").isEmpty;
+            let isEmpty = require("../functions/isEmpty");
             if(!isEmpty(console) && !isEmpty(console.clear) && process.stdout.isTTY)
                 console.clear();
             else if(!isEmpty(console))

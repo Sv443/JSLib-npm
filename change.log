@@ -25,6 +25,7 @@
         - function "jsl.downloadFile(url, destPath, options)" to download a file from a URL
         - function "jsl.unused(any_var)" to indicate an unused variable to a linter
         - function "jsl.replaceAt(input: str, index: number, replacement: str)" to replace a character at the specified index of a string with a replacement
+        - function "jsl.randomizeArray(array: array)" to randomize the indexes of the items of an array
         - object "colors" to make it easier to add colors to the console output - this will replace "jsl.consoleColor()"
         - class "MenuPrompt" for an interactive menu (directly in the CLI) - methods:
             - "open()" to open the prompt
