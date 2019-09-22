@@ -4,7 +4,8 @@
 const jsl = require("./JSLib");
 var test = {};
 var allResults = [];
-const logOk = (name, ok, res) => console.log(`    ${ok.length == res.length ? "\x1b[32m\x1b[1m█ \x1b[0m" : "\x1b[31m\x1b[1m█ \x1b[0m"}${name}: ${ok.length == res.length ? "\x1b[32m\x1b[1m" : "\x1b[31m\x1b[1m"}(${ok.length} / ${res.length})\x1b[0m ${ok.length == res.length ? "" : `- (${ok})`}`);
+const logOk = (name, ok, res) => console.log(`    ${ok.length == res.length ? "\x1b[32m\x1b[1m█ \x1b[0m" : "\x1b[31m\x1b[1m█ \x1b[0m"}${name}: ${ok.length == res.length ? "\x1b[32m\x1b[1m" : "\x1b[31m\x1b[1m"}(${ok.length} / ${res.length})\x1b[0m ${(ok.length != res.length && ok.length > 0) ? `- (${ok} are ok)` : ""}`);
+const doNothing = () => {};
 
 console.log(`\x1b[36m\x1b[1mJSLib-npm - Unit Tests:\x1b[0m`);
 //#MARKER Functions
@@ -25,7 +26,7 @@ test.isEmpty = () => {
         res.push(true);
     else res.push(false);
 
-    res.forEach((r, i) => r === true ? ok.push(i) : null);
+    res.forEach((r, i) => r === true ? ok.push(i) : doNothing());
 
     logOk("isEmpty", ok, res);
     allResults.push(...res);
@@ -52,7 +53,7 @@ test.isArrayEmpty = () => {
         res.push(true);
     else res.push(false);
 
-    res.forEach((r, i) => r === true ? ok.push(i) : null);
+    res.forEach((r, i) => r === true ? ok.push(i) : doNothing());
 
     logOk("isArrayEmpty", ok, res);
     allResults.push(...res);
@@ -75,7 +76,7 @@ test.allEqual = () => {
         res.push(true);
     else res.push(false);
 
-    res.forEach((r, i) => r === true ? ok.push(i) : null);
+    res.forEach((r, i) => r === true ? ok.push(i) : doNothing());
 
     logOk("allEqual", ok, res);
     allResults.push(...res);
@@ -102,7 +103,7 @@ test.readableArray = () => {
         res.push(true);
     else res.push(false);
 
-    res.forEach((r, i) => r === true ? ok.push(i) : null);
+    res.forEach((r, i) => r === true ? ok.push(i) : doNothing());
 
     logOk("readableArray", ok, res);
     allResults.push(...res);
@@ -121,7 +122,15 @@ test.mapRange = () => {
         res.push(true);
     else res.push(false);
 
-    res.forEach((r, i) => r === true ? ok.push(i) : null);
+    if(jsl.mapRange(7, 5, 10, 0, 20) === 8) // 2
+        res.push(true);
+    else res.push(false);
+
+    if(jsl.mapRange(3, 0, 4, 0, 10).toFixed(1) === 7.5.toFixed(1)) // 3
+        res.push(true);
+    else res.push(false);
+
+    res.forEach((r, i) => r === true ? ok.push(i) : doNothing());
 
     logOk("mapRange", ok, res);
     allResults.push(...res);
@@ -139,7 +148,7 @@ test.unused = () => {
         res.push(true);
     else res.push(false);
 
-    res.forEach((r, i) => r === true ? ok.push(i) : null);
+    res.forEach((r, i) => r === true ? ok.push(i) : doNothing());
 
     logOk("unused", ok, res);
     allResults.push(...res);
@@ -159,7 +168,7 @@ test.replaceAt = () => {
         res.push(true);
     else res.push(false);
 
-    res.forEach((r, i) => r === true ? ok.push(i) : null);
+    res.forEach((r, i) => r === true ? ok.push(i) : doNothing());
 
     logOk("replaceAt", ok, res);
     allResults.push(...res);
