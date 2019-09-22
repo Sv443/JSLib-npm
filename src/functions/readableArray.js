@@ -13,13 +13,13 @@ const readableArray = (array, separators, lastSeparator) => {
         throw new Error(`Wrong or missing parameters in "jsl.readableArray()"`);
     if(isEmptyWithoutString(lastSeparator) || lastSeparator === false)
         lastSeparator = " and ";
-    if(isEmptyWithoutString(separators) || separators === false)
+    if(isEmptyWithoutString(separators))
         separators = ", ";
 
     if(array.length <= 1)
-        return array.toString();
+        return array[0].toString();
     else if(array.length == 2)
-        return array.join(separators);
+        return array.join(lastSeparator);
     else {
         let ae = lastSeparator + array[array.length - 1];
         array.pop();
@@ -28,7 +28,7 @@ const readableArray = (array, separators, lastSeparator) => {
 }
 
 function isEmptyWithoutString(variable) {
-    if((variable == null || variable == undefined || variable == [] || isNaN(variable)) && variable != "")
+    if(variable == null || variable == undefined || variable == [])
         return true;
     else return false;
 }

@@ -33,7 +33,8 @@
     "url": "git+https://github.com/Sv443/JSLib-npm.git"
   },
   "scripts": {
-    "test": "eslint ./"
+    "lint": "eslint ./",
+    "test": "node unittest.js"
   },
   "version": "1.8.0",
   "devDependencies": {
