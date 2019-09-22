@@ -1,6 +1,10 @@
+// These are the unit tests for JSLib
+// You can run them with "npm run test" in the root of JSLib
+
 const jsl = require("./JSLib");
 var test = {};
-const logOk = (name, ok, res) => console.log(`    ${ok.length == res.length ? "\x1b[32m\x1b[1m✓ \x1b[0m" : "\x1b[31m\x1b[1m✗ \x1b[0m"}${name}: ${ok.length == res.length ? "\x1b[32m\x1b[1m" : "\x1b[31m\x1b[1m"}(${ok.length} / ${res.length})\x1b[0m ${ok.length == res.length ? "" : `- (${ok})`}`);
+var allResults = [];
+const logOk = (name, ok, res) => console.log(`    ${ok.length == res.length ? "\x1b[32m\x1b[1m█ \x1b[0m" : "\x1b[31m\x1b[1m█ \x1b[0m"}${name}: ${ok.length == res.length ? "\x1b[32m\x1b[1m" : "\x1b[31m\x1b[1m"}(${ok.length} / ${res.length})\x1b[0m ${ok.length == res.length ? "" : `- (${ok})`}`);
 
 console.log(`\x1b[36m\x1b[1mJSLib-npm - Unit Tests:\x1b[0m`);
 //#MARKER Functions
@@ -24,6 +28,7 @@ test.isEmpty = () => {
     res.forEach((r, i) => r === true ? ok.push(i) : null);
 
     logOk("isEmpty", ok, res);
+    allResults.push(...res);
 }
 test.isEmpty();
 
@@ -50,6 +55,7 @@ test.isArrayEmpty = () => {
     res.forEach((r, i) => r === true ? ok.push(i) : null);
 
     logOk("isArrayEmpty", ok, res);
+    allResults.push(...res);
 }
 test.isArrayEmpty();
 
@@ -72,6 +78,7 @@ test.allEqual = () => {
     res.forEach((r, i) => r === true ? ok.push(i) : null);
 
     logOk("allEqual", ok, res);
+    allResults.push(...res);
 }
 test.allEqual();
 
@@ -98,6 +105,7 @@ test.readableArray = () => {
     res.forEach((r, i) => r === true ? ok.push(i) : null);
 
     logOk("readableArray", ok, res);
+    allResults.push(...res);
 }
 test.readableArray();
 
@@ -116,6 +124,7 @@ test.mapRange = () => {
     res.forEach((r, i) => r === true ? ok.push(i) : null);
 
     logOk("mapRange", ok, res);
+    allResults.push(...res);
 }
 test.mapRange();
 
@@ -133,6 +142,7 @@ test.unused = () => {
     res.forEach((r, i) => r === true ? ok.push(i) : null);
 
     logOk("unused", ok, res);
+    allResults.push(...res);
 }
 test.unused();
 
@@ -152,6 +162,7 @@ test.replaceAt = () => {
     res.forEach((r, i) => r === true ? ok.push(i) : null);
 
     logOk("replaceAt", ok, res);
+    allResults.push(...res);
 }
 test.replaceAt();
 
@@ -183,6 +194,11 @@ console.log(`\n\n\x1b[33m\x1b[1m> Objects:\x1b[0m\n`);
 
 
 
-
-
+let allTrue = 0;
+let allFalse = 0;
+allResults.forEach(res => {
+    if(res) allTrue++;
+    if(!res) allFalse++;
+})
+console.log(`\n\n\x1b[35m\x1b[1m>> Result:\x1b[0m ${allTrue} / ${allTrue + allFalse}${allFalse > 0 ? `  \x1b[31m\x1b[1m(${allFalse} false)\x1b[0m` : ""}`);
 console.log(`\n\x1b[36m\x1b[1m==================================\x1b[0m`);
