@@ -1,7 +1,7 @@
 /**
  * 🔹 Randomizes all items in an array 🔹
- * @param {Array<any>} array 
- * @returns {Array<any>}
+ * @param {Array<any>} array The array that should be randomized
+ * @returns {Array<any>} Returns the randomized array
  * @throws Throws an error if the parameter is not an array
  * @since 1.8.0
  */
@@ -13,11 +13,7 @@ const randomizeArray = array => {
 
     let newArray = [];
 
-    array.forEach(item => {
-        let randNumber = randRange(0, --array.length);
-
-        newArray[randNumber] = item;
-    });
+    array.forEach(item => newArray[randRange(0, --array.length)] = item);
 
     return newArray;
 }

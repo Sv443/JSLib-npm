@@ -803,7 +803,7 @@ allResults.forEach(res => {
     if(res) allTrue++;
     if(!res) allFalse++;
 })
-console.log(`\n\n\x1b[35m\x1b[1m>> Result:\x1b[0m ${allTrue} / ${allTrue + allFalse}${allFalse > 0 ? `  \x1b[31m\x1b[1m(${allFalse} false)\x1b[0m` : ""}`);
+console.log(`\n\n\x1b[35m\x1b[1m>> Result:\x1b[0m ${allTrue == allTrue + allFalse ? "\x1b[32m\x1b[1m" : "\x1b[31m\x1b[1m"}${allTrue} / ${allTrue + allFalse}\x1b[0m${allFalse > 0 ? `  \x1b[31m\x1b[1m(${allFalse} failed)\x1b[0m` : ""}`);
 console.log(`\n\x1b[36m\x1b[1m==================================\x1b[0m`);
 
 if(allTrue < allFalse)
