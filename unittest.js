@@ -7,7 +7,7 @@
 const jsl = require("./JSLib");
 var test = {seededRNG:{},generateUUID:{}};
 var allResults = [];
-const logOk = (name, ok, res, indent) => console.log(`    ${indent === true ? "    " : ""}${ok.length == res.length ? "\x1b[32m\x1b[1m■" : "\x1b[31m\x1b[1m█"}\x1b[0m ${name}: ${ok.length == res.length ? "\x1b[32m\x1b[1m" : "\x1b[31m\x1b[1m"}(${ok.length} / ${res.length})\x1b[0m ${(ok.length != res.length && ok.length > 0) ? `- (${ok} ${ok.length == 1 ? "is" : "are"} ok)` : ""}`);
+const logOk = (name, ok, res, indent) => console.log(`    ${indent === true ? "    " : ""}${ok.length == res.length ? "\x1b[32m" : "\x1b[31m"}\x1b[1m■\x1b[0m ${name}: ${ok.length == res.length ? "\x1b[32m\x1b[1m" : "\x1b[31m\x1b[1m"}(${ok.length} / ${res.length})\x1b[0m ${(ok.length != res.length && ok.length > 0) ? `- (${ok} ${ok.length == 1 ? "is" : "are"} ok)` : ""}`);
 const doNothing = () => {};
 
 
@@ -110,7 +110,7 @@ test.noShutdown = () => {
 
     jsl.noShutdown();
 
-    if(process.jsl != undefined && process.jsl.noShutdown === true) // 0
+    if(process.jsl != undefined && process.jsl.noShutdown === false) // 0
         res.push(true);
     else res.push(false);
 
