@@ -4,7 +4,7 @@
 const jsl = require("./JSLib");
 var test = {seededRNG:{},generateUUID:{}};
 var allResults = [];
-const logOk = (name, ok, res, indent) => console.log(`    ${indent === true ? "    " : ""}${ok.length == res.length ? "\x1b[32m\x1b[1m█ \x1b[0m" : "\x1b[31m\x1b[1m█ \x1b[0m"}${name}: ${ok.length == res.length ? "\x1b[32m\x1b[1m" : "\x1b[31m\x1b[1m"}(${ok.length} / ${res.length})\x1b[0m ${(ok.length != res.length && ok.length > 0) ? `- (${ok} ${ok.length == 1 ? "is" : "are"} ok)` : ""}`);
+const logOk = (name, ok, res, indent) => console.log(`    ${indent === true ? "    " : ""}${ok.length == res.length ? "\x1b[32m\x1b[1m■" : "\x1b[31m\x1b[1m█"}\x1b[0m ${name}: ${ok.length == res.length ? "\x1b[32m\x1b[1m" : "\x1b[31m\x1b[1m"}(${ok.length} / ${res.length})\x1b[0m ${(ok.length != res.length && ok.length > 0) ? `- (${ok} ${ok.length == 1 ? "is" : "are"} ok)` : ""}`);
 const doNothing = () => {};
 
 
@@ -802,9 +802,11 @@ let allFalse = 0;
 allResults.forEach(res => {
     if(res) allTrue++;
     if(!res) allFalse++;
-})
-console.log(`\n\n\x1b[35m\x1b[1m>> Result:\x1b[0m ${allTrue == allTrue + allFalse ? "\x1b[32m\x1b[1m" : "\x1b[31m\x1b[1m"}${allTrue} / ${allTrue + allFalse}\x1b[0m${allFalse > 0 ? `  \x1b[31m\x1b[1m(${allFalse} failed)\x1b[0m` : ""}`);
-console.log(`\n\x1b[36m\x1b[1m==================================\x1b[0m`);
+});
+
+console.log(`\n\n\n\x1b[36m\x1b[1m════════════════════════════════════════════════\x1b[0m\n`);
+console.log(`${allTrue == allTrue + allFalse ? "\x1b[32m" : "\x1b[31m"}\x1b[1m►>\x1b[0m  Result:\x1b[0m ${allTrue == allTrue + allFalse ? "\x1b[32m\x1b[1m" : "\x1b[31m\x1b[1m"}${allTrue} / ${allTrue + allFalse}\x1b[0m${allFalse > 0 ? `  \x1b[31m\x1b[1m(${allFalse} failed)\x1b[0m` : ""}`);
+console.log(`\n\x1b[36m\x1b[1m════════════════════════════════════════════════\x1b[0m`);
 
 if(allTrue < allFalse)
     process.exit(1);
