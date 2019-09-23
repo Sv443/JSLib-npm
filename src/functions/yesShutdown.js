@@ -4,7 +4,10 @@
  * @since 1.6.0
  */
 const yesShutdown = () => {
-    if(!process.jsl.noShutdown) return;
+    if(process.jsl != undefined && !process.jsl.noShutdown) return;
+
+    if(process.jsl == undefined)
+        process.jsl = {};
 
     process.jsl.noShutdown = false;
     process.on("SIGINT", ()=>process.exit());

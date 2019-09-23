@@ -89,6 +89,46 @@ test.allEqual = () => {
 test.allEqual();
 
 
+test.noShutdown = () => {
+    let res = [];
+    let ok = [];
+    
+
+    jsl.noShutdown();
+
+    if(process.jsl != undefined && process.jsl.noShutdown === true) // 0
+        res.push(true);
+    else res.push(false);
+
+
+    res.forEach((r, i) => r === true ? ok.push(i) : doNothing());
+
+    logOk("noShutdown", ok, res);
+    allResults.push(...res);
+}
+test.noShutdown();
+
+
+test.yesShutdown = () => {
+    let res = [];
+    let ok = [];
+    
+
+    jsl.yesShutdown();
+    
+    if(process.jsl != undefined && process.jsl.noShutdown === false) // 0
+        res.push(true);
+    else res.push(false);
+
+
+    res.forEach((r, i) => r === true ? ok.push(i) : doNothing());
+
+    logOk("yesShutdown", ok, res);
+    allResults.push(...res);
+}
+test.yesShutdown();
+
+
 test.readableArray = () => {
     let res = [];
     let ok = [];

@@ -34,7 +34,7 @@
             - "currentMenu()" to get the current menu index
             - "close()" to prematurely close the prompt and get the results
             - "result()" to prematurely get the results of the prompt (without closing it)
-        - added unit tests for every function, class and object. It can be run with "npm test" or "node unittest"
+        - added unit tests for every function, class and object. They can be run with "npm test" or "node unittest"
     - improvements / fixes:
         - put all random number generator related stuff in a separate file ("rng.js")
         - improved time measurement system for "jsl.ping()"

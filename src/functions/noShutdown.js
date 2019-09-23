@@ -4,8 +4,11 @@
  * @since 1.5.0
  */
 const noShutdown = () => {
-    if(process.jsl.noShutdown) return;
+    if(process.jsl != undefined && process.jsl.noShutdown) return;
 
+    if(process.jsl == undefined)
+        process.jsl = {};
+    
     process.jsl.noShutdown = true;
     process.on("SIGINT", ()=>{});
     process.on("SIGTERM", ()=>{});
