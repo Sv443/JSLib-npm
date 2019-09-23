@@ -1,6 +1,9 @@
 // These are the unit tests for JSLib
-// You can run them with "npm run test" in the root of JSLib
+// You can run them with "npm test" in the root of JSLib
+// As with most things, red means bad and green means good
+// If you are colorblind, replace all occurrencies of "\x1b[32m" with "\x1b34m"
 
+//#MARKER Init
 const jsl = require("./JSLib");
 var test = {seededRNG:{},generateUUID:{}};
 var allResults = [];
@@ -11,6 +14,17 @@ const doNothing = () => {};
 
 console.clear();
 console.log(`\n\n\x1b[36m\x1b[1mJSLib-npm - Unit Tests:\x1b[0m`);
+
+
+
+
+
+
+
+
+
+
+
 
 
 //#MARKER Functions
@@ -492,6 +506,14 @@ test.readdirRecursiveSync();
 
 
 
+
+
+
+
+
+
+
+
 //#MARKER Classes
 console.log(`\n\n\x1b[33m\x1b[1m> Classes:\x1b[0m\n`);
 
@@ -568,18 +590,12 @@ class MenuPromptUnitTest extends jsl.MenuPrompt {
         this._active = true;
 
 
-        let openMenu = (idx) => {
+        let openMenu = idx => {
             if(idx >= this._menus.length || !this._active)
-            {
-                // this.close();
-                // this._options.onFinished(this._results);
-                return;
-            }
+                return this.close();
             else
             {
                 this._currentMenu = idx;
-
-                // this._clearConsole();
 
                 let currentMenu = {
                     title: "",
@@ -613,51 +629,38 @@ class MenuPromptUnitTest extends jsl.MenuPrompt {
                     currentMenu.options += `\n${col.fg.red}${this._options.exitKey}${col.rst}${this._options.optionSeparator}${exitSpacer}Exit\n`;
                 }
 
-// let menuText = `\
-// ${isEmpty(userFeedback) ? "\n\n\n" : `${col.fg.red}❗️ > ${userFeedback}${col.rst}\n\n\n`}${col.fat}${col.fg.cyan}${currentMenu.title}${col.rst}
-// ${col.fg.cyan}${titleUL}${col.rst}
-// ${currentMenu.options}
-
-// ${this._options.cursorPrefix} \
-// `;
-
-                // this._rl.resume();
-                // this._rl.question(menuText, answer => {
-                //     this._rl.pause();
-
-                    let answer = "1";
-                    if(!isEmpty(this._options.exitKey) && answer == this._options.exitKey)
-                        return openMenu(++idx);
-                    
-                    if(isEmpty(answer) && this._options.retryOnInvalid !== false)
-                    {
-                        return openMenu(idx, "Please type one of the green options and press enter");
-                    }
-                    else
-                    {
-                        let currentOptions = this._menus[idx].options;
-                        let selectedOption = null;
-                        currentOptions.forEach((opt, i) => {
-                            if(opt.key == answer)
-                            {
-                                selectedOption = opt;
-                                selectedOption["menuTitle"] = this._menus[idx].title;
-                                selectedOption["optionIndex"] = i;
-                                selectedOption["menuIndex"] = idx;
-                            }
-                        });
-
-                        if(selectedOption != null)
+                let answer = "1";
+                if(!isEmpty(this._options.exitKey) && answer == this._options.exitKey)
+                    return openMenu(++idx);
+                
+                if(isEmpty(answer) && this._options.retryOnInvalid !== false)
+                {
+                    return openMenu(idx, "Please type one of the green options and press enter");
+                }
+                else
+                {
+                    let currentOptions = this._menus[idx].options;
+                    let selectedOption = null;
+                    currentOptions.forEach((opt, i) => {
+                        if(opt.key == answer)
                         {
-                            if(typeof this._results != "object" || isNaN(parseInt(this._results.length)))
-                                this._results = [selectedOption];
-                            else this._results.push(selectedOption);
-
-                            return openMenu(++idx);
+                            selectedOption = opt;
+                            selectedOption["menuTitle"] = this._menus[idx].title;
+                            selectedOption["optionIndex"] = i;
+                            selectedOption["menuIndex"] = idx;
                         }
-                        else return openMenu(idx, `Invalid option "${answer}" selected`);
+                    });
+
+                    if(selectedOption != null)
+                    {
+                        if(typeof this._results != "object" || isNaN(parseInt(this._results.length)))
+                            this._results = [selectedOption];
+                        else this._results.push(selectedOption);
+
+                        return openMenu(++idx);
                     }
-                // });
+                    else return openMenu(idx, `Invalid option "${answer}" selected`);
+                }
             }
         }
 
@@ -734,6 +737,12 @@ test.MenuPrompt();
 
 
 
+
+
+
+
+
+
 //#MARKER Objects
 console.log(`\n\n\x1b[33m\x1b[1m> Objects:\x1b[0m\n`);
 
@@ -797,6 +806,13 @@ test.colors();
 
 
 
+
+
+
+
+
+
+//#MARKER End
 let allTrue = 0;
 let allFalse = 0;
 allResults.forEach(res => {
