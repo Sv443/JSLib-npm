@@ -36,7 +36,7 @@
             - "result()" to prematurely get the results of the prompt (without closing it)
         - added unit tests for every function, class and object. They can be run with "npm test" or "node unittest"
     - improvements / fixes:
-        - put all random number generator related stuff in a separate file ("rng.js")
+        - added support for ESLint (use "npm i --save-dev" and then "npm run lint")
         - improved time measurement system for "jsl.ping()"
         - improved the background stuff in "jsl.ping()" to improve performance
         - added "contentType" property to "jsl.ping()"'s promise callback
@@ -48,7 +48,7 @@
             - "generateUUID.binary(format: str)" [0-1]
             - "generateUUID.custom(format: str, possibleValues: str)" [Custom]
         - added "contributors" and "documentation" properties to the "jsl.info" object
-        - removed the signal "SIGKILL" from the shutdown prevention functions as SIGKILL is intended as a signal that forces a process to be exited no matter what
+        - removed the signal "SIGKILL" from the shutdown prevention functions as "SIGKILL" is intended as a signal that forces a process to be exited no matter what
         - rewrote the entire "README.md"
         - restructured the entire script to separate each function into its own file
         - fixed "isEmpty()"'s object-with-length-0-detection
