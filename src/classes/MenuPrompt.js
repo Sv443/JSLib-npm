@@ -232,7 +232,7 @@ ${this._options.cursorPrefix} \
         this._active = false;
         this._currentMenu = -1;
         this._rl.close();
-        console.clear();
+        this._clearConsole();
 
         return this._results;
     }
@@ -247,6 +247,9 @@ ${this._options.cursorPrefix} \
      */
     addMenu(menu)
     {
+        if(this._active !== true)
+            return `MenuPrompt was already closed, can't add a new menu with "jsl.MenuPrompt.addMenu()"`;
+
         if(this.validateMenu(menu) !== true)
             return `Invalid menu provided in "jsl.MenuPrompt.addMenu()"`;
 
@@ -360,4 +363,4 @@ ${this._options.cursorPrefix} \
         }
     }
 }
-module.exports.MenuPrompt = MenuPrompt;
+module.exports = MenuPrompt;

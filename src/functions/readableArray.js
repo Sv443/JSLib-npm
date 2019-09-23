@@ -16,7 +16,9 @@ const readableArray = (array, separators, lastSeparator) => {
     if(isEmptyWithoutString(separators))
         separators = ", ";
 
-    if(array.length <= 1)
+    if(array.length == null || array.length <= 0)
+        return array;
+    else if(array.length == 1)
         return array[0].toString();
     else if(array.length == 2)
         return array.join(lastSeparator);

@@ -8,6 +8,8 @@
  * @version 1.8.0 Added check for objects with length = 0
  */
 const isEmpty = input => {
-    return (input === undefined || input === null || input === "" || (typeof input == "object" && input.length < 0)) ? true : false;
+    return ((typeof input == "object" && !isNaN(parseInt(input.length)) && input.length <= 0) // arrays
+        || input === undefined || input === null || input === "") // other
+        ? true : false;
 }
 module.exports = isEmpty;

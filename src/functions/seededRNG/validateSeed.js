@@ -8,7 +8,8 @@ const validateSeed = (seed) => {
     let isEmpty = require("../isEmpty");
     let digitCount;
     
-    if(typeof seed == "string") digitCount = parseInt(seed.length);
+    if(typeof seed == "string")
+        digitCount = parseInt(seed.length);
     else digitCount = parseInt(seed.toString().length);
 
     if(isEmpty(seed) || isEmpty(digitCount) || isNaN(parseInt(digitCount)))

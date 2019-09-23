@@ -1,6 +1,6 @@
 /**
  * 🔹 Use this to add color to your console output 🔹
- * ⚠️ "jsl.consoleColor()" will soon be deprecated - use this instead!
+ * ⚠️ "jsl.consoleColor()" will soon be deprecated - please use this object instead!
  * @prop {String} rst
  * @prop {String} reset
  * @prop {String} fat

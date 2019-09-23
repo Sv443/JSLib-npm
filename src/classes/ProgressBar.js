@@ -1,3 +1,9 @@
+/**
+ * 🔹 Creates a dynamic progress bar with a percentage and custom message display 🔹
+ * @param {Number} timesToUpdate How many times you will call ProgressBar.next() in total - example: 4 means you will need to call ProgressBar.next() exactly four times to reach 100% progress 
+ * @param {String} [initialMessage=""] Initial message that appears at 0% progress
+ * @since 1.7.0
+ */
 const ProgressBar = class {
     /**
      * 🔹 Creates a dynamic progress bar with a percentage and custom message display 🔹
@@ -85,4 +91,4 @@ const ProgressBar = class {
         return (this.timesToUpdate - this.iteration >= 0 ? this.timesToUpdate - this.iteration : 0);
     }
 }
-module.exports.ProgressBar = ProgressBar;
+module.exports = ProgressBar;
