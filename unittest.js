@@ -110,7 +110,7 @@ test.noShutdown = () => {
 
     jsl.noShutdown();
 
-    if(process.jsl != undefined && process.jsl.noShutdown === false) // 0
+    if(process.jsl != undefined && process.jsl.noShutdown === true) // 0
         res.push(true);
     else res.push(false);
 
