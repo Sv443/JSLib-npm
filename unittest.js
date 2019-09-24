@@ -6,6 +6,14 @@
 // If you are colorblind, replace all occurrencies of "\x1b[32m" with "\x1b[34m" and replace "\x1b[31m" with "\x1b[33m" - this will turn green into blue and red into yellow
 
 
+const options = {
+    readdirRecursiveSync: {
+        path: "./src/objects" // if this project is opened from a slow drive, this path can be changed to a faster drive to optimize the unit tests
+    }
+}
+
+
+
 //#MARKER Init
 const jsl = require("./JSLib");
 var test = {seededRNG:{},generateUUID:{}};
@@ -494,7 +502,7 @@ test.readdirRecursiveSync = () => {
     let ok = [];
 
 
-    if(typeof jsl.readdirRecursiveSync("./src/objects").length == "number" && jsl.readdirRecursiveSync("./").length > 0) // 0
+    if(typeof jsl.readdirRecursiveSync(options.readdirRecursiveSync.path).length == "number" && jsl.readdirRecursiveSync("./").length > 0) // 0
         res.push(true);
     else res.push(false);
 
