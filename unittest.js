@@ -1,14 +1,17 @@
 // These are the unit tests for JSLib
 // You can run them with "npm test" in the root of JSLib
 // As with most things, red means bad and green means good
-// If you are colorblind, replace all occurrencies of "\x1b[32m" with "\x1b34m"
+// The parentheses tell you how many checks were successful - Example: (3 / 4) means 3 out of 4 checks for this function / class or object were successful
+// The result shows the same thing, but adds up all the checks
+// If you are colorblind, replace all occurrencies of "\x1b[32m" with "\x1b[34m" and replace "\x1b[31m" with "\x1b[33m" - this will turn green into blue and red into yellow
+
 
 //#MARKER Init
 const jsl = require("./JSLib");
 var test = {seededRNG:{},generateUUID:{}};
 var allResults = [];
 const logOk = (name, ok, res, indent) => console.log(`    ${indent === true ? "    " : ""}${ok.length == res.length ? "\x1b[32m" : "\x1b[31m"}\x1b[1m■\x1b[0m ${name}: ${ok.length == res.length ? "\x1b[32m\x1b[1m" : "\x1b[31m\x1b[1m"}(${ok.length} / ${res.length})\x1b[0m ${(ok.length != res.length && ok.length > 0) ? `- (${ok} ${ok.length == 1 ? "is" : "are"} ok)` : ""}`);
-const doNothing = () => {};
+const doNothing = () => {}; // I feel a bit dirty for having coded it like this but my linter wouldn't shut up, sorry :/
 
 
 
