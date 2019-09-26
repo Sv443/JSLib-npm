@@ -3,8 +3,8 @@
  * ⚠️ This function will be deprecated - use `jsl.info.version` or `jsl.info.intVersion` instead ⚠️
  * @returns {String} version
  * @since 1.5.0
- * @version 1.8.0 This function will be deprecated - use `jsl.info.version` or `jsl.info.intVersion` instead
- * @deprecated
+ * @version 1.8.0
+ * @deprecated This function will be deprecated - use `jsl.info.version` or `jsl.info.intVersion` instead
  */
 module.exports.version = () => require("./objects/info").version;
 
