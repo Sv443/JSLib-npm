@@ -8,7 +8,7 @@
  * @version 1.8.0 Added check for objects with length = 0
  */
 const isEmpty = input => {
-    return ((typeof input == "object" && !isNaN(parseInt(input.length)) && input.length <= 0) // arrays
+    return ((input != null && typeof input == "object" && !isNaN(parseInt(input.length)) && input.length <= 0) // arrays
         || input === undefined || input === null || input === "") // other
         ? true : false;
 }
