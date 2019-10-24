@@ -111,27 +111,82 @@
 
 
 
-# func()
-> Description  
+# noShutdown()
+> Prevents the process from being shut down. Triggers on the "SIGINT" and "SIGTERM" signals.  
+> Use [yesShutdown()](#yesshutdown) to remove the shutdown prevention.  
 > ```js
-> jsl.func(param: Number, [param2: String]) -> Boolean
+> jsl.noShutdown() -> void
 > ```
 > 
-> ## Examples:
-> 
-> **<details><summary>Example 1</summary>**
+> **<details><summary>Example</summary>**
 > 
 > ```js
-> test()
+> jsl.noShutdown();
+> ```
+> Then, try exiting the process with `^C` (CTRL + C).
+> 
+> </details>
+
+<br><br><br><br><br><br><br><br><br><br><br>
+
+
+
+# yesShutdown()
+> Removes the shutdown prevention that has been set up with [noShutdown()](#noshutdown).  
+> ```js
+> jsl.yesShutdown() -> void
+> ```
+> 
+> **<details><summary>Example</summary>**
+> 
+> ```js
+> jsl.yesShutdown();
+> ```
+> Then, try exiting the process with `^C` (CTRL + C).
+> 
+> </details>
+
+<br><br><br><br><br><br><br><br><br><br><br>
+
+
+
+# readableArray()
+> Turns an array into a better readable one, with customizable separators.  
+> The `separators` parameter defaults to `, ` and the `lastSeparator` parameter defaults to ` and `.  
+> ```js
+> jsl.readableArray(array: Array<Any>, [separators: String, lastSeparator: String]) -> String
+> ```
+> 
+> **<details><summary>Example</summary>**
+> 
+> ```js
+> var array = [1, 2, 3, 4, 5, 6];
+> 
+> jsl.readableArray(array);           // 1, 2, 3, 4, 5 and 6
+> jsl.readableArray(array, "|", "*"); // 1|2|3|4|5*6
 > ```
 > 
 > </details>
-> 
-> 
-> **<details><summary>Example 1</summary>**
-> 
+
+<br><br><br><br><br><br><br><br><br><br><br>
+
+
+
+# mapRange()
+> Transforms a value of one numerical range to a value of another numerical range.  
 > ```js
-> test()
+> jsl.mapRange(value: Number, range_1_min: Number, range_1_max: Number, range_2_min: Number, range_2_max: Number) -> Number
+> ```
+> 
+> **<details><summary>Example</summary>**
+> 
+> Turn any value with a known minimum and maximum value into a percentage:
+> ```js
+> var inputValue = 1926;
+> var result = jsl.mapRange(inputValue, 0, 4600, 0, 100);
+> 
+> console.log(result);                   // 41.869565217391305
+> console.log(Math.round(result) + "%"); // 42%
 > ```
 > 
 > </details>
@@ -146,108 +201,10 @@
 > jsl.func(param: Number, [param2: String]) -> Boolean
 > ```
 > 
-> ## Examples:
-> 
-> **<details><summary>Example 1</summary>**
+> **<details><summary>Example</summary>**
 > 
 > ```js
-> test()
-> ```
-> 
-> </details>
-> 
-> 
-> **<details><summary>Example 1</summary>**
-> 
-> ```js
-> test()
-> ```
-> 
-> </details>
-
-<br><br><br><br><br><br><br><br><br><br><br>
-
-
-
-# func()
-> Description  
-> ```js
-> jsl.func(param: Number, [param2: String]) -> Boolean
-> ```
-> 
-> ## Examples:
-> 
-> **<details><summary>Example 1</summary>**
-> 
-> ```js
-> test()
-> ```
-> 
-> </details>
-> 
-> 
-> **<details><summary>Example 1</summary>**
-> 
-> ```js
-> test()
-> ```
-> 
-> </details>
-
-<br><br><br><br><br><br><br><br><br><br><br>
-
-
-
-# func()
-> Description  
-> ```js
-> jsl.func(param: Number, [param2: String]) -> Boolean
-> ```
-> 
-> ## Examples:
-> 
-> **<details><summary>Example 1</summary>**
-> 
-> ```js
-> test()
-> ```
-> 
-> </details>
-> 
-> 
-> **<details><summary>Example 1</summary>**
-> 
-> ```js
-> test()
-> ```
-> 
-> </details>
-
-<br><br><br><br><br><br><br><br><br><br><br>
-
-
-
-# func()
-> Description  
-> ```js
-> jsl.func(param: Number, [param2: String]) -> Boolean
-> ```
-> 
-> ## Examples:
-> 
-> **<details><summary>Example 1</summary>**
-> 
-> ```js
-> test()
-> ```
-> 
-> </details>
-> 
-> 
-> **<details><summary>Example 1</summary>**
-> 
-> ```js
-> test()
+> jsl.foo();
 > ```
 > 
 > </details>
@@ -262,21 +219,10 @@
 > jsl.func(param: Number, [param2: String]) -> Boolean
 > ```
 > 
-> ## Examples:
-> 
-> **<details><summary>Example 1</summary>**
+> **<details><summary>Example</summary>**
 > 
 > ```js
-> test()
-> ```
-> 
-> </details>
-> 
-> 
-> **<details><summary>Example 1</summary>**
-> 
-> ```js
-> test()
+> jsl.foo();
 > ```
 > 
 > </details>
@@ -291,21 +237,10 @@
 > jsl.func(param: Number, [param2: String]) -> Boolean
 > ```
 > 
-> ## Examples:
-> 
-> **<details><summary>Example 1</summary>**
+> **<details><summary>Example</summary>**
 > 
 > ```js
-> test()
-> ```
-> 
-> </details>
-> 
-> 
-> **<details><summary>Example 1</summary>**
-> 
-> ```js
-> test()
+> jsl.foo();
 > ```
 > 
 > </details>
@@ -320,21 +255,10 @@
 > jsl.func(param: Number, [param2: String]) -> Boolean
 > ```
 > 
-> ## Examples:
-> 
-> **<details><summary>Example 1</summary>**
+> **<details><summary>Example</summary>**
 > 
 > ```js
-> test()
-> ```
-> 
-> </details>
-> 
-> 
-> **<details><summary>Example 1</summary>**
-> 
-> ```js
-> test()
+> jsl.foo();
 > ```
 > 
 > </details>
@@ -349,21 +273,10 @@
 > jsl.func(param: Number, [param2: String]) -> Boolean
 > ```
 > 
-> ## Examples:
-> 
-> **<details><summary>Example 1</summary>**
+> **<details><summary>Example</summary>**
 > 
 > ```js
-> test()
-> ```
-> 
-> </details>
-> 
-> 
-> **<details><summary>Example 1</summary>**
-> 
-> ```js
-> test()
+> jsl.foo();
 > ```
 > 
 > </details>
@@ -378,21 +291,10 @@
 > jsl.func(param: Number, [param2: String]) -> Boolean
 > ```
 > 
-> ## Examples:
-> 
-> **<details><summary>Example 1</summary>**
+> **<details><summary>Example</summary>**
 > 
 > ```js
-> test()
-> ```
-> 
-> </details>
-> 
-> 
-> **<details><summary>Example 1</summary>**
-> 
-> ```js
-> test()
+> jsl.foo();
 > ```
 > 
 > </details>
@@ -407,21 +309,10 @@
 > jsl.func(param: Number, [param2: String]) -> Boolean
 > ```
 > 
-> ## Examples:
-> 
-> **<details><summary>Example 1</summary>**
+> **<details><summary>Example</summary>**
 > 
 > ```js
-> test()
-> ```
-> 
-> </details>
-> 
-> 
-> **<details><summary>Example 1</summary>**
-> 
-> ```js
-> test()
+> jsl.foo();
 > ```
 > 
 > </details>
@@ -436,21 +327,10 @@
 > jsl.func(param: Number, [param2: String]) -> Boolean
 > ```
 > 
-> ## Examples:
-> 
-> **<details><summary>Example 1</summary>**
+> **<details><summary>Example</summary>**
 > 
 > ```js
-> test()
-> ```
-> 
-> </details>
-> 
-> 
-> **<details><summary>Example 1</summary>**
-> 
-> ```js
-> test()
+> jsl.foo();
 > ```
 > 
 > </details>
@@ -465,21 +345,10 @@
 > jsl.func(param: Number, [param2: String]) -> Boolean
 > ```
 > 
-> ## Examples:
-> 
-> **<details><summary>Example 1</summary>**
+> **<details><summary>Example</summary>**
 > 
 > ```js
-> test()
-> ```
-> 
-> </details>
-> 
-> 
-> **<details><summary>Example 1</summary>**
-> 
-> ```js
-> test()
+> jsl.foo();
 > ```
 > 
 > </details>
@@ -494,21 +363,10 @@
 > jsl.func(param: Number, [param2: String]) -> Boolean
 > ```
 > 
-> ## Examples:
-> 
-> **<details><summary>Example 1</summary>**
+> **<details><summary>Example</summary>**
 > 
 > ```js
-> test()
-> ```
-> 
-> </details>
-> 
-> 
-> **<details><summary>Example 1</summary>**
-> 
-> ```js
-> test()
+> jsl.foo();
 > ```
 > 
 > </details>
@@ -523,21 +381,10 @@
 > jsl.func(param: Number, [param2: String]) -> Boolean
 > ```
 > 
-> ## Examples:
-> 
-> **<details><summary>Example 1</summary>**
+> **<details><summary>Example</summary>**
 > 
 > ```js
-> test()
-> ```
-> 
-> </details>
-> 
-> 
-> **<details><summary>Example 1</summary>**
-> 
-> ```js
-> test()
+> jsl.foo();
 > ```
 > 
 > </details>
@@ -552,21 +399,10 @@
 > jsl.func(param: Number, [param2: String]) -> Boolean
 > ```
 > 
-> ## Examples:
-> 
-> **<details><summary>Example 1</summary>**
+> **<details><summary>Example</summary>**
 > 
 > ```js
-> test()
-> ```
-> 
-> </details>
-> 
-> 
-> **<details><summary>Example 1</summary>**
-> 
-> ```js
-> test()
+> jsl.foo();
 > ```
 > 
 > </details>
@@ -581,21 +417,10 @@
 > jsl.func(param: Number, [param2: String]) -> Boolean
 > ```
 > 
-> ## Examples:
-> 
-> **<details><summary>Example 1</summary>**
+> **<details><summary>Example</summary>**
 > 
 > ```js
-> test()
-> ```
-> 
-> </details>
-> 
-> 
-> **<details><summary>Example 1</summary>**
-> 
-> ```js
-> test()
+> jsl.foo();
 > ```
 > 
 > </details>
@@ -610,21 +435,10 @@
 > jsl.func(param: Number, [param2: String]) -> Boolean
 > ```
 > 
-> ## Examples:
-> 
-> **<details><summary>Example 1</summary>**
+> **<details><summary>Example</summary>**
 > 
 > ```js
-> test()
-> ```
-> 
-> </details>
-> 
-> 
-> **<details><summary>Example 1</summary>**
-> 
-> ```js
-> test()
+> jsl.foo();
 > ```
 > 
 > </details>
@@ -639,21 +453,10 @@
 > jsl.func(param: Number, [param2: String]) -> Boolean
 > ```
 > 
-> ## Examples:
-> 
-> **<details><summary>Example 1</summary>**
+> **<details><summary>Example</summary>**
 > 
 > ```js
-> test()
-> ```
-> 
-> </details>
-> 
-> 
-> **<details><summary>Example 1</summary>**
-> 
-> ```js
-> test()
+> jsl.foo();
 > ```
 > 
 > </details>
@@ -668,21 +471,10 @@
 > jsl.func(param: Number, [param2: String]) -> Boolean
 > ```
 > 
-> ## Examples:
-> 
-> **<details><summary>Example 1</summary>**
+> **<details><summary>Example</summary>**
 > 
 > ```js
-> test()
-> ```
-> 
-> </details>
-> 
-> 
-> **<details><summary>Example 1</summary>**
-> 
-> ```js
-> test()
+> jsl.foo();
 > ```
 > 
 > </details>
@@ -697,21 +489,10 @@
 > jsl.func(param: Number, [param2: String]) -> Boolean
 > ```
 > 
-> ## Examples:
-> 
-> **<details><summary>Example 1</summary>**
+> **<details><summary>Example</summary>**
 > 
 > ```js
-> test()
-> ```
-> 
-> </details>
-> 
-> 
-> **<details><summary>Example 1</summary>**
-> 
-> ```js
-> test()
+> jsl.foo();
 > ```
 > 
 > </details>
