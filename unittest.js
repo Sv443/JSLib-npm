@@ -218,8 +218,9 @@ test.unused = () => {
     let ok = [];
 
     let x = "test";
+    let prevType = typeof x;
     jsl.unused(x);
-    if(x === x) // 0
+    if(x === x && typeof x === prevType) // 0
         res.push(true);
     else res.push(false);
 

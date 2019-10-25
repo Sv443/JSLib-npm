@@ -11,10 +11,7 @@ const randomizeArray = array => {
     if(isNaN(parseInt(array.length)))
         throw new Error(`Parameter in "jsl.randomizeArray()" needs to be an array that has to contain at one item.`);
 
-    let newArray = [];
-
-    array.forEach(item => newArray[randRange(0, --array.length)] = item);
-
-    return newArray;
+    // TODO: remake this
+    return array;
 }
 module.exports = randomizeArray;

@@ -195,16 +195,17 @@
 
 
 
-# func()
-> Description  
+# unused()
+> Indicates an unused variable to a linter without modifying the variable.  
 > ```js
-> jsl.func(param: Number, [param2: String]) -> Boolean
+> jsl.unused(any_var: Any) -> void
 > ```
 > 
 > **<details><summary>Example</summary>**
 > 
 > ```js
-> jsl.foo();
+> var foo = "I am an unused variable";
+> jsl.unused(foo);
 > ```
 > 
 > </details>
@@ -214,15 +215,16 @@
 
 
 # replaceAt()
-> Description  
+> Replaces a character at the specified index of a string with another string.  
 > ```js
-> jsl.func(param: Number, [param2: String]) -> Boolean
+> jsl.replaceAt(input: String, index: Number, replacement: String) -> String
 > ```
 > 
 > **<details><summary>Example</summary>**
 > 
 > ```js
-> jsl.foo();
+> jsl.replaceAt("Hello World!", 5, " foo "); // Hello foo World!
+> jsl.replaceAt("012345", 3, "_");           // 012_45
 > ```
 > 
 > </details>
@@ -231,16 +233,19 @@
 
 
 
-# func()
-> Description  
+# randRange()
+> Generates highly randomized numbers from a passed numerical range.  
 > ```js
-> jsl.func(param: Number, [param2: String]) -> Boolean
+> jsl.randRange(min: Number, max: Number) -> Number
 > ```
 > 
 > **<details><summary>Example</summary>**
 > 
 > ```js
-> jsl.foo();
+> jsl.randRange(5, 10); // 8
+> jsl.randRange(1, 10); // 4
+> jsl.randRange(9, 10); // 10
+> jsl.randRange(-7, 0); // -4
 > ```
 > 
 > </details>
@@ -249,16 +254,17 @@
 
 
 
-# func()
-> Description  
+# randomizeArray()
+> Randomizes the items inside an array and returns it.  
 > ```js
-> jsl.func(param: Number, [param2: String]) -> Boolean
+> jsl.randomizeArray(array: Array<Any>) -> Array
 > ```
 > 
 > **<details><summary>Example</summary>**
 > 
 > ```js
-> jsl.foo();
+> var array = [1, 2, 3, 4, 5, 6];
+> jsl.randomizeArray(array); // [ 5, 2, 1, 6, 3, 4 ]
 > ```
 > 
 > </details>
@@ -266,17 +272,17 @@
 <br><br><br><br><br><br><br><br><br><br><br>
 
 
-
-# func()
-> Description  
+<!-- TODO: -->
+# seededRNG.generateSeededNumbers()
+> Generates a set of numbers based on a seed. As long as the seed stays the same, the random numbers will be the same, no matter when and how the function is executed.  
 > ```js
-> jsl.func(param: Number, [param2: String]) -> Boolean
+> jsl.seededRNG.generateSeededNumbers(param: Number, [param2: String]) -> Boolean
 > ```
 > 
 > **<details><summary>Example</summary>**
 > 
 > ```js
-> jsl.foo();
+> jsl.seededRNG.generateSeededNumbers();
 > ```
 > 
 > </details>
