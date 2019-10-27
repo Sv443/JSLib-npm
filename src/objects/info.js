@@ -1,3 +1,5 @@
+const packageJSON = require("../../package.json");
+
 /**
  * 🔹 Info about JSLib 🔹
  * @param {Object} jsli
@@ -13,13 +15,14 @@
  * @version 1.8.0 added "contributors" array
  */
 const jslInfo = {
-    version: "1.8.0",
-    intVersion: [1, 8, 0],
+    version: packageJSON.version,
+    intVersion: packageJSON.version.split(".").map(v => v = parseInt(v)),
     name: "JSLib",
-    desc: "A multi-purpose, lightweight and dependency-free JavaScript library that makes coding a bit faster by providing many easy to use functions and classes",
-    author: "Sv443 <sven.fehler@web.de> (https://sv443.net/)",
-    contributors: ["none yet :("],
-    license: "MIT (https://sv443.net/LICENSE)",
+    desc: packageJSON.description,
+    author: packageJSON.author.name,
+    authorLong: `${packageJSON.author.name} <${packageJSON.author.email}> (${packageJSON.author.url})`,
+    contributors: packageJSON.contributors != undefined ? packageJSON.contributors : ["none yet :("],
+    license: `${packageJSON.license} (https://sv443.net/LICENSE)`,
     documentation: "https://github.com/Sv443/JSLib-npm/wiki"
 };
 module.exports = jslInfo;

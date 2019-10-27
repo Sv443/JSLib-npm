@@ -27,11 +27,13 @@ const ProgressBar = class {
     }
 
     /**
-     * Increment the progress bar. The amount of these functions should be known at the point of initially creating the ProgressBar object.
-     * @param {String} message Message that should be displayed
+     * 🔹 Increment the progress bar. The amount of these functions should be known at the point of initially creating the ProgressBar object. 🔹
+     * @param {String} [message] Message that should be displayed
      * @since 1.7.0
      */
     next(message) { // increments the progress bar
+        //NOTE: isEmpty check will be executed on _update(), so no need to do it here
+
         this.progress = (1 / this.timesToUpdate) * this.iteration;
 
         let pt = "";
@@ -62,7 +64,7 @@ const ProgressBar = class {
     }
 
     /**
-     * Executes a function once the progress reaches 100%
+     * 🔹 Executes a function once the progress reaches 100% 🔹
      * @param {Function} callback Function
      * @since 1.7.0
      */
@@ -74,8 +76,8 @@ const ProgressBar = class {
     }
 
     /**
-     * Get the current progress as a float value
-     * @returns {Float}
+     * 🔹 Get the current progress as a float value 🔹
+     * @returns {Number}
      * @since 1.7.0
      */
     getProgress() {
@@ -83,7 +85,7 @@ const ProgressBar = class {
     }
 
     /**
-     * Get the amount of increments that are still needed to reach 100% progress
+     * 🔹 Get the amount of increments that are still needed to reach 100% progress 🔹
      * @returns {Number}
      * @since 1.7.0
      */

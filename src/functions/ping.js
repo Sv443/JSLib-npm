@@ -2,7 +2,8 @@
  * @typedef {Object} pingReturnValues An object containing the ping's results
  * @property {Number} statusCode The ping's returned status code (eg. 200 or 404)
  * @property {String} statusMessage The status message of the ping - Could be something like "Ok" for status 200 or "Not Found" for status 404
- * @property {Float} responseTime The response time in milliseconds as an integer
+ * @property {Number} responseTime The response time in milliseconds as an integer
+ * @property {String} contentType The `content-type` header - this will contain the MIME type and the content encoding
  */
 
 /**

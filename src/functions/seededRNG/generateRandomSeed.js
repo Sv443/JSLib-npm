@@ -1,6 +1,6 @@
 /**
  * 🔹 Creates a random seed 🔹
- * @param {Number} digitCount How many digits the seed should have
+ * @param {Number} [digitCount=10] How many digits the seed should have - defaults to 10 if left empty
  * @returns {Number}
  * @since 1.8.0
  */

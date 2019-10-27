@@ -48,3 +48,5 @@ module.exports = {
     version: require("./src/deprecated").version,
     consoleColor: require("./src/deprecated").consoleColor,
 }
+
+require("./test")

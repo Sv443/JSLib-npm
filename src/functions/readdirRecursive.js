@@ -15,18 +15,18 @@ function readdirRecursive(folder, callback) { // modified version of https://sta
                 return done(err);
             let pending = list.length;
             if(!pending)
-                return done(null, results);
+                return done(null, results.reverse());
             list.forEach(function(file) {
                 file = path.resolve(dir, file);
                 fs.stat(file, function(err, stat) {
                     if(stat && stat.isDirectory()) {
                         walk(file, function(err, res) {
                             results = results.concat(res);
-                            if(!--pending) done(null, results);
+                            if(!--pending) done(null, results.reverse());
                         });
                     } else {
                         results.push(file);
-                        if(!--pending) done(null, results);
+                        if(!--pending) done(null, results.reverse());
                     }
                 });
             });

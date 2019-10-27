@@ -1,9 +1,9 @@
 /**
  * @typedef {Object} SeededRandomNumbers
  * @prop {Array<Number>} numbers An array of the random numbers
- * @prop {Number} seed The seed that was used to create the random numbers
  * @param {String} stringified The random numbers, but as a string
  * @param {Number} integer The random numbers, but as an integer
+ * @prop {Number} seed The seed that was used to create the random numbers
  */
 
 /**
@@ -44,9 +44,9 @@ const generateSeededNumbers = (count = 16, seed) => { // thanks to olsn for this
 
     return {
         numbers: result,
-        seed: initialSeed,
         stringified: result.join(""),
-        integer: parseInt(result.join(""))
+        integer: parseInt(result.join("")),
+        seed: initialSeed,
     }
 }
 module.exports = generateSeededNumbers;

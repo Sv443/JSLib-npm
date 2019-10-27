@@ -19,7 +19,7 @@ const validateSeed = (seed) => {
 
     let regex = new RegExp(`^[0-9]{${digitCount}}`, "gm");
 
-    if(!seed.match(regex) || seed.includes("\n"))
+    if(!seed.match(regex) || seed.match(/\n/gm))
         return false;
 
     return true;

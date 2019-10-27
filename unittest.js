@@ -3,13 +3,13 @@
 // As with most things, red means bad and green means good
 // The parentheses tell you how many checks were successful - Example: (3 / 4) means 3 out of 4 checks for this function / class or object were successful
 // The result shows the same thing, but adds up all the checks
-// If you are colorblind, set the property "colorblind" of the below object to true (this will turn green into blue and red into yellow)
+// If you are colorblind, set the property "colorblind" of the below object to true (this will turn green into blue and red into magenta)
 
 
 const options = {
     colorblind: false,
     readdirRecursiveSync: {
-        path: "./src/objects" // if this project is opened from a slow drive, this path can be changed to a faster drive to optimize the unit tests
+        path: "./src/objects" // if this project is opened from a slow drive, this path can be changed to a faster drive to speed up the unit tests
     }
 }
 
@@ -22,8 +22,15 @@ if(rut != null && rut.colorblind === true)
 const jsl = require("./JSLib");
 var test = {seededRNG:{},generateUUID:{}};
 var allResults = [];
-const getColorblindColor = col => (options.colorblind ? (col == "green" ? "\x1b[34m" : "\x1b[33m") : (col == "green" ? "\x1b[32m" : "\x1b[31m"));
-const logOk = (name, ok, res, indent) => console.log(`    ${indent === true ? "    " : ""}${ok.length == res.length ? getColorblindColor("green") : getColorblindColor("red")}\x1b[1m■\x1b[0m ${name}: ${ok.length == res.length ? getColorblindColor("green") + "\x1b[1m" : getColorblindColor("red") + "\x1b[1m"}(${ok.length} / ${res.length})\x1b[0m ${(ok.length != res.length && ok.length > 0) ? `- (${ok} ${ok.length == 1 ? "is" : "are"} ok)` : ""}`);
+const getColorblindColor = col => "\x1b[1m" + (options.colorblind ? (col == "green" ? "\x1b[34m" : "\x1b[33m") : (col == "green" ? "\x1b[32m" : "\x1b[31m"));
+
+const logOk = (name, ok, res, indent) => {
+console.log(
+`    ${indent === true ? "    " : ""}${ok.length == res.length ? getColorblindColor("green") : getColorblindColor("red")}\x1b[1m■\x1b[0m \
+${name}: ${ok.length == res.length ? getColorblindColor("green") + "\x1b[1m" : getColorblindColor("red") + "\x1b[1m"}(${ok.length} / ${res.length})\x1b[0m \
+${(ok.length != res.length && ok.length > 0) ? `- (${ok} ${ok.length == 1 ? "is" : "are"} ok)` : ""}`);
+};
+
 const doNothing = () => {}; // I feel a bit dirty for having coded it like this but my linter wouldn't shut up, sorry :/
 
 
@@ -838,7 +845,7 @@ allResults.forEach(res => {
 });
 
 console.log(`\n\n\n\x1b[36m\x1b[1m════════════════════════════════════════════════\x1b[0m\n`);
-console.log(`${allTrue == allTrue + allFalse ? getColorblindColor("green") : getColorblindColor("red")}\x1b[1m►>\x1b[0m  Result:\x1b[0m ${allTrue == allTrue + allFalse ? getColorblindColor("green") + "\x1b[1m" : getColorblindColor("red") + "\x1b[1m"}${allTrue} / ${allTrue + allFalse}\x1b[0m${allFalse > 0 ? `  ${getColorblindColor("red")}\x1b[1m(${allFalse} failed)\x1b[0m` : ""}`);
+console.log(`${allTrue == allTrue + allFalse ? getColorblindColor("green") : getColorblindColor("red")}\x1b[1m►>\x1b[0m  Result:\x1b[0m ${allTrue == allTrue + allFalse ? getColorblindColor("green") + "\x1b[1m" : getColorblindColor("red") + "\x1b[1m"}${allTrue} / ${allTrue + allFalse}\x1b[0m${allFalse > 0 ? `  ${getColorblindColor("red")}\x1b[1m(${allFalse} failed)\x1b[0m` : `  ${getColorblindColor("green")}\x1b[1m(success)\x1b[0m`}`);
 console.log(`\n\x1b[36m\x1b[1m════════════════════════════════════════════════\x1b[0m`);
 
 if(allTrue < allFalse)

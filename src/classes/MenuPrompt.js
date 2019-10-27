@@ -1,5 +1,4 @@
 //#MARKER typedefs
-
 /**
  * @typedef {Object} MenuPromptMenuOption
  * @prop {String} key The key(s) that need(s) to be pressed to select this option
@@ -40,7 +39,7 @@
  * ⚠️ Warning: After creating a MenuPrompt object, the process will no longer exit automatically until the MenuPrompt has finished or was explicitly closed. You have to explicitly use process.exit() until the menu has finished or is closed
  * @class
  * @param {MenuPromptOptions} options The options for the prompt
- * @param {MenuPromptMenu} menus An array of menus
+ * @param {Array<MenuPromptMenu>} menus An array of menus
  * @returns {(Boolean|String)} Returns true, if the menu was successfully created, a string containing the error message, if not
  * @since 1.8.0
  */
@@ -51,7 +50,7 @@ const MenuPrompt = class {
      * ⚠️ Warning: After creating a MenuPrompt object, the process will no longer exit automatically until the MenuPrompt has finished or was explicitly closed. You have to explicitly use process.exit() until the menu has finished or is closed
      * @class
      * @param {MenuPromptOptions} options The options for the prompt
-     * @param {MenuPromptMenu} menus An array of menus
+     * @param {Array<MenuPromptMenu>} [menus] An array of menus - if you leave this empty, remember to call `MenuPrompt.addMenu()` before calling `MenuPrompt.open()`!
      * @returns {(Boolean|String)} Returns true, if the menu was successfully created, a string containing the error message, if not
      * @since 1.8.0
      */
@@ -83,6 +82,9 @@ const MenuPrompt = class {
             if(isEmpty(options.onFinished)) options.onFinished = () => {};
         }
         this._options = options;
+
+        if(typeof menus != "object" && typeof menus != "undefined")
+            throw new Error(`Invalid parameter "menus" provided in the construction of a MenuPrompt object. Expected: "object", got: "${typeof menus}"`);
 
         let invalidMenus = [];
         if(!isEmpty(menus)) menus.forEach((menu, i) => {

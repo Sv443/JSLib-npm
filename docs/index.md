@@ -15,7 +15,7 @@ const jsl = require("svjsl");
 <br><br>
 
 # Menu:
-- Functions:
+- **Functions:**
     - [isEmpty()](./features/functions.md#isempty)
     - [isArrayEmpty()](./features/functions.md#isarrayempty)
     - [error()](./features/functions.md#error)
@@ -42,9 +42,9 @@ const jsl = require("svjsl");
     - [logger()](./features/functions.md#logger)
     - [readdirRecursive()](./features/functions.md#readdirrecursive)
     - [readdirRecursiveSync()](./features/functions.md#readdirrecursivesync)
-- Classes:
+- **Classes:**
     - [ProgressBar](./features/classes.md#progress-bar)
     - [MenuPrompt](./features/classes.md#menu-prompt)
-- Objects:
+- **Objects:**
     - [info](./features/objects.md#info)
     - [colors](./features/objects.md#colors)

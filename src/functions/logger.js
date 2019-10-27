@@ -17,7 +17,7 @@ function logger(path, content, options) {
     let timestamp = new Date().toString();
 
     if(options.timestamp)
-        content = `[${timestamp}]  ${content}`
+        content = `[${timestamp}]  ${content}`;
 
     if(!options.append_bottom)
         fs.writeFileSync(path, content);

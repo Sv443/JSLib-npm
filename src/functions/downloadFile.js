@@ -1,7 +1,11 @@
 /**
  * @typedef {Object} DownloadProgress
- * @prop {Number} current The current download progress in kilobytes
- * @prop {Number} total The total file size in kilobytes
+ * @prop {Number} currentB The current download progress in bytes
+ * @prop {Number} currentKB The current download progress in kilobytes
+ * @prop {Number} currentMB The current download progress in megabytes
+ * @prop {Number} totalB The total file size in bytes
+ * @prop {Number} totalKB The total file size in kilobytes
+ * @prop {Number} totalMB The total file size in megabytes
  */
 
 /**
@@ -24,7 +28,7 @@
 /**
  * Downloads a file from the specified URL, to the specified destination path, according to the specified options
  * @param {String} url The URL to the file you want to download
- * @param {String} [destPath] The path where the file should be saved to - can be absolute or relative - If left empty, it will default to the root directory of the project
+ * @param {String} [destPath] The path where the file should be saved to - can be absolute or relative - If left empty, it will default to the root directory of the project - **⚠️ Do not include the file name here - set it in the `options` parameter ⚠️**
  * @param {DownloadOptions} [options]
  * @since 1.8.0
  */
@@ -81,18 +85,18 @@ const downloadFile = (url, destPath = "./", options) => {
                     let curSize = fs.statSync(dest).size;
                     if(!isEmpty(totalSize))
                         options.progressCallback({
-                            currentB: curSize,
-                            currentKB: (curSize / 1000).toFixed(3),
-                            currentMB: (curSize / 1000000).toFixed(3),
-                            totalB: totalSize,
-                            totalKB: (totalSize / 1000).toFixed(3),
-                            totalMB: (totalSize / 1000000).toFixed(3)
+                            currentB: parseFloat(curSize),
+                            currentKB: parseFloat((curSize / 1000).toFixed(3)),
+                            currentMB: parseFloat((curSize / 1000000).toFixed(3)),
+                            totalB: parseFloat(totalSize),
+                            totalKB: parseFloat((totalSize / 1000).toFixed(3)),
+                            totalMB: parseFloat((totalSize / 1000000).toFixed(3))
                         });
                     else
                         options.progressCallback({
                             currentB: curSize,
-                            currentKB: (curSize / 1000).toFixed(3),
-                            currentMB: (curSize / 1000000).toFixed(3)
+                            currentKB: parseFloat((curSize / 1000).toFixed(3)),
+                            currentMB: parseFloat((curSize / 1000000).toFixed(3))
                         });
                 }, 50);
             res.pipe(file);
@@ -104,12 +108,12 @@ const downloadFile = (url, destPath = "./", options) => {
                     lastM = true;
                     if(!isEmpty(totalSize) && !isEmpty(options) && !isEmpty(options.progressCallback))
                         options.progressCallback({
-                            currentB: totalSize,
-                            currentKB: (totalSize / 1000).toFixed(3),
-                            currentMB: (totalSize / 1000000).toFixed(3),
-                            totalB: totalSize,
-                            totalKB: (totalSize / 1000).toFixed(3),
-                            totalMB: (totalSize / 1000000).toFixed(3)
+                            currentB: parseFloat(totalSize),
+                            currentKB: parseFloat((totalSize / 1000).toFixed(3)),
+                            currentMB: parseFloat((totalSize / 1000000).toFixed(3)),
+                            totalB: parseFloat(totalSize),
+                            totalKB: parseFloat((totalSize / 1000).toFixed(3)),
+                            totalMB: parseFloat((totalSize / 1000000).toFixed(3))
                         });
                 }
     
