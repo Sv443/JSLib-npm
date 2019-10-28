@@ -28,7 +28,7 @@
     ],
     "license": "MIT",
     "main": "JSLib.js",
-    "name": "svjsl",
+    "name": "@sv443/svjsl",
     "repository": {
       "type": "git",
       "url": "git+https://github.com/Sv443/JSLib-npm.git"
@@ -40,6 +40,9 @@
     "version": "1.8.0",
     "devDependencies": {
       "eslint": "^6.3.0"
+    },
+    "publishConfig": {
+      "registry": "https://npm.pkg.github.com/@Sv443"
     }
   }
   
