@@ -31,8 +31,6 @@ ${name}: ${ok.length == res.length ? getColorblindColor("green") + "\x1b[1m" : g
 ${(ok.length != res.length && ok.length > 0) ? `- (${ok} ${ok.length == 1 ? "is" : "are"} ok)` : ""}`);
 };
 
-const doNothing = () => {}; // I feel a bit dirty for having coded it like this but my linter wouldn't shut up, sorry :/
-
 
 
 console.clear();
@@ -68,7 +66,9 @@ test.isEmpty = () => {
         res.push(true);
     else res.push(false);
 
-    res.forEach((r, i) => r === true ? ok.push(i) : doNothing());
+    res.forEach((r, i) =>{
+        if(r) ok.push(i);
+    });
 
     logOk("isEmpty", ok, res);
     allResults.push(...res);
@@ -95,7 +95,9 @@ test.isArrayEmpty = () => {
         res.push(true);
     else res.push(false);
 
-    res.forEach((r, i) => r === true ? ok.push(i) : doNothing());
+    res.forEach((r, i) =>{
+        if(r) ok.push(i);
+    });
 
     logOk("isArrayEmpty", ok, res);
     allResults.push(...res);
@@ -118,7 +120,9 @@ test.allEqual = () => {
         res.push(true);
     else res.push(false);
 
-    res.forEach((r, i) => r === true ? ok.push(i) : doNothing());
+    res.forEach((r, i) =>{
+        if(r) ok.push(i);
+    });
 
     logOk("allEqual", ok, res);
     allResults.push(...res);
@@ -138,7 +142,9 @@ test.noShutdown = () => {
     else res.push(false);
 
 
-    res.forEach((r, i) => r === true ? ok.push(i) : doNothing());
+    res.forEach((r, i) =>{
+        if(r) ok.push(i);
+    });
 
     logOk("noShutdown", ok, res);
     allResults.push(...res);
@@ -158,7 +164,9 @@ test.yesShutdown = () => {
     else res.push(false);
 
 
-    res.forEach((r, i) => r === true ? ok.push(i) : doNothing());
+    res.forEach((r, i) =>{
+        if(r) ok.push(i);
+    });
 
     logOk("yesShutdown", ok, res);
     allResults.push(...res);
@@ -185,7 +193,9 @@ test.readableArray = () => {
         res.push(true);
     else res.push(false);
 
-    res.forEach((r, i) => r === true ? ok.push(i) : doNothing());
+    res.forEach((r, i) =>{
+        if(r) ok.push(i);
+    });
 
     logOk("readableArray", ok, res);
     allResults.push(...res);
@@ -212,7 +222,9 @@ test.mapRange = () => {
         res.push(true);
     else res.push(false);
 
-    res.forEach((r, i) => r === true ? ok.push(i) : doNothing());
+    res.forEach((r, i) =>{
+        if(r) ok.push(i);
+    });
 
     logOk("mapRange", ok, res);
     allResults.push(...res);
@@ -231,7 +243,9 @@ test.unused = () => {
         res.push(true);
     else res.push(false);
 
-    res.forEach((r, i) => r === true ? ok.push(i) : doNothing());
+    res.forEach((r, i) =>{
+        if(r) ok.push(i);
+    });
 
     logOk("unused", ok, res);
     allResults.push(...res);
@@ -251,7 +265,9 @@ test.replaceAt = () => {
         res.push(true);
     else res.push(false);
 
-    res.forEach((r, i) => r === true ? ok.push(i) : doNothing());
+    res.forEach((r, i) =>{
+        if(r) ok.push(i);
+    });
 
     logOk("replaceAt", ok, res);
     allResults.push(...res);
@@ -266,7 +282,7 @@ test.randRange = () => {
     let randNums = [];
 
     for(let i = 0; i < 25; i++)
-        randNums.push(jsl.randRange(0, 10000));
+        randNums.push(jsl.randRange(0, 100000));
     
     let allEqual = true;
     randNums.forEach(n => {
@@ -278,7 +294,9 @@ test.randRange = () => {
         res.push(true);
     else res.push(false);
 
-    res.forEach((r, i) => r === true ? ok.push(i) : doNothing());
+    res.forEach((r, i) =>{
+        if(r) ok.push(i);
+    });
 
     logOk("randRange", ok, res);
     allResults.push(...res);
@@ -290,20 +308,23 @@ test.randomizeArray = () => {
     let res = [];
     let ok = [];
 
-    let initialArray = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
-    let randomizedArray = jsl.randomizeArray(initialArray);
-    
-    let allEqual = true;
-    initialArray.forEach((n, i) => {
-        if(n != randomizedArray[i])
-            allEqual = false;
-    });
+    let initialArray = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20];
+    let randomizedArray1 = jsl.randomizeArray(initialArray);
+    let randomizedArray2 = jsl.randomizeArray(initialArray);
 
-    if(allEqual === false) // 0
+
+    if(initialArray != randomizedArray1) // 0
         res.push(true);
     else res.push(false);
 
-    res.forEach((r, i) => r === true ? ok.push(i) : doNothing());
+    if(initialArray != randomizedArray2) // 1
+        res.push(true);
+    else res.push(false);
+
+
+    res.forEach((r, i) =>{
+        if(r) ok.push(i);
+    });
 
     logOk("randomizeArray", ok, res);
     allResults.push(...res);
@@ -332,7 +353,9 @@ test.seededRNG.generateSeededNumbers = () => {
         res.push(true);
     else res.push(false);
 
-    res.forEach((r, i) => r === true ? ok.push(i) : doNothing());
+    res.forEach((r, i) =>{
+        if(r) ok.push(i);
+    });
 
     logOk("seededRNG.generateSeededNumbers", ok, res);
     allResults.push(...res);
@@ -356,7 +379,9 @@ test.seededRNG.generateRandomSeed = () => {
         res.push(true);
     else res.push(false);
 
-    res.forEach((r, i) => r === true ? ok.push(i) : doNothing());
+    res.forEach((r, i) =>{
+        if(r) ok.push(i);
+    });
 
     logOk("seededRNG.generateRandomSeed", ok, res);
     allResults.push(...res);
@@ -387,7 +412,9 @@ test.seededRNG.validateSeed = () => {
         res.push(true);
     else res.push(false);
 
-    res.forEach((r, i) => r === true ? ok.push(i) : doNothing());
+    res.forEach((r, i) =>{
+        if(r) ok.push(i);
+    });
 
     logOk("seededRNG.validateSeed", ok, res);
     allResults.push(...res);
@@ -410,7 +437,9 @@ test.generateUUID.hexadecimal = () => {
         res.push(true);
     else res.push(false);
 
-    res.forEach((r, i) => r === true ? ok.push(i) : doNothing());
+    res.forEach((r, i) =>{
+        if(r) ok.push(i);
+    });
 
     logOk("generateUUID.hexadecimal", ok, res);
     allResults.push(...res);
@@ -433,7 +462,9 @@ test.generateUUID.decimal = () => {
         res.push(true);
     else res.push(false);
 
-    res.forEach((r, i) => r === true ? ok.push(i) : doNothing());
+    res.forEach((r, i) =>{
+        if(r) ok.push(i);
+    });
 
     logOk("generateUUID.decimal", ok, res);
     allResults.push(...res);
@@ -456,7 +487,9 @@ test.generateUUID.alphanumerical = () => {
         res.push(true);
     else res.push(false);
 
-    res.forEach((r, i) => r === true ? ok.push(i) : doNothing());
+    res.forEach((r, i) =>{
+        if(r) ok.push(i);
+    });
 
     logOk("generateUUID.alphanumerical", ok, res);
     allResults.push(...res);
@@ -479,7 +512,9 @@ test.generateUUID.binary = () => {
         res.push(true);
     else res.push(false);
 
-    res.forEach((r, i) => r === true ? ok.push(i) : doNothing());
+    res.forEach((r, i) =>{
+        if(r) ok.push(i);
+    });
 
     logOk("generateUUID.binary", ok, res);
     allResults.push(...res);
@@ -502,7 +537,9 @@ test.generateUUID.custom = () => {
         res.push(true);
     else res.push(false);
 
-    res.forEach((r, i) => r === true ? ok.push(i) : doNothing());
+    res.forEach((r, i) =>{
+        if(r) ok.push(i);
+    });
 
     logOk("generateUUID.custom", ok, res);
     allResults.push(...res);
@@ -519,7 +556,9 @@ test.readdirRecursiveSync = () => {
         res.push(true);
     else res.push(false);
 
-    res.forEach((r, i) => r === true ? ok.push(i) : doNothing());
+    res.forEach((r, i) =>{
+        if(r) ok.push(i);
+    });
 
     logOk("readdirRecursiveSync", ok, res);
     allResults.push(...res);
@@ -593,7 +632,9 @@ test.ProgressBar = () => {
     else res.push(false);
 
 
-    res.forEach((r, i) => r === true ? ok.push(i) : doNothing());
+    res.forEach((r, i) =>{
+        if(r) ok.push(i);
+    });
     logOk("ProgressBar", ok, res);
     allResults.push(...res);
 }
@@ -749,7 +790,9 @@ test.MenuPrompt = () => {
 
 
 
-    res.forEach((r, i) => r === true ? ok.push(i) : doNothing());
+    res.forEach((r, i) =>{
+        if(r) ok.push(i);
+    });
     logOk("MenuPrompt", ok, res);
     allResults.push(...res);
 }
@@ -772,6 +815,8 @@ console.log(`\n\n\x1b[33m\x1b[1m> Objects:\x1b[0m\n`);
 
 
 test.info = () => {
+    let packageJSON = require("./package.json");
+
     let res = [];
     let ok = [];
 
@@ -784,16 +829,18 @@ test.info = () => {
         res.push(true);
     else res.push(false);
 
-    if(jsl.info.license.startsWith("MIT")) // 2
+    if(jsl.info.license.startsWith(packageJSON.license.split(" ")[0])) // 2
         res.push(true);
     else res.push(false);
 
-    if(jsl.info.author.startsWith("Sv443")) // 3
+    if(jsl.info.author.startsWith(packageJSON.author.name)) // 3
         res.push(true);
     else res.push(false);
 
 
-    res.forEach((r, i) => r === true ? ok.push(i) : doNothing());
+    res.forEach((r, i) =>{
+        if(r) ok.push(i);
+    });
     logOk("info", ok, res);
     allResults.push(...res);
 }
@@ -809,16 +856,18 @@ test.colors = () => {
         res.push(true);
     else res.push(false);
 
-    if(jsl.colors.fg != undefined) // 1
+    if(Object.keys(jsl.colors.fg).length != 0) // 1
         res.push(true);
     else res.push(false);
 
-    if(jsl.colors.bg != undefined) // 2
+    if(Object.keys(jsl.colors.bg).length != 0) // 2
         res.push(true);
     else res.push(false);
 
 
-    res.forEach((r, i) => r === true ? ok.push(i) : doNothing());
+    res.forEach((r, i) =>{
+        if(r) ok.push(i);
+    });
     logOk("colors", ok, res);
     allResults.push(...res);
 }
