@@ -47,6 +47,4 @@ module.exports = {
     //#MARKER deprecated
     version: require("./src/deprecated").version,
     consoleColor: require("./src/deprecated").consoleColor,
-}
-
-require("./test")
+};
