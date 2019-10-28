@@ -18,29 +18,40 @@
 
 > [1.8.0]:
     - new features:
-        - function "jsl.generateSeededNumbers(count, seed)" to generate "random" numbers based on a passed seed
-        - function "jsl.generateRandomSeed(digitCount)" to generate a random seed to be used in "jsl.generateSeededNumbers()"
-        - function "jsl.validateSeed(seed)" to check whether or not a seed is valid
+        - function "jsl.seededRNG.generateSeededNumbers(count, seed)" to generate "random" numbers based on a passed seed
+        - function "jsl.seededRNG.generateRandomSeed(digitCount)" to generate a random seed to be used in "jsl.generateSeededNumbers()"
+        - function "jsl.seededRNG.validateSeed(seed)" to check whether or not a seed is valid
         - function "jsl.mapRange(value, range_1_min, range_1_max, range_2_min, range_2_max)" to transform a value from one numerical range to another
         - function "jsl.downloadFile(url, destPath, options)" to download a file from a URL
-        - object "colors" to make it easier to add colors to the console output
+        - function "jsl.unused(any_var)" to indicate an unused variable to a linter
+        - function "jsl.replaceAt(input: str, index: number, replacement: str)" to replace a character at the specified index of a string with a replacement
+        - function "jsl.randomizeArray(array: array)" to randomize the indexes of the items of an array
+        - object "colors" to make it easier to add colors to the console output - this will replace "jsl.consoleColor()"
+        - class "MenuPrompt" for an interactive menu (directly in the CLI) - methods:
+            - "open()" to open the prompt
+            - "addMenu()" to add a new menu to the prompt
+            - "validateMenu()" to check whether a menu is invalid
+            - "currentMenu()" to get the current menu index
+            - "close()" to prematurely close the prompt and get the results
+            - "result()" to prematurely get the results of the prompt (without closing it)
+        - added unit tests for every function, class and object. They can be run with "npm test" or "node unittest"
     - improvements / fixes:
-        - put all random number generator related stuff in a separate file ("rng.js")
+        - added support for ESLint (use "npm i --save-dev" and then "npm run lint")
         - improved time measurement system for "jsl.ping()"
         - improved the background stuff in "jsl.ping()" to improve performance
         - added "contentType" property to "jsl.ping()"'s promise callback
+        - edited a bunch of functions and methods to throw an error instead of returning it as a string, which could've caused unwanted and unpredictable behavior
+        - put the UUID generation inside an object, renamed it and added four new ones:
+            - "generateUUID.hexadecimal(format: str, upperCase: bool)" [0-9,a-f/A-F]
+            - "generateUUID.alphanumerical(format: str, upperCase: bool)" [0-9,a-z/A-Z]
+            - "generateUUID.decimal(format: str)" [0-9]
+            - "generateUUID.binary(format: str)" [0-1]
+            - "generateUUID.custom(format: str, possibleValues: str)" [Custom]
+        - added "contributors" and "documentation" properties to the "jsl.info" object
+        - removed the signal "SIGKILL" from the shutdown prevention functions as "SIGKILL" is intended as a signal that forces a process to be exited no matter what
+        - rewrote the entire documentation, I'm crying rn
+        - restructured the entire script to separate each function into its own file
+        - fixed "isEmpty()"'s object-with-length-0-detection
 
-
-[#MARKER TODO]:
-        - make four versions of "generateUUID()"
-            - "uuid.generateHexadecimal(format: str, upperAndLowerCase: bool)" [0-9,A-F,(a-f)]
-            - "uuid.generateDecimal(format: str)" [0-9]
-            - "uuid.generateBinary(format: str)" [0-1]
-            - "uuid.generateAlphanumerical(format: str, upperAndLowerCase: bool)" [0-9,A-Z,(a-z)]
-        - new class "MenuPrompt" for an interactive menu (directly in the CLI)
-            - methods:
-                - "open()" to open the prompt
-                - "addMenu()" to add a new menu to the prompt
-                - "currentMenu()" to get current menu index
-                - "close()" to close the prompt
-                - "result()" to prematurely get the results of the prompt
+[Next version / TODO]:
+    (nothing yet)
