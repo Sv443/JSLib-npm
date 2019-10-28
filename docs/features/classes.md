@@ -7,7 +7,8 @@
 > 
 > <br>
 > 
-> > ## Constructor:
+> > ## ProgressBar Constructor:
+> > Creates a new ProgressBar object.  
 > > `timesToUpdate` is the amount of incrementation steps of your progress bar or how often you will call `ProgressBar.next()`. This also directly determines the length of the progress bar.  
 > > `initialMessage` is the message that will be shown when the progress bar is still at 0%. You can also leave this empty to not have a message.  
 > > ```js
@@ -66,8 +67,9 @@
 > 
 > <br>
 > 
-> > ## Constructor:
-> > For further definition of what the types `MenuPromptOptions` and `MenuPromptMenu` are, click [here](#menuprompt-types).  
+> > ## MenuPrompt Constructor:
+> > Creates a new MenuPrompt object.  
+> > For further definition of what the types `MenuPromptOptions` and `MenuPromptMenu` are, click [here](#custom-types-of-the-menuprompt-class).  
 > > ```js
 > > var mp = new jsl.MenuPrompt(options: MenuPromptOptions, menus: Array<MenuPromptMenu>)
 > > ```
@@ -86,9 +88,9 @@
 > > ## MenuPrompt.close()
 > > Use this method to prematurely close the menu prompt.  
 > > Returns an array containing the results the menu prompt has collected thus far.  
-> > For further definition of the type `MenuPromptResult`, click [here](#menuprompt-types).  
+> > For further definition of the type `MenuPromptResult`, click [here](#type-menupromptresult).  
 > > ```js
-> > MenuPrompt.close() -> MenuPromptResult
+> > MenuPrompt.close() -> Array<MenuPromptResult>
 > > ```
 > 
 > <br>
@@ -97,7 +99,7 @@
 > > Adds another menu to the menu prompt.  
 > > This can even be called while the menu prompt is open.  
 > > Returns `true`, if the menu could be added or a string containing an error message, if not.  
-> > For further definition of the type `MenuPromptMenu`, click [here](#menuprompt-types).  
+> > For further definition of the type `MenuPromptMenu`, click [here](#type-menupromptmenu).  
 > > ```js
 > > MenuPrompt.addMenu(menu: MenuPromptMenu) -> Boolean|String
 > > ```
@@ -114,9 +116,10 @@
 > <br>
 > 
 > > ## MenuPrompt.result()
-> > Returns the results that the menu prompt has collected thus far but doesn't stop the menu prompt like `MenuPrompt.stop()` does.  
+> > Returns an array of results that the menu prompt has collected thus far but doesn't stop the menu prompt like `MenuPrompt.stop()` does.  
+> > For further definition of the type `MenuPromptResult`, click [here](#type-menupromptresult).  
 > > ```js
-> > MenuPrompt.result() -> MenuPromptResult
+> > MenuPrompt.result() -> Array<MenuPromptResult>
 > > ```
 > 
 > <br>
@@ -212,11 +215,11 @@
 
 <br><br><br>
 
-## MenuPrompt Types:
+# Custom Types of the MenuPrompt Class:
 > There are three custom objects that are being used in MenuPrompt.  
 > They are explained in this section.  
 >   
-> ## MenuPromptOptions:
+> ## Type MenuPromptOptions:
 > > These are the options of your menu prompt.  
 > > ```js
 > > {
@@ -232,10 +235,10 @@
 > 
 > <br>
 > 
-> ## MenuPromptMenu:
+> ## Type MenuPromptMenu:
 > > This object describes a single menu prompt menu.  
 > > It has to be structured similar to this:  
-> > ```js
+> > ```json
 > > {
 > >     "title": "The title of the menu",
 > >     "options": [ // an array containing all selectable options of the menu
@@ -254,5 +257,16 @@
 > 
 > <br>
 > 
-> ## MenuPromptResult:
-> > TODO: this + debug MenuPrompt.open()
+> ## Type MenuPromptResult:
+> > This object contains the result of a single menu of the menu prompt.  
+> > You will always encounter this object multiple times inside an array.  
+> > This object is structured like this:  
+> > ```json
+> > {
+> >     "key": "The key that the user pressed in this menu",
+> >     "description": "The description of the option the user selected",
+> >     "menuTitle": "The title of this menu",
+> >     "optionIndex": "The (zero-based) index number of the user selected option",
+> >     "menuIndex": "The (zero-based) index number of this menu"
+> > }
+> > ```

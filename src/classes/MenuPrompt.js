@@ -63,6 +63,8 @@ const MenuPrompt = class {
             output: process.stdout
         });
 
+        this._closed = false;
+
         if(isEmpty(options))
         {
             options = {
@@ -232,6 +234,7 @@ ${this._options.cursorPrefix} \
     close()
     {
         this._active = false;
+        this._closed = true;
         this._currentMenu = -1;
         this._rl.close();
         this._clearConsole();
@@ -249,13 +252,14 @@ ${this._options.cursorPrefix} \
      */
     addMenu(menu)
     {
-        if(this._active !== true)
+        if(this._closed)
             return `MenuPrompt was already closed, can't add a new menu with "jsl.MenuPrompt.addMenu()"`;
 
-        if(this.validateMenu(menu) !== true)
+        if(!this.validateMenu(menu))
             return `Invalid menu provided in "jsl.MenuPrompt.addMenu()"`;
 
-        try {
+        try
+        {
             if(this._menus == undefined)
                 this._menus = [];
             this._menus.push(menu);
