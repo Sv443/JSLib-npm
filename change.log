@@ -16,7 +16,7 @@
     - split the package up into three separate files
     - removed all dependencies because they are either included by default or their effect was easily recreatable in vanilla JS
 
-> [1.8.0]:
+[1.8.0]:
     - new features:
         - function "jsl.seededRNG.generateSeededNumbers(count, seed)" to generate "random" numbers based on a passed seed
         - function "jsl.seededRNG.generateRandomSeed(digitCount)" to generate a random seed to be used in "jsl.generateSeededNumbers()"
@@ -52,6 +52,17 @@
         - rewrote the entire documentation, I'm crying rn
         - restructured the entire script to separate each function into its own file
         - fixed "isEmpty()"'s object-with-length-0-detection
+
+[1.8.1]:
+    - improvements / fixes:
+        - version bumped because GitHub package registry doesn't allow unpublishing *sigh*
+    
+> [1.8.2]:
+    - improvements / fixes:
+        - fixed typo in the JSDoc comment for "jsl.randRange()"
+        - fixed JSDoc typedefs for MenuPrompt
+        - added missing documentation for "jsl.runUnitTests()"
+        - fixed "directory not found" error in "jsl.runUnitTests()"
 
 [Next version / TODO]:
     (nothing yet)
