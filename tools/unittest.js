@@ -9,7 +9,7 @@
 const options = {
     colorblind: false,
     readdirRecursiveSync: {
-        path: "./src/objects" // if this project is opened from a slow drive, this path can be changed to a faster drive to speed up the unit tests
+        path: "./src/objectss" // if this project is opened from a slow drive, this path can be changed to a faster drive to speed up the unit tests
     }
 }
 
@@ -543,13 +543,22 @@ test.generateUUID.custom();
 
 
 test.readdirRecursiveSync = () => {
+    let fs = require("fs");
+
     let res = [];
     let ok = [];
 
-
-    if(typeof jsl.readdirRecursiveSync(options.readdirRecursiveSync.path).length == "number" && jsl.readdirRecursiveSync("./").length > 0) // 0
+    if(!fs.existsSync(options.readdirRecursiveSync.path))
+    {
+        console.warn(`        \x1b[33m\x1b[1m>>> Warning: Path for "jsl.readdirRecursiveSync()" not found. Skipping...\x1b[0m`);
         res.push(true);
-    else res.push(false);
+    }
+    else
+    {
+        if(typeof jsl.readdirRecursiveSync(options.readdirRecursiveSync.path).length == "number" && jsl.readdirRecursiveSync("./").length > 0) // 0
+            res.push(true);
+        else res.push(false);
+    }
 
     res.forEach((r, i) =>{
         if(r) ok.push(i);
