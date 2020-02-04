@@ -18,6 +18,7 @@
  * @prop {String} [cursorPrefix="─►"] Character(s) that should be prefixed to the cursor. Will default to this arrow: "─►"
  * @prop {Boolean} [retryOnInvalid=true] Whether the menu should be retried if the user entered a wrong option - if false, continues to next menu
  * @prop {MenuPromptOnFinishedCallback} [onFinished] A function that gets called when the user is done with all of the menus of the prompt or entered the exit key(s). The only passed parameter is an array containing all selected option keys
+ * @prop {Boolean} [autoSubmit] If set to true, the MenuPrompt will only accept a single character of input and will then automatically submit the value. If set to false, the user will have to explicitly press the Enter key to submit a value
  */
 
 /**
@@ -34,23 +35,20 @@
  * @prop {Number} menuIndex The zero-based index of the menu
  */
 
-/**
- * 🔹 Creates an interactive prompt with one or many menus 🔹
- * ⚠️ Warning: After creating a MenuPrompt object, the process will no longer exit automatically until the MenuPrompt has finished or was explicitly closed. You have to explicitly use process.exit() until the menu has finished or is closed
- * @class
- * @param {MenuPromptOptions} options The options for the prompt
- * @param {Array<MenuPromptMenu>} menus An array of menus
- * @returns {(Boolean|String)} Returns true, if the menu was successfully created, a string containing the error message, if not
- * @since 1.8.0
- */
+ /**
+  * 🔹 Creates an interactive prompt with one or many menus - add them using `MenuPrompt.addMenu()` 🔹
+  * ⚠️ Warning: Make sure to use the `new` keyword to create an object of this class - example: `let mp = new jsl.MenuPrompt()` ⚠️
+  * @class
+  * @since 1.8.0
+  */
 //#MARKER constructor
 const MenuPrompt = class {
     /**
      * 🔹 Creates an interactive prompt with one or many menus - add them using `MenuPrompt.addMenu()` 🔹
      * ⚠️ Warning: After creating a MenuPrompt object, the process will no longer exit automatically until the MenuPrompt has finished or was explicitly closed. You have to explicitly use process.exit() until the menu has finished or is closed
-     * @class
      * @param {MenuPromptOptions} options The options for the prompt
      * @returns {(Boolean|String)} Returns true, if the MenuPrompt was successfully created, a string containing the error message, if not
+     * @constructor
      * @since 1.8.0
      * @version 1.8.2 Removed second parameter - use `MenuPrompt.addMenu()` instead
      */
@@ -75,6 +73,7 @@ const MenuPrompt = class {
                 cursorPrefix: "─►",
                 retryOnInvalid: true,
                 onFinished: () => {},
+                autoSubmit: false
             };
         }
         else
@@ -84,6 +83,7 @@ const MenuPrompt = class {
             if(options.cursorPrefix !== "" && isEmpty(options.cursorPrefix)) options.cursorPrefix = "─►";
             if(isEmpty(options.retryOnInvalid)) options.retryOnInvalid = true;
             if(isEmpty(options.onFinished)) options.onFinished = () => {};
+            if(isEmpty(options.autoSubmit)) options.autoSubmit = false;
         }
         this._options = options;
 
@@ -160,7 +160,7 @@ const MenuPrompt = class {
                     currentMenu.options += `\n${col.fg.red}${this._options.exitKey}${col.rst}${this._options.optionSeparator}${exitSpacer}Exit\n`;
                 }
 
-let menuText = `\
+                let menuText = `\
 ${isEmpty(userFeedback) ? "\n\n\n" : `${col.fg.red}❗️ > ${userFeedback}${col.rst}\n\n\n`}${col.fat}${col.fg.cyan}${currentMenu.title}${col.rst}
 ${col.fg.cyan}${titleUL}${col.rst}
 ${currentMenu.options}
@@ -168,13 +168,12 @@ ${currentMenu.options}
 ${this._options.cursorPrefix} \
 `;
 
-                this._rl.resume();
-                this._rl.question(menuText, answer => {
-                    this._rl.pause();
-
+                let answerCallback = answer => {
                     if(!isEmpty(this._options.exitKey) && answer == this._options.exitKey)
                         return openMenu(++idx);
-                    
+
+                    console.log();
+
                     if(isEmpty(answer) && this._options.retryOnInvalid !== false)
                     {
                         return openMenu(idx, "Please type one of the green options and press enter");
@@ -201,9 +200,43 @@ ${this._options.cursorPrefix} \
 
                             return openMenu(++idx);
                         }
-                        else return openMenu(idx, `Invalid option "${answer}" selected`);
+                        else
+                        {
+                            return openMenu(idx, `Invalid option "${answer.replace(/\n|\r\n/gm, "\\\\n")}" selected`.toString());
+                        }
                     }
-                });
+                }
+
+                if(!this._options.autoSubmit)
+                {
+                    this._rl.resume();
+                    this._rl.question(menuText, answer => {
+                        this._rl.pause();
+                        return answerCallback(answer);
+                    });
+                }
+                else
+                {
+                    this._listenerAttached = true;
+                    process.stdout.write(menuText);
+                    process.stdin.resume();
+
+                    let keypressEvent = chunk => {
+                        if(this._listenerAttached)
+                        {
+                            process.stdin.pause();
+                            removeKeypressEvent();
+                            return answerCallback(chunk);
+                        }
+                    };
+
+                    let removeKeypressEvent = () => {
+                        process.stdin.removeListener("keypress", keypressEvent);
+                        this._listenerAttached = false;
+                    };
+
+                    process.stdin.on("keypress", keypressEvent);
+                }
             }
         }
 
@@ -318,8 +351,8 @@ ${this._options.cursorPrefix} \
 
         if(!isEmpty(menu.options))
             menu.options.forEach((opt, i) => {
-                if(!isNaN(parseInt(opt.length)))
-                    errors.push(`The option with the index ${i} can't be an array`);
+                if(Array.isArray(opt))
+                    errors.push(`The option with the array index ${i} can't be an array`);
 
                 if(typeof opt.key != "string")
                     errors.push(`Wrong variable type for option.key (at array index ${i}). Expected: "string", got "${typeof opt.key}"`);
@@ -327,6 +360,14 @@ ${this._options.cursorPrefix} \
                 if(typeof opt.description != "string")
                     errors.push(`Wrong variable type for option.description (at array index ${i}). Expected: "string", got "${typeof opt.description}"`);
             });
+        
+        if(this._options.autoSubmit)
+        {
+            menu.options.forEach((opt, i) => {
+                if(opt.key.length > 1)
+                    errors.push(`The option "autoSubmit" was set to true but the key of the option with the array index ${i} is more than a single character in length`);
+            });
+        }
 
 
         if(isArrayEmpty(errors))

@@ -6,6 +6,6 @@
     > If it doesn't exist, refer to [this website](https://flaviocopes.com/package-json/#contributors) on how to add it (please use the second format to make using it easier).
 3. Run the command `npm run lint` in your terminal to make sure your code is free of errors
 4. Run the command `npm test` in your terminal to run the unit tests for JSLib to make sure all functions, classes, methods and object still work as expected.
-    > If this fails, you will see the index of the tests that succeeded. From this you can deduce which tests didn't work out. Ýou can then further debug it by taking a look at the file `unittests.js`, searching for the index of the failed test(s) to see what exactly broke.
+    > If this fails, you will see the index of the tests that succeeded. From this you can deduce which tests didn't work out. You can then further debug it by taking a look at the file `unittests.js`, searching for the index of the failed test(s) to see what exactly broke.
 5. Then, submit a new pull / merge request (https://github.com/Sv443/JSLib-npm/compare)
     > Select `Sv443/JSLib-npm` and `master` as the `base` and your forked repository and your edited branch as the `compare`.
