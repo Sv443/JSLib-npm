@@ -46,15 +46,15 @@
 //#MARKER constructor
 const MenuPrompt = class {
     /**
-     * 🔹 Creates an interactive prompt with one or many menus 🔹
+     * 🔹 Creates an interactive prompt with one or many menus - add them using `MenuPrompt.addMenu()` 🔹
      * ⚠️ Warning: After creating a MenuPrompt object, the process will no longer exit automatically until the MenuPrompt has finished or was explicitly closed. You have to explicitly use process.exit() until the menu has finished or is closed
      * @class
      * @param {MenuPromptOptions} options The options for the prompt
-     * @param {Array<MenuPromptMenu>} [menus] An array of menus - if you leave this empty, remember to call `MenuPrompt.addMenu()` before calling `MenuPrompt.open()`!
-     * @returns {(Boolean|String)} Returns true, if the menu was successfully created, a string containing the error message, if not
+     * @returns {(Boolean|String)} Returns true, if the MenuPrompt was successfully created, a string containing the error message, if not
      * @since 1.8.0
+     * @version 1.8.2 Removed second parameter - use `MenuPrompt.addMenu()` instead
      */
-    constructor(options, menus)
+    constructor(options)
     {
         let isEmpty = require("../functions/isEmpty");
         let readline = require("readline");
@@ -62,8 +62,10 @@ const MenuPrompt = class {
             input: process.stdin,
             output: process.stdout
         });
+        this._rl.pause();
 
         this._closed = false;
+        this._active = false;
 
         if(isEmpty(options))
         {
@@ -85,43 +87,27 @@ const MenuPrompt = class {
         }
         this._options = options;
 
-        if(typeof menus != "object" && typeof menus != "undefined")
-            throw new Error(`Invalid parameter "menus" provided in the construction of a MenuPrompt object. Expected: "object", got: "${typeof menus}"`);
-
-        let invalidMenus = [];
-        if(!isEmpty(menus)) menus.forEach((menu, i) => {
-            if(this.validateMenu(menu) !== true)
-                invalidMenus.push(i);
-        });
-
-        let retError = "";
-        if(!isEmpty(invalidMenus))
-            retError = `Invalid menu${invalidMenus.length == 1 ? "" : "s"} provided in the construction of a MenuPrompt object. The index${invalidMenus.length == 1 ? "" : "es"} of the invalid menu${invalidMenus.length == 1 ? "" : "s"} ${invalidMenus.length == 1 ? "is" : "are"}: ${invalidMenus.length == 1 ? invalidMenus[0] : require("../functions/readableArray")(invalidMenus)}`;
-        
-        this._menus = [];
-        if(typeof menus == "object" && !isNaN(parseInt(menus.length)))
-            menus.forEach(men => this.addMenu(men));
-
         this._results = [];
 
         this._currentMenu = -1;
 
-        if(isEmpty(retError))
-            return true;
-        else return retError;
+        return true;
     }
 
     //#MARKER open
     /**
      * 🔹 Opens the menu 🔹
      * ⚠️ Warning: While the menu is opened you shouldn't write anything to the console / to the stdout and stderr as this could mess up the layout of the menu and/or make stuff unreadable
-     * @returns {Boolean} Returns true, if the menu could be opened or a string containing an error message, if not
+     * @returns {(Boolean|String)} Returns true, if the menu could be opened or a string containing an error message, if not
      * @since 1.8.0
      */
     open()
     {
         let isEmpty = require("../functions/isEmpty");
         let col = require("../objects/colors");
+
+        if(this._active)
+            return "This MenuPrompt object was already opened - not opening again";
 
         if(isEmpty(this._menus))
             return `No menus were added to the MenuPrompt object. Please use the method "MenuPrompt.addMenu()" or supply the menu(s) in the construction of the MenuPrompt object before calling "MenuPrompt.open()"`;
