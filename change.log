@@ -61,7 +61,6 @@
     - improvements / fixes:
         - fixed typo in the JSDoc comment for "jsl.randRange()"
         - fixed JSDoc typedefs for MenuPrompt
-        - added missing documentation for "jsl.runUnitTests()"
         - fixed "directory not found" error in "jsl.runUnitTests()"
 
 [Next version / TODO]:

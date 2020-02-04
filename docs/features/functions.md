@@ -648,31 +648,3 @@
 > </details>
 
 <br><br><br><br>
-
-
-
-# runUnitTests()
-> Runs JSLib's unit tests. These test all functions, classes, methods and objects to ensure that they're all working correctly.  
-> While running the unit tests, the results of all checks will be logged to the console.  
-> ⚠️ Using this function will exit the process so if you use this at all, don't do it in production ⚠️  
->   
-> Setting the `colorblind` parameter to `true` will turn green into blue and red into yellow.  
-> 
-> ```js
-> jsl.runUnitTests([colorblind: Boolean]) -> void
-> ```
-> 
-> **<details><summary>Example</summary>**
-> 
-> ```js
-> jsl.runUnitTests();
-> // or
-> jsl.runUnitTests(true); // colorblind mode
-> ```
->
-> Running this function will look similar to this in your console:  
-> ![image](https://sv443.net/cdn/jsl/doc/unittests.png)
-> 
-> </details>
-
-<br><br><br><br>
