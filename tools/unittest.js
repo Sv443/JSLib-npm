@@ -9,7 +9,7 @@
 const options = {
     colorblind: false,
     readdirRecursiveSync: {
-        path: "./src/objectss" // if this project is opened from a slow drive, this path can be changed to a faster drive to speed up the unit tests
+        path: "." // if this project is opened from a slow drive, this path can be changed to a faster drive to speed up the unit tests - setting this to "." or ".." will make the unit tests always work but also slow them down a lot
     }
 }
 
