@@ -37,7 +37,7 @@
       "lint": "echo Running ESLint... && echo. && eslint ./ && echo Done. && echo.",
       "test": "echo Running Unit Tests... && echo. && call node tools/unittest.js && echo."
     },
-    "version": "1.8.1",
+    "version": "1.8.2",
     "devDependencies": {
       "eslint": "^6.3.0"
     }

@@ -62,6 +62,7 @@
         - fixed typo in the JSDoc comment for "jsl.randRange()"
         - fixed JSDoc typedefs for MenuPrompt
         - fixed "directory not found" error in the unit test script
+		- added GitHub actions scripts to automate building and publishing
 
 [Next version / TODO]:
     (nothing yet)

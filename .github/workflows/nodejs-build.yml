@@ -1,0 +1,44 @@
+name: build
+
+on: [push] # runs on every push
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    timeout-minutes: 10
+
+    strategy:
+      fail-fast: false
+      matrix:
+        node-version: [13.x]
+
+    steps:
+    - uses: actions/checkout@v1 # checkout latest commit
+    - name: Use Node.js ${{ matrix.node-version }} # set up Node.js
+      uses: actions/setup-node@v1
+      with:
+        node-version: ${{ matrix.node-version }}
+    - name: Install Dependencies # runs the npm ci command to install all dependencies
+      run: |
+        npm ci
+      env:
+        CI: "true"
+    - name: Run Unit Tests # runs all unit tests to verify that everything works
+      run: |
+        npm test
+      env:
+        CI: "true"
+    - name: Discord success notification # sends a Discord notification
+      env:
+        DISCORD_WEBHOOK: ${{ secrets.DISCORD_WEBHOOK }}
+      uses: Ilshidur/action-discord@master
+      with:
+        args: '✅ **JSLib (npm) CI** (triggered by `{{GITHUB_ACTOR}}` on `{{GITHUB_REF}}`) was successful (see https://github.com/Sv443/JSLib-npm/commit/{{GITHUB_SHA}}/checks)' 
+    - name: Discord failure notification # sends a Discord notification
+      env:
+        DISCORD_WEBHOOK: ${{ secrets.DISCORD_WEBHOOK }}
+      uses: Ilshidur/action-discord@master
+      with:
+        args: '🚫 **JSLib (npm) CI** (triggered by `{{GITHUB_ACTOR}}` on `{{GITHUB_REF}}`) has failed (see https://github.com/Sv443/JSLib-npm/commit/{{GITHUB_SHA}}/checks)'
+      if: failure()
