@@ -1,7 +1,7 @@
 linters:
   eslint:
     config: './.eslintrc.json'
-	fixer: true
+    fixer: true
 
 files:
   ignore:
@@ -9,4 +9,4 @@ files:
     - 'node_modules/*'
 
 fixers:
-	enable: true
+  enable: true
