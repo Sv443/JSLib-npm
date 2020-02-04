@@ -34,8 +34,8 @@
       "url": "git+https://github.com/Sv443/JSLib-npm.git"
     },
     "scripts": {
-      "lint": "echo Running ESLint... && echo. && eslint ./ && echo Done. && echo.",
-      "test": "echo Running Unit Tests... && echo. && call node tools/unittest.js && echo."
+      "lint": "eslint ./",
+      "test": "node tools/unittest.js"
     },
     "version": "1.8.2",
     "devDependencies": {
