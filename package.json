@@ -1,48 +1,47 @@
 {
     "author": {
-      "name": "Sv443",
-      "email": "sven.fehler@web.de",
-      "url": "https://sv443.net/"
+		"name": "Sv443",
+		"email": "sven.fehler@web.de",
+		"url": "https://sv443.net/"
     },
     "bugs": {
-      "url": "https://github.com/Sv443/JSLib-npm/issues"
+    	"url": "https://github.com/Sv443/JSLib-npm/issues"
     },
     "deprecated": false,
     "description": "A multi-purpose, lightweight and dependency-free JavaScript library that makes coding a bit faster by providing many easy to use functions and classes",
     "homepage": "https://github.com/Sv443/JSLib-npm#readme",
     "keywords": [
-      "javascript",
-      "js",
-      "library",
-      "general-purpose",
-      "multi-purpose",
-      "miscellaneous",
-      "miscellaneous-utilities",
-      "miscellaneous-functions",
-      "network",
-      "networking",
-      "download-file",
-      "files",
-      "filesystem",
-      "math"
+		"javascript",
+		"js",
+		"library",
+		"general-purpose",
+		"multi-purpose",
+		"miscellaneous",
+		"miscellaneous-utilities",
+		"miscellaneous-functions",
+		"network",
+		"networking",
+		"download-file",
+		"files",
+		"filesystem",
+		"math"
     ],
     "license": "MIT",
     "main": "JSLib.js",
     "name": "@sv443/svjsl",
     "repository": {
-      "type": "git",
-      "url": "git+https://github.com/Sv443/JSLib-npm.git"
+		"type": "git",
+		"url": "git+https://github.com/Sv443/JSLib-npm.git"
     },
     "scripts": {
-      "lint": "echo Running ESLint... && echo. && eslint ./ && echo Done. && echo.",
-      "test": "echo Running Unit Tests... && echo. && call node unittest.js && echo."
+		"lint": "eslint ./",
+		"test": "node tools/unittest.js"
     },
-    "version": "1.8.1",
+    "version": "1.8.2",
     "devDependencies": {
       "eslint": "^6.3.0"
     },
     "publishConfig": {
       "registry": "https://npm.pkg.github.com/@Sv443"
     }
-  }
-  
+}

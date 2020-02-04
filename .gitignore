@@ -63,7 +63,4 @@ typings/
 
 # JSLib
 test.js
-CODE_OF_CONDUCT.md
-SECURITY.md
-.github/
 !change.log

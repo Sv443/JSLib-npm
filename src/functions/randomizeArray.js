@@ -11,7 +11,7 @@ const randomizeArray = array => {
     let randRange = require("./randRange");
 
     if(isNaN(parseInt(array.length)))
-        throw new Error(`Parameter in "jsl.randomizeArray()" needs to be an array that has to contain at one item.`);
+        throw new Error(`Parameter in "jsl.randomizeArray()" needs to be an array that has to contain at least one item.`);
 
     // shamelessly stolen from https://javascript.info/task/shuffle
     for(let i = retArray.length - 1; i > 0; i--)
