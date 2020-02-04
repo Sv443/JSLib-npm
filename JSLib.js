@@ -33,7 +33,6 @@ module.exports = {
     logger: require("./src/functions/logger"),
     readdirRecursive: require("./src/functions/readdirRecursive"),
     readdirRecursiveSync: require("./src/functions/readdirRecursiveSync"),
-    runUnitTests: require("./src/functions/runUnitTests"),
 
     //#MARKER classes
     ProgressBar: require("./src/classes/ProgressBar"),

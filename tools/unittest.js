@@ -3,7 +3,7 @@
 // As with most things, red means bad and green means good
 // The parentheses tell you how many checks were successful - Example: (3 / 4) means 3 out of 4 checks for this function / class or object were successful
 // The result shows the same thing, but adds up all the checks
-// If you are colorblind, set the property "colorblind" of the below object to true (this will turn green into blue and red into magenta)
+// If you are colorblind, set the property "colorblind" of the below object to true (this will turn green into blue and red into purple)
 
 
 const options = {
@@ -13,20 +13,15 @@ const options = {
     }
 }
 
-let rut = require("./src/functions/runUnitTests");
-if(rut != null && rut.colorblind === true)
-    options.colorblind = true;
-
 
 //#MARKER Init
-const jsl = require("./JSLib");
+const jsl = require("../JSLib");
 var test = {seededRNG:{},generateUUID:{}};
 var allResults = [];
 const getColorblindColor = col => "\x1b[1m" + (options.colorblind ? (col == "green" ? "\x1b[34m" : "\x1b[33m") : (col == "green" ? "\x1b[32m" : "\x1b[31m"));
 
 const logOk = (name, ok, res, indent) => {
-console.log(
-`    ${indent === true ? "    " : ""}${ok.length == res.length ? getColorblindColor("green") : getColorblindColor("red")}\x1b[1m■\x1b[0m \
+console.log(`    ${indent === true ? "    " : ""}${ok.length == res.length ? getColorblindColor("green") : getColorblindColor("red")}\x1b[1m■\x1b[0m \
 ${name}: ${ok.length == res.length ? getColorblindColor("green") + "\x1b[1m" : getColorblindColor("red") + "\x1b[1m"}(${ok.length} / ${res.length})\x1b[0m \
 ${(ok.length != res.length && ok.length > 0) ? `- (${ok} ${ok.length == 1 ? "is" : "are"} ok)` : ""}`);
 };
@@ -646,8 +641,8 @@ class MenuPromptUnitTest extends jsl.MenuPrompt {
     _clearConsole() {return;}
     open()
     {
-        let isEmpty = require("./src/functions/isEmpty");
-        let col = require("./src/objects/colors");
+        let isEmpty = require("../src/functions/isEmpty");
+        let col = require("../src/objects/colors");
 
         if(isEmpty(this._menus))
             return `No menus were added to the MenuPrompt object. Please use the method "MenuPrompt.addMenu()" or supply the menu(s) in the construction of the MenuPrompt object before calling "MenuPrompt.open()"`;
@@ -815,7 +810,7 @@ console.log(`\n\n\x1b[33m\x1b[1m> Objects:\x1b[0m\n`);
 
 
 test.info = () => {
-    let packageJSON = require("./package.json");
+    let packageJSON = require("../package.json");
 
     let res = [];
     let ok = [];
