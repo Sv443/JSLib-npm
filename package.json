@@ -37,7 +37,7 @@
 		"lint": "eslint ./",
 		"test": "node tools/unittest.js"
     },
-    "version": "1.8.2",
+    "version": "1.8.3",
     "devDependencies": {
       	"eslint": "^6.3.0"
     }

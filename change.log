@@ -8,10 +8,14 @@ Version 1.8.2
 
 
 [Next version / TODO]:
-    - 
+    - Fix visual glitch when using "autoSubmit" and pressing Enter in MenuPrompt
 
 
-> [1.8.2]:
+> [1.8.3]:
+    - TIL you can't use a previously published and unpublished tag in NPM *sigh #2*
+
+
+[1.8.2]:
     - fixed typo in the JSDoc comment for "jsl.randRange()"
     - fixed JSDoc typedefs for MenuPrompt
     - fixed "directory not found" error in the unit test script
