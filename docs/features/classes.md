@@ -206,10 +206,11 @@
 >     ]
 > };
 > 
-> if(mp.validateMenu(newMenu)) // checks whether the new menu we want to add is valid
+> let validation = mp.validateMenu(newMenu);
+> if(validation === true) // checks whether the new menu we want to add is valid
 >     mp.addMenu(newMenu);     // adds the menu to the menu prompt
 > else
->     console.log("newMenu is invalid!");
+>     console.log(`newMenu is invalid:\n${validation.join("\n")}`);
 > 
 > setTimeout(() => {
 >     mp.open(); // now the menu will be opened (after a 5 second delay)
