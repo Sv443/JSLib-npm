@@ -149,7 +149,7 @@
 >     onFinished: (res) => { // a function that should be executed when the prompt has finished, this callback contains the result(s) of the menu prompt
 >         console.log(res);  // look at the "MenuPrompt Types" section below to see how this might look like
 >     },
-      autoSubmit: true       // if set to true, there is no need to press the Enter key to submit a value. But the option keys have to be one character in length
+>     autoSubmit: true       // if set to true, there is no need to press the Enter key to submit a value. But the option keys have to be one character in length
 > };
 > 
 > 
