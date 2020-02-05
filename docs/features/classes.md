@@ -71,7 +71,7 @@
 > > Creates a new MenuPrompt object.  
 > > For further definition of what the types `MenuPromptOptions` and `MenuPromptMenu` are, click [here](#custom-types-of-the-menuprompt-class).  
 > > ```js
-> > var mp = new jsl.MenuPrompt(options: MenuPromptOptions, menus: Array<MenuPromptMenu>)
+> > var mp = new jsl.MenuPrompt(options: MenuPromptOptions)
 > > ```
 > 
 > <br>
@@ -88,6 +88,7 @@
 > > ## MenuPrompt.close()
 > > Use this method to prematurely close the menu prompt.  
 > > Returns an array containing the results the menu prompt has collected thus far.  
+> > If no options were selected by the user, it instead returns an empty array.  
 > > For further definition of the type `MenuPromptResult`, click [here](#type-menupromptresult).  
 > > ```js
 > > MenuPrompt.close() -> Array<MenuPromptResult>
@@ -117,6 +118,7 @@
 > 
 > > ## MenuPrompt.result()
 > > Returns an array of results that the menu prompt has collected thus far but doesn't stop the menu prompt like `MenuPrompt.stop()` does.  
+> > If no option was selected, you will get an empty array.  
 > > For further definition of the type `MenuPromptResult`, click [here](#type-menupromptresult).  
 > > ```js
 > > MenuPrompt.result() -> Array<MenuPromptResult>
@@ -146,7 +148,8 @@
 >     retryOnInvalid: true,  // false = skip to the next menu if an invalid option was entered - true = retry the current menu
 >     onFinished: (res) => { // a function that should be executed when the prompt has finished, this callback contains the result(s) of the menu prompt
 >         console.log(res);  // look at the "MenuPrompt Types" section below to see how this might look like
->     }
+>     },
+      autoSubmit: true       // if set to true, there is no need to press the Enter key to submit a value. But the option keys have to be one character in length
 > };
 > 
 > 
@@ -184,19 +187,21 @@
 > ];
 > 
 > 
-> var mp = new jsl.MenuPrompt(options, menus); // this actually constructs the menu prompt object - you can call this without actually opening the menu prompt
-> 
+> var mp = new jsl.MenuPrompt(options); // this constructs the MenuPrompt object - you can call this without actually opening the menu prompt
+> menus.forEach(function(menu) { // add each menu to the MenuPrompt object
+>     mp.addMenu(menu);
+> });
 >
 > var newMenu = {
 >     "title": "Yet another menu",
 >     "options": [
 >         {
 >             "key": "hello",
->             "description": "keys don't have to be 1 char long"
+>             "description": "keys don't have to be just 1 char long, except for the case that the option 'autoSubmit' is set to 'true'"
 >         },
 >         {
 >             "key": "!+#_",
->             "description": "and they can contain any unicode character"
+>             "description": "Also keys can contain any unicode character but the user's terminal determines how and if they are rendered"
 >         }
 >     ]
 > };
@@ -207,7 +212,7 @@
 >     console.log("newMenu is invalid!");
 > 
 > setTimeout(() => {
->     mp.open(); // just now the menu will be opened, after a 5 second delay
+>     mp.open(); // now the menu will be opened (after a 5 second delay)
 > }, 5000);
 > ```
 >
@@ -229,7 +234,8 @@
 > >     "retryOnInvalid": true,  // false = skip to the next menu if an invalid option was entered - true = retry the current menu
 > >     "onFinished": (res) => { // a function that should be executed when the prompt has finished, this callback contains the result(s) of the menu prompt
 > >         console.log(res);    // look at the "MenuPrompt Types" section below to see how this might look like
-> >     }
+> >     },
+> >     "autoSubmit": false      // if set to true, there is no need to press the Enter key to submit a value. But the option keys have to be one character in length
 > > }
 > > ```
 > 
@@ -259,7 +265,7 @@
 > 
 > ## Type MenuPromptResult:
 > > This object contains the result of a single menu of the menu prompt.  
-> > You will always encounter this object multiple times inside an array.  
+> > You will always encounter this object one or multiple times inside an array.  
 > > This object is structured like this:  
 > > ```json
 > > {
