@@ -33,7 +33,7 @@ jobs:
       env:
         CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
       run: |
-        npx nyc --reporter=lcov npm test && npx codecov -t $CODECOV_TOKEN
+        npx nyc --reporter=lcov npm run test && npx codecov -t $CODECOV_TOKEN
     - name: Discord success notification # sends a Discord notification
       env:
         DISCORD_WEBHOOK: ${{ secrets.DISCORD_WEBHOOK }}
