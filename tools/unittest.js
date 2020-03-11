@@ -16,14 +16,19 @@ const options = {
 
 //#MARKER Init
 const jsl = require("../JSLib");
+
 var test = {seededRNG:{},generateUUID:{}};
+var asyncTest = {};
 var allResults = [];
+
 const getColorblindColor = col => "\x1b[1m" + (options.colorblind ? (col == "green" ? "\x1b[34m" : "\x1b[33m") : (col == "green" ? "\x1b[32m" : "\x1b[31m"));
 
 const logOk = (name, ok, res, indent) => {
+
 console.log(`    ${indent === true ? "    " : ""}${ok.length == res.length ? getColorblindColor("green") : getColorblindColor("red")}\x1b[1m■\x1b[0m \
 ${name}: ${ok.length == res.length ? getColorblindColor("green") + "\x1b[1m" : getColorblindColor("red") + "\x1b[1m"}(${ok.length} / ${res.length})\x1b[0m \
 ${(ok.length != res.length && ok.length > 0) ? `- (${ok} ${ok.length == 1 ? "is" : "are"} ok)` : ""}`);
+
 };
 
 
@@ -128,11 +133,11 @@ test.allEqual();
 test.noShutdown = () => {
     let res = [];
     let ok = [];
-    
+
 
     jsl.noShutdown();
 
-    if(process.jsl != undefined && process.jsl.noShutdown === true) // 0
+    if(process.jsl && process.jsl.noShutdown === true) // 0
         res.push(true);
     else res.push(false);
 
@@ -150,11 +155,11 @@ test.noShutdown();
 test.yesShutdown = () => {
     let res = [];
     let ok = [];
-    
+
 
     jsl.yesShutdown();
-    
-    if(process.jsl != undefined && process.jsl.noShutdown === false) // 0
+
+    if(process.jsl && process.jsl.noShutdown === false) // 0
         res.push(true);
     else res.push(false);
 
@@ -298,7 +303,6 @@ test.randRange = () => {
 }
 test.randRange();
 
-
 test.randomizeArray = () => {
     let res = [];
     let ok = [];
@@ -368,6 +372,8 @@ test.seededRNG.generateSeededNumbers = () => {
     let expected2 = 4105684652;
     let seededNums2 = jsl.seededRNG.generateSeededNumbers(10, seed2).integer;
 
+    let seed3 = "invalid_seed";
+
 
     if(seededNums1 === expected1) // 0
         res.push(true);
@@ -376,6 +382,16 @@ test.seededRNG.generateSeededNumbers = () => {
     if(seededNums2 === expected2) // 1
         res.push(true);
     else res.push(false);
+
+    try // 2 - expected to fail
+    {
+        jsl.seededRNG.generateSeededNumbers(10, seed3);
+        res.push(false);
+    }
+    catch(err)
+    {
+        res.push(true);
+    }
 
     res.forEach((r, i) =>{
         if(r) ok.push(i);
@@ -597,6 +613,24 @@ test.readdirRecursiveSync = () => {
     allResults.push(...res);
 }
 test.readdirRecursiveSync();
+
+
+test.inDebugger = () => {
+    let res = [];
+    let ok = [];
+
+    if(jsl.inDebugger()) // 0
+        res.push(false);
+    else res.push(true);
+
+    res.forEach((r, i) =>{
+        if(r) ok.push(i);
+    });
+
+    logOk("inDebugger", ok, res);
+    allResults.push(...res);
+}
+test.inDebugger();
 
 
 
@@ -864,7 +898,7 @@ test.info = () => {
         res.push(true);
     else res.push(false);
 
-    if(typeof jsl.info.contributors === "object" && !isNaN(parseInt(jsl.info.contributors.length))) // 1
+    if(typeof jsl.info.contributors === "object" && Array.isArray(jsl.info.contributors)) // 1
         res.push(true);
     else res.push(false);
 
@@ -924,18 +958,129 @@ test.colors();
 
 
 
-//#MARKER End
-let allTrue = 0;
-let allFalse = 0;
-allResults.forEach(res => {
-    if(res) allTrue++;
-    if(!res) allFalse++;
+//#MARKER async
+asyncTest.ping = () => {
+    return new Promise((resolve) => {
+        let res = [];
+        let ok = [];
+
+        let pingURLsuccess = "https://www.example.org/";
+        let pingURLfail = `https://www.sv443.net/i_should_return_404`;
+
+        jsl.ping(pingURLsuccess, 10).then(retV => {
+            if(retV.statusCode < 400) // 0
+                res.push(true);
+            else res.push(false);
+
+            jsl.ping(pingURLfail, 10).then(retV2 => {
+                if(retV2.statusCode >= 400) // 1
+                    res.push(true);
+                else res.push(false);
+
+                res.forEach((r, i) =>{
+                    if(r) ok.push(i);
+                });
+            
+                logOk("ping", ok, res);
+                allResults.push(...res);
+    
+                return resolve();
+            });
+        });
+    });
+}
+
+
+asyncTest.downloadFile = () => {
+    return new Promise((resolve) => {
+        let res = [];
+        let ok = [];
+
+        let downloadFileUrl = "https://www.example.org/";
+
+        jsl.downloadFile(downloadFileUrl, "./", {
+            fileName: "example.html",
+            finishedCallback: (err) => {
+                if(err) // 0
+                    res.push(false);
+                else res.push(true);
+
+                res.forEach((r, i) =>{
+                    if(r) ok.push(i);
+                });
+            
+                logOk("downloadFile", ok, res);
+                allResults.push(...res);
+
+                let fs = require("fs");
+                if(fs.existsSync("./example.html"))
+                    fs.unlinkSync("./example.html");
+
+                return resolve();
+            }
+        });
+    });
+}
+
+
+asyncTest.readdirRecursive = () => {
+    return new Promise((resolve) => {
+        let res = [];
+        let ok = [];
+
+        jsl.readdirRecursive("./", (err, result) => {
+            if(err) // 0
+                res.push(false);
+            else res.push(true);
+
+            if(!err && Array.isArray(result)) // 1
+                res.push(true);
+            else res.push(false);
+
+            res.forEach((r, i) =>{
+                if(r) ok.push(i);
+            });
+        
+            logOk("readdirRecursive", ok, res);
+            allResults.push(...res);
+
+            return resolve();
+        });
+    });
+}
+
+
+
+let runAsyncTests = () => {
+    return new Promise((resolve, reject) => {
+        let promises = [];
+        Object.keys(asyncTest).forEach(key => {
+            promises.push(asyncTest[key]());
+        });
+
+        console.log(`\n\n\x1b[33m\x1b[1m> Async Tests:\x1b[0m\n`);
+        Promise.all(promises).then(() => {
+            return resolve();
+        }).catch(err => {
+            return reject(err);
+        });
+    });
+};
+
+runAsyncTests().then(() => {
+    //#MARKER End
+    let allTrue = 0;
+    let allFalse = 0;
+    allResults.forEach(res => {
+        if(res) allTrue++;
+        if(!res) allFalse++;
+    });
+
+    console.log(`\n\n\n\x1b[36m\x1b[1m════════════════════════════════════════════════\x1b[0m\n`);
+    console.log(`${allTrue == allTrue + allFalse ? getColorblindColor("green") : getColorblindColor("red")}\x1b[1m►>\x1b[0m  Result:\x1b[0m ${allTrue == allTrue + allFalse ? getColorblindColor("green") + "\x1b[1m" : getColorblindColor("red") + "\x1b[1m"}${allTrue} / ${allTrue + allFalse}\x1b[0m${allFalse > 0 ? `  ${getColorblindColor("red")}\x1b[1m(${allFalse} failed)\x1b[0m` : `  ${getColorblindColor("green")}\x1b[1m(success)\x1b[0m`}`);
+    console.log(`\n\x1b[36m\x1b[1m════════════════════════════════════════════════\x1b[0m`);
+
+    if(allTrue < allFalse)
+        process.exit(1);
+    else process.exit(0);
 });
-
-console.log(`\n\n\n\x1b[36m\x1b[1m════════════════════════════════════════════════\x1b[0m\n`);
-console.log(`${allTrue == allTrue + allFalse ? getColorblindColor("green") : getColorblindColor("red")}\x1b[1m►>\x1b[0m  Result:\x1b[0m ${allTrue == allTrue + allFalse ? getColorblindColor("green") + "\x1b[1m" : getColorblindColor("red") + "\x1b[1m"}${allTrue} / ${allTrue + allFalse}\x1b[0m${allFalse > 0 ? `  ${getColorblindColor("red")}\x1b[1m(${allFalse} failed)\x1b[0m` : `  ${getColorblindColor("green")}\x1b[1m(success)\x1b[0m`}`);
-console.log(`\n\x1b[36m\x1b[1m════════════════════════════════════════════════\x1b[0m`);
-
-if(allTrue < allFalse)
-    process.exit(1);
-else process.exit(0);
