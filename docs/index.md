@@ -43,6 +43,7 @@ const jsl = require("svjsl");
     - [logger()](./features/functions.md#logger)
     - [readdirRecursive()](./features/functions.md#readdirrecursive)
     - [readdirRecursiveSync()](./features/functions.md#readdirrecursivesync)
+    - [pause()](./features/functions.md#pause)
 - **Classes:**
     - [ProgressBar](./features/classes.md#progress-bar)
     - [MenuPrompt](./features/classes.md#menu-prompt)
