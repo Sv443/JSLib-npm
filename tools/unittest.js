@@ -326,6 +326,35 @@ test.randomizeArray = () => {
 }
 test.randomizeArray();
 
+test.removeDuplicates = () => {
+    let res = [];
+    let ok = [];
+
+    let rdArray1 = jsl.removeDuplicates(["test", "foo", "bar", "test", "baz", 1, 2, 1, 3, 2]);
+    let rdArray1expected = ["test", "foo", "bar", "baz", 1, 2, 3];
+    
+    let rdArray2 = jsl.removeDuplicates(["test", null, undefined, 1, 2, 3, "test"]);
+    let rdArray2expected = ["test", null, undefined, 1, 2, 3, "test"]; // check is expected to fail
+
+
+    if(rdArray1.length === rdArray1expected.length && rdArray1.every((u, i) => u === rdArray1expected[i])) // 0
+        res.push(true);
+    else res.push(false);
+
+    if(rdArray2.length === rdArray2expected.length && rdArray2.every((u, i) => u === rdArray2expected[i])) // 1 - should fail
+        res.push(false);
+    else res.push(true);
+
+
+    res.forEach((r, i) =>{
+        if(r) ok.push(i);
+    });
+
+    logOk("removeDuplicates", ok, res);
+    allResults.push(...res);
+}
+test.removeDuplicates();
+
 
 test.seededRNG.generateSeededNumbers = () => {
     let res = [];
@@ -748,6 +777,8 @@ test.MenuPrompt = () => {
         retryOnInvalid: true
     });
 
+    mp.localization.wrongOption = "unittest_xyz";
+
     mp.addMenu({
         title: "Hello World!",
         options: [
@@ -789,6 +820,10 @@ test.MenuPrompt = () => {
     let m1 = {title: "test", options: [{key: "t", description: "g"}]};
 
     if(mp.addMenu(m1).startsWith("MenuPrompt was already closed")) // 2
+        res.push(true);
+    else res.push(false);
+
+    if(mp.localization.wrongOption === "unittest_xyz") // 3
         res.push(true);
     else res.push(false);
 

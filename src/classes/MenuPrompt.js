@@ -94,7 +94,7 @@ const MenuPrompt = class {
 
         this._currentMenu = -1;
 
-        if(!process.stdin.isRaw)
+        if(!process.stdin.isRaw && typeof process.stdin.setRawMode === "function") // need the extra check for GitHub CI which fails since it doesn't provide a stdin
             process.stdin.setRawMode(true);
 
         
