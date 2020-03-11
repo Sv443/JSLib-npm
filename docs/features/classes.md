@@ -192,6 +192,11 @@
 >     mp.addMenu(menu);
 > });
 >
+> mp.localization = { // you can use this object to translate the default messages:
+>     wrongOption: "Bitte gib eine der grünen Optionen ein und drücke <Eingabe>",
+>     invalidOptionSelected: "Inkorrekte Option ausgewählt:"
+> }
+>
 > var newMenu = {
 >     "title": "Yet another menu",
 >     "options": [
