@@ -18,6 +18,7 @@ Version 1.9.0
     - Added a `localization` property to `jsl.MenuPrompt` to enable it for being translated
     - Added `jsl.inDebugger()` to check if the process is currently running in a debugger
     - Fixed a bug in `jsl.MenuPrompt` by ensuring that the raw mode of the stdin is always set to true
+    - Added a code coverage report to the README.md file
 
 
 [1.8.4]:
