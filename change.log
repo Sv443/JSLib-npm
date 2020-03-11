@@ -11,7 +11,13 @@ Version 1.8.2
     - Fix visual glitch when using "autoSubmit" and pressing Enter in MenuPrompt
 
 
-> [1.8.3]:
+> [1.8.4]:
+    - Fixed high severity security vulnerabilities in ESLint's dependencies:
+        - acorn https://app.snyk.io/vuln/SNYK-JS-ACORN-559469
+        - minimist https://app.snyk.io/vuln/SNYK-JS-MINIMIST-559764
+
+
+[1.8.3]:
     - TIL you can't use a previously published and unpublished tag in NPM *sigh #2*
 
 
