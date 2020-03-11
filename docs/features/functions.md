@@ -693,3 +693,28 @@
 > </details>
 
 <br><br><br><br>
+
+
+
+# inDebugger()
+> This function checks if the process is currently running in a debugger environment.  
+> This can be useful because some features like child processes and reading from stdin do not work in a debugger.  
+>
+> ```js
+> jsl.inDebugger() -> Boolean
+> ```
+> 
+> **<details><summary>Example</summary>**
+> 
+> ```js
+> // only create a MenuPrompt object if the process is not running in the debugger, since MenuPrompt requires the user to input stuff in the stdin
+> if(!jsl.inDebugger())
+> {
+>     let mp = new jsl.MenuPrompt();
+>     // ...
+> }
+> ```
+> 
+> </details>
+
+<br><br><br><br>
