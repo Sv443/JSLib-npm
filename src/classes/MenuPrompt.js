@@ -51,6 +51,7 @@ const MenuPrompt = class {
      * @constructor
      * @since 1.8.0
      * @version 1.8.2 Removed second parameter - use `MenuPrompt.addMenu()` instead
+     * @version 1.9.0 The construction of a MenuPrompt object will now set the process.stdin raw mode to true
      */
     constructor(options)
     {
@@ -90,6 +91,9 @@ const MenuPrompt = class {
         this._results = [];
 
         this._currentMenu = -1;
+
+        if(!process.stdin.isRaw)
+            process.stdin.setRawMode(true);
 
         return true;
     }
