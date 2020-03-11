@@ -1,14 +1,22 @@
 {
+  "name": "svjsl",
+  "description": "A multi-purpose, lightweight and dependency-free JavaScript library that makes coding a bit faster by providing many easy to use functions and classes",
+  "version": "1.9.0",
+  "main": "JSLib.js",
+  "license": "MIT",
   "author": {
     "name": "Sv443",
     "email": "sven.fehler@web.de",
-    "url": "https://sv443.net/"
+    "url": "https://github.com/Sv443"
+  },
+  "scripts": {
+    "lint": "eslint ./",
+    "test": "node tools/unittest.js"
   },
   "bugs": {
     "url": "https://github.com/Sv443/JSLib-npm/issues"
   },
   "deprecated": false,
-  "description": "A multi-purpose, lightweight and dependency-free JavaScript library that makes coding a bit faster by providing many easy to use functions and classes",
   "homepage": "https://github.com/Sv443/JSLib-npm#readme",
   "keywords": [
     "javascript",
@@ -26,18 +34,10 @@
     "filesystem",
     "math"
   ],
-  "license": "MIT",
-  "main": "JSLib.js",
-  "name": "svjsl",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/Sv443/JSLib-npm.git"
   },
-  "scripts": {
-    "lint": "eslint ./",
-    "test": "node tools/unittest.js"
-  },
-  "version": "1.8.4",
   "devDependencies": {
     "eslint": "^6.8.0"
   }
