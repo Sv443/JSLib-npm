@@ -36,7 +36,8 @@
  */
 
  /**
-  * 🔹 Creates an interactive prompt with one or many menus - add them using `MenuPrompt.addMenu()` 🔹
+  * 🔹 Creates an interactive prompt with one or many menus - add them using `MenuPrompt.addMenu()`.
+  * To translate the messages, you can use the `MenuPrompt.localization` object, which is where all localization variables are stored. 🔹
   * ⚠️ Warning: Make sure to use the `new` keyword to create an object of this class - example: `let mp = new jsl.MenuPrompt()` ⚠️
   * @class
   * @since 1.8.0
@@ -44,14 +45,15 @@
 //#MARKER constructor
 const MenuPrompt = class {
     /**
-     * 🔹 Creates an interactive prompt with one or many menus - add them using `MenuPrompt.addMenu()` 🔹
+     * 🔹 Creates an interactive prompt with one or many menus - add them using `MenuPrompt.addMenu()`.
+     * To translate the messages, you can use the `MenuPrompt.localization` object, which is where all localization variables are stored. 🔹
      * ⚠️ Warning: After creating a MenuPrompt object, the process will no longer exit automatically until the MenuPrompt has finished or was explicitly closed. You have to explicitly use process.exit() until the menu has finished or is closed
      * @param {MenuPromptOptions} options The options for the prompt
      * @returns {(Boolean|String)} Returns true, if the MenuPrompt was successfully created, a string containing the error message, if not
      * @constructor
      * @since 1.8.0
      * @version 1.8.2 Removed second parameter - use `MenuPrompt.addMenu()` instead
-     * @version 1.9.0 The construction of a MenuPrompt object will now set the process.stdin raw mode to true
+     * @version 1.9.0 The construction of a MenuPrompt object will now set the process.stdin raw mode to true + There is now a `localization` property you can use to translate some messages
      */
     constructor(options)
     {
@@ -94,6 +96,13 @@ const MenuPrompt = class {
 
         if(!process.stdin.isRaw)
             process.stdin.setRawMode(true);
+
+        
+        this.localization = {
+            wrongOption: "Please type one of the green options and press <Return>",
+            invalidOptionSelected: "Invalid option selected:"
+        };
+
 
         return true;
     }
@@ -180,7 +189,7 @@ ${this._options.cursorPrefix} \
 
                     if(isEmpty(answer) && this._options.retryOnInvalid !== false)
                     {
-                        return openMenu(idx, "Please type one of the green options and press enter");
+                        return openMenu(idx, this.localization.wrongOption);
                     }
                     else
                     {
@@ -206,7 +215,7 @@ ${this._options.cursorPrefix} \
                         }
                         else
                         {
-                            return openMenu(idx, `Invalid option "${answer.replace(/\n|\r\n/gm, "\\\\n")}" selected`.toString());
+                            return openMenu(idx, `${this.localization.invalidOptionSelected} "${answer.replace(/\n|\r\n/gm, "\\\\n")}"`.toString());
                         }
                     }
                 }
