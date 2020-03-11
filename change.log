@@ -13,6 +13,11 @@ Version 1.9.0
 
 > [1.9.0]:
     - `jsl.unused()` now has a rest parameter instead of a single parameter
+    - Added `jsl.removeDuplicates()` to remove duplicate entries in an array
+    - Added `jsl.pause()` to wait until user confirmation before continuing code execution
+    - Added a `localization` property to `jsl.MenuPrompt` to enable it for being translated
+    - Added `jsl.inDebugger()` to check if the process is currently running in a debugger
+    - Fixed a bug in `jsl.MenuPrompt` by ensuring that the raw mode of the stdin is always set to true
 
 
 [1.8.4]:
