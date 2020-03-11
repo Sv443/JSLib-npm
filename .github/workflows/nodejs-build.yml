@@ -29,6 +29,11 @@ jobs:
         npm test
       env:
         CI: "true"
+    - name: Upload coverage report to Codecov # uploads the coverage report from the unit tests to codecov.io
+      env:
+        CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
+      run: |
+        npx nyc --reporter=lcov npm test && npx codecov -t $CODECOV_TOKEN
     - name: Discord success notification # sends a Discord notification
       env:
         DISCORD_WEBHOOK: ${{ secrets.DISCORD_WEBHOOK }}
