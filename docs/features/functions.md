@@ -274,6 +274,25 @@
 
 
 
+# removeDuplicates()
+> Removes duplicate items in an array and returns it.  
+> ```js
+> jsl.removeDuplicates(array: Array<Any>) -> Array
+> ```
+> 
+> **<details><summary>Example</summary>**
+> 
+> ```js
+> var array = ["foo", 1, "test", "bar", "baz", "foo", "test", 1, 2, 3, 1];
+> jsl.removeDuplicates(array); // [ "foo", 1, "test", "bar", "baz", 2, 3 ]
+> ```
+> 
+> </details>
+
+<br><br><br><br>
+
+
+
 # seededRNG.generateSeededNumbers()
 > Generates a set of numbers based on a seed. As long as the seed stays the same, the random numbers will be the same, no matter when and how the function is executed.  
 > If no `seed` parameter is provided, a random seed will be generated using [seededRNG.generateRandomSeed()](#seededrng-generaterandomseed) and passed in the returned object. The seed needs to be a number that can't start with the digit `0`.  
