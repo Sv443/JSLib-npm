@@ -54,7 +54,7 @@ const jsl = require("svjsl");
 <br>
 
 ### If you need any help, feel free to join my Discord server and I will help you as soon as possible:
-[![Discord Invite](https://sv443.net/cdn/jsl/doc/discord_invite.png)](https://discord.gg/aBH4uRG)
+[![Discord Invite](https://sv443.net/cdn/jsl/doc/discord_invite.png)](https://sv443.net/discord)
 
 </div>
 
