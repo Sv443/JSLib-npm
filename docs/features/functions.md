@@ -667,3 +667,29 @@
 > </details>
 
 <br><br><br><br>
+
+
+
+# pause()
+> Waits for the user to press a key in the console window and then resolves a Promise.  
+> If the `text` parameter is omitted, it will default to the string "Press any key to continue... "  
+> The Promise resolution is passed the pressed key as a single parameter. The rejection gets passed the error message.  
+>
+> ```js
+> jsl.pause([text: String]) -> Promise<String>
+> ```
+> 
+> **<details><summary>Example</summary>**
+> 
+> ```js
+> jsl.pause().then(key => {
+>     console.log(`Pressed key: ${key}`);
+>     continueWithOtherCode();
+> }).catch(err => {
+>     console.error(`Error: ${err}`);
+> });
+> ```
+> 
+> </details>
+
+<br><br><br><br>

@@ -34,6 +34,7 @@ module.exports = {
     logger: require("./src/functions/logger"),
     readdirRecursive: require("./src/functions/readdirRecursive"),
     readdirRecursiveSync: require("./src/functions/readdirRecursiveSync"),
+    pause: require("./src/functions/pause"),
 
     //#MARKER classes
     ProgressBar: require("./src/classes/ProgressBar"),
