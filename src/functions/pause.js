@@ -17,7 +17,7 @@ function pause(text = "Press any key to continue... ")
             process.stdout.write("\n");
             process.stdin.pause();
 
-            return resolve(chunk);
+            return resolve(chunk.toString());
         });
 
         process.stdin.on("error", err => {
