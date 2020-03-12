@@ -4,7 +4,7 @@
  * @returns {Promise} Passes the pressed key in the resolution or the error message in the rejection
  * @since 1.9.0
  */
-function pause(text = "Press any key to continue... ")
+function pause(text = "Press any key to continue...")
 {
     if(!process.stdin.isRaw)
         process.stdin.setRawMode(true);
