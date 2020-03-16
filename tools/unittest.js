@@ -179,57 +179,6 @@ test.allEqual = () => {
 test.allEqual();
 
 
-test.softShutdown = () => {
-    let res = [];
-    let ok = [];
-
-    let softShutdownInt = false;
-    let softShutdownTerm = false;
-    let softShutdownKill = false;
-
-    jsl.noShutdown();
-    jsl.softShutdown(() => {
-        if(!softShutdownInt)
-            softShutdownInt = true;
-    });
-    process.emit("SIGINT");
-
-    jsl.softShutdown(() => {
-        if(!softShutdownTerm)
-            softShutdownTerm = true;
-    });
-    process.emit("SIGTERM");
-
-    jsl.softShutdown(() => {
-        if(!softShutdownKill)
-            softShutdownKill = true;
-    });
-    process.emit("SIGKILL");
-
-
-    if(softShutdownInt === true) // 0
-        res.push(true);
-    else res.push(false);
-
-    if(softShutdownTerm === true) // 1
-        res.push(true);
-    else res.push(false);
-
-    if(softShutdownKill === true) // 2
-        res.push(true);
-    else res.push(false);
-
-
-    res.forEach((r, i) =>{
-        if(r) ok.push(i);
-    });
-
-    logOk("softShutdown", ok, res);
-    allResults.push(...res);
-}
-test.softShutdown();
-
-
 test.noShutdown = () => {
     let res = [];
     let ok = [];
