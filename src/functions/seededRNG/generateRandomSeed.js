@@ -14,7 +14,7 @@ const generateRandomSeed = (digitCount = 10) => {
     if(seed.startsWith("0"))
     {
         seed = seed.substring(1); // make sure the first item is not 0, so we can parse it as an int without losing the first digit
-        seed = (Math.floor(Math.random() * (9 - 1)) + 1).toString() + seed;
+        seed = randRange(1, 9).toString() + seed.toString();
     }
 
     return parseInt(seed);

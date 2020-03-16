@@ -48,7 +48,8 @@
           "src/**/*.js"
       ],
       "exclude": [
-          "**/deprecated.js"
+          "**/deprecated.js",
+          "**/pause.js"
       ]
   }
 }

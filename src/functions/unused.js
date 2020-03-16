@@ -7,14 +7,7 @@
  * @version 1.9.0 Function now accepts an infinite number of parameters
  */
 const unused = (...any) => {
-    try
-    {
-        any.toString();
-        return;
-    }
-    catch(e)
-    {
-        return;
-    }
+    void(any);
+    return;
 };
 module.exports = unused;

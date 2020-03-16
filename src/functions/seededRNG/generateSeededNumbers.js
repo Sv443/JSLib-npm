@@ -19,7 +19,8 @@ const generateSeededNumbers = (count = 16, seed) => { // thanks to olsn for this
     let validateSeed = require("./validateSeed");
     let result = [];
 
-    if(isEmpty(seed)) seed = generateRandomSeed();
+    if(isEmpty(seed))
+        seed = generateRandomSeed();
 
     if(!validateSeed(seed))
         throw new Error("Error while validating seed in generateSeededNumbers() - Seeds cannot start with 0 and can only contain numerical digits between 0 and 9");
@@ -40,7 +41,7 @@ const generateSeededNumbers = (count = 16, seed) => { // thanks to olsn for this
         result.push(seededRandom(0, 9));
 
     if(result[0] == 0)
-        result[0] = 1; // make sure the first item is not 0, so we can parse it as an int without losing the first digit
+        result[0] = 1; // make sure the first item is not 0, so we can parse it as an int without losing the first digit - this can't be a random number since it needs to be the same every time
 
     return {
         numbers: result,

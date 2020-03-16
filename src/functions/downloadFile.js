@@ -68,7 +68,7 @@ const downloadFile = (url, destPath = "./", options) => {
     
     let req2 = https.request(opts, res2 => {
         if(res2.statusCode >= 300 && res2.statusCode < 400)
-            return this.downloadFile(res2.headers["location"], destPath, options);
+            return downloadFile(res2.headers["location"], destPath, options);
 
         if(res2.statusCode >= 400)
             return options.finishedCallback("Status Code: " + res2.statusCode);
@@ -136,7 +136,7 @@ const downloadFile = (url, destPath = "./", options) => {
     });
 
     req2.on("error", e => {
-        throw new Error(`Error while reading file information: ${e}`);
+        throw new Error(`Error while reading remote file information: ${e}`);
     });
 
     req2.end();

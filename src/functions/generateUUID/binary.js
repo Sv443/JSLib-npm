@@ -1,23 +1,22 @@
 /**
  * 🔹 Creates a binary [0-1] UUID with a given format. This uses a RNG that is even more random than the standard Math.random() 🔹
  * @param {String} uuidFormat The format of the UUID. All x's and y's will be affected by the RNG. Example: "xxxx-yyyy-xxxx-yyyy" - if you want an x or y to not be replaced, prefix it with this character: ^
- * @param {Boolean} [asBooleanArray=false] Set to true to get an array of booleans instead of a string of 1 and 0. Setting this to true will ignore the uuidFormat parameter.
+ * @param {Boolean} [asBooleanArray=false] Set to true to get an array of booleans instead of a string of 1 and 0. Setting this to true will ignore the uuidFormat parameter. Instead, the amount of x's and y's will be equivalent to the resulting array items.
  * @returns {String|Array<Boolean>}
  * @since 1.8.0
  */
 const binary = (uuidFormat, asBooleanArray) => {
-    let isEmpty = require("../isEmpty");
     let replaceAt = require("../replaceAt");
     let randRange = require("../randRange");
+    
+    if(typeof uuidFormat != "string")
+        throw new Error(`Wrong parameter provided for "uuidFormat" in jsl.generateUUID.binary() - (expected: "String", got: "${typeof uuidFormat}")`);
 
     uuidFormat = uuidFormat.replace(/\^x/gm, "ꮦ");
     uuidFormat = uuidFormat.replace(/\^y/gm, "ꮧ");
 
     let possible = "01";
     possible = possible.split("");
-    
-    if(isEmpty(uuidFormat) || typeof uuidFormat != "string")
-        throw new Error(`Wrong parameter provided for "uuidFormat" in jsl.generateUUID.binary() - (expected: "String", got: "${typeof uuidFormat}")`);
 
     let regex = /[xy]/gm;
     let match;

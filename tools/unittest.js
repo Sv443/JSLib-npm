@@ -105,9 +105,47 @@ test.isArrayEmpty = () => {
 test.isArrayEmpty();
 
 
+test.error = () => {
+    let fs = require("fs");
+
+    let res = [];
+    let ok = [];
+    
+
+    try // 0
+    {
+        jsl.error(null);
+        res.push(false);
+    }
+    catch(err) // expected to fail
+    {
+        res.push(true);
+    }
+
+    jsl.error("1234", "./unittest-error-1.log", false, 0, false);
+    if(fs.existsSync("./unittest-error-1.log")) // 1
+    {
+        res.push(true);
+        fs.unlinkSync("./unittest-error-1.log");
+    }
+    else res.push(false);
+
+
+    res.forEach((r, i) =>{
+        if(r) ok.push(i);
+    });
+
+    logOk("error", ok, res);
+    allResults.push(...res);
+}
+test.error();
+
+
 test.allEqual = () => {
     let res = [];
     let ok = [];
+
+
     if(jsl.allEqual([1, 1, 1, 1]) === true) // 0
         res.push(true);
     else res.push(false);
@@ -120,6 +158,17 @@ test.allEqual = () => {
         res.push(true);
     else res.push(false);
 
+    try // 3
+    {
+        jsl.allEqual("I'm a teapot");
+        res.push(false);
+    }
+    catch(err) // expected to fail
+    {
+        res.push(true);
+    }
+
+
     res.forEach((r, i) =>{
         if(r) ok.push(i);
     });
@@ -128,6 +177,57 @@ test.allEqual = () => {
     allResults.push(...res);
 }
 test.allEqual();
+
+
+test.softShutdown = () => {
+    let res = [];
+    let ok = [];
+
+    let softShutdownInt = false;
+    let softShutdownTerm = false;
+    let softShutdownKill = false;
+
+    jsl.noShutdown();
+    jsl.softShutdown(() => {
+        if(!softShutdownInt)
+            softShutdownInt = true;
+    });
+    process.emit("SIGINT");
+
+    jsl.softShutdown(() => {
+        if(!softShutdownTerm)
+            softShutdownTerm = true;
+    });
+    process.emit("SIGTERM");
+
+    jsl.softShutdown(() => {
+        if(!softShutdownKill)
+            softShutdownKill = true;
+    });
+    process.emit("SIGKILL");
+
+
+    if(softShutdownInt === true) // 0
+        res.push(true);
+    else res.push(false);
+
+    if(softShutdownTerm === true) // 1
+        res.push(true);
+    else res.push(false);
+
+    if(softShutdownKill === true) // 2
+        res.push(true);
+    else res.push(false);
+
+
+    res.forEach((r, i) =>{
+        if(r) ok.push(i);
+    });
+
+    logOk("softShutdown", ok, res);
+    allResults.push(...res);
+}
+test.softShutdown();
 
 
 test.noShutdown = () => {
@@ -157,6 +257,13 @@ test.yesShutdown = () => {
     let ok = [];
 
 
+    jsl.yesShutdown();
+
+    process.jsl = undefined;
+    jsl.yesShutdown();
+
+    process.jsl = {};
+    process.jsl.noShutdown = false;
     jsl.yesShutdown();
 
     if(process.jsl && process.jsl.noShutdown === false) // 0
@@ -206,6 +313,8 @@ test.readableArray();
 test.mapRange = () => {
     let res = [];
     let ok = [];
+
+
     if(jsl.mapRange(5, 0, 10, 0, 20) === 10) // 0
         res.push(true);
     else res.push(false);
@@ -222,6 +331,27 @@ test.mapRange = () => {
         res.push(true);
     else res.push(false);
 
+    try // 4
+    {
+        jsl.mapRange(NaN, NaN, NaN, NaN, NaN);
+        res.push(false);
+    }
+    catch(err) // expected to fail
+    {
+        res.push(true);
+    }
+
+    try // 5
+    {
+        jsl.mapRange(0, 0, 0, 0, 0);
+        res.push(false);
+    }
+    catch(err) // expected to fail
+    {
+        res.push(true);
+    }
+
+
     res.forEach((r, i) =>{
         if(r) ok.push(i);
     });
@@ -236,12 +366,16 @@ test.unused = () => {
     let res = [];
     let ok = [];
 
+
     let x = "test";
     let prevType = typeof x;
+
     jsl.unused(x);
+
     if(x === x && typeof x === prevType) // 0
         res.push(true);
     else res.push(false);
+
 
     res.forEach((r, i) =>{
         if(r) ok.push(i);
@@ -293,6 +427,27 @@ test.randRange = () => {
     if(allEqual === false) // 0
         res.push(true);
     else res.push(false);
+
+    try // 1
+    {
+        jsl.randRange(5, 4);
+        res.push(false);
+    }
+    catch(err) // expected to fail
+    {
+        res.push(true);
+    }
+
+    try // 2
+    {
+        jsl.randRange("Hello", "World");
+        res.push(false);
+    }
+    catch(err) // expected to fail
+    {
+        res.push(true);
+    }
+
 
     res.forEach((r, i) =>{
         if(r) ok.push(i);
@@ -374,6 +529,10 @@ test.seededRNG.generateSeededNumbers = () => {
 
     let seed3 = "invalid_seed";
 
+    let seed4 = 20; // seed 20 causes special behavior since the generated seed starts with the number 0 so this needs to be tested here too
+    let expected4 = 1340628001;
+    let seededNums4 = jsl.seededRNG.generateSeededNumbers(10, seed4).integer;
+
 
     if(seededNums1 === expected1) // 0
         res.push(true);
@@ -392,6 +551,10 @@ test.seededRNG.generateSeededNumbers = () => {
     {
         res.push(true);
     }
+
+    if(seededNums4 === expected4) // 3
+        res.push(true);
+    else res.push(false);
 
     res.forEach((r, i) =>{
         if(r) ok.push(i);
@@ -552,6 +715,27 @@ test.generateUUID.binary = () => {
         res.push(true);
     else res.push(false);
 
+    try // 2
+    {
+        jsl.generateUUID.binary(null);
+        res.push(false);
+    }
+    catch(err) // expected to fail
+    {
+        res.push(true);
+    }
+
+    let valid3 = true;
+    jsl.generateUUID.binary("xxxxyyyy", true).forEach(itm => {
+        if(typeof itm !== "boolean")
+            valid3 = false;
+    });
+
+    if(!valid3) // 3
+        res.push(false);
+    else res.push(true);
+
+
     res.forEach((r, i) =>{
         if(r) ok.push(i);
     });
@@ -585,6 +769,62 @@ test.generateUUID.custom = () => {
     allResults.push(...res);
 }
 test.generateUUID.custom();
+
+
+test.logger = () => {
+    let fs = require("fs");
+
+    let res = [];
+    let ok = [];
+
+    
+    jsl.logger("./unittest-logger-1.log", "1234", {
+        append_bottom: false,
+        timestamp: false
+    });
+
+    if(fs.existsSync("./unittest-logger-1.log"))
+    {
+        if(fs.readFileSync("./unittest-logger-1.log").toString() == "1234") // 0
+            res.push(true);
+        else res.push(false);
+
+        fs.unlinkSync("./unittest-logger-1.log");
+    }
+    else res.push(false);
+
+    try // 1
+    {
+        jsl.logger("./unittest-logger-2.log", null);
+        res.push(false);
+    }
+    catch(err) // expected to throw an error
+    {
+        res.push(true);
+    }
+
+    jsl.logger("./unittest-logger-3.log", "Hello, World!", {
+        timestamp: true,
+        append_bottom: true
+    });
+
+    if(fs.existsSync("./unittest-logger-3.log"))
+    {
+        res.push(true);
+
+        fs.unlinkSync("./unittest-logger-3.log");
+    }
+    else res.push(false);
+
+
+    res.forEach((r, i) =>{
+        if(r) ok.push(i);
+    });
+
+    logOk("logger", ok, res);
+    allResults.push(...res);
+}
+test.logger();
 
 
 test.readdirRecursiveSync = () => {
@@ -964,16 +1204,37 @@ asyncTest.ping = () => {
         let res = [];
         let ok = [];
 
-        let pingURLsuccess = "https://www.example.org/";
+        try // 0
+        {
+            jsl.ping(null);
+            res.push(false);
+        }
+        catch(err) // expected to fail
+        {
+            res.push(true);
+        }
+
+        let pingURLmalformatted = `http:example org`;
+        try // 1
+        {
+            jsl.ping(pingURLmalformatted);
+            res.push(false);
+        }
+        catch(err) // expected to fail
+        {
+            res.push(true);
+        }
+
+        let pingURLsuccess = "http://www.example.org/";
         let pingURLfail = `https://www.sv443.net/i_should_return_404`;
 
         jsl.ping(pingURLsuccess, 10).then(retV => {
-            if(retV.statusCode < 400) // 0
+            if(retV.statusCode < 400) // 2
                 res.push(true);
             else res.push(false);
 
-            jsl.ping(pingURLfail, 10).then(retV2 => {
-                if(retV2.statusCode >= 400) // 1
+            jsl.ping(pingURLfail).then(retV2 => {
+                if(retV2.statusCode >= 400) // 3
                     res.push(true);
                 else res.push(false);
 
@@ -996,6 +1257,21 @@ asyncTest.downloadFile = () => {
         let res = [];
         let ok = [];
 
+        let finishDL = () => {
+            res.forEach((r, i) =>{
+                if(r) ok.push(i);
+            });
+        
+            logOk("downloadFile", ok, res);
+            allResults.push(...res);
+
+            let fs = require("fs");
+            if(fs.existsSync("./example.html"))
+                fs.unlinkSync("./example.html");
+
+            return resolve();
+        };
+
         let downloadFileUrl = "https://www.example.org/";
 
         jsl.downloadFile(downloadFileUrl, "./", {
@@ -1005,18 +1281,37 @@ asyncTest.downloadFile = () => {
                     res.push(false);
                 else res.push(true);
 
-                res.forEach((r, i) =>{
-                    if(r) ok.push(i);
+                try // 1
+                {
+                    jsl.downloadFile(downloadFileUrl, "./i-do-not-exist-1234567/", {
+                        fileName: "example.html"
+                    });
+                    res.push(false);
+                }
+                catch(err) // expected to fail
+                {
+                    res.push(true);
+                }
+
+                jsl.downloadFile("https://google.com/", "./", { // URL is a 301 redirect
+                    fileName: "example.html",
+                    finishedCallback: (err) => {
+                        if(err) // 2
+                            res.push(false);
+                        else res.push(true);
+
+                        jsl.downloadFile("https://www.google.com/this-page-doesnt-exist-jslunittests-1234567", "./", { // URL is a 301 redirect
+                            fileName: "example.html",
+                            finishedCallback: (err) => {
+                                if(err) // 2
+                                    res.push(true);
+                                else res.push(false);
+
+                                return finishDL();
+                            }
+                        });
+                    }
                 });
-            
-                logOk("downloadFile", ok, res);
-                allResults.push(...res);
-
-                let fs = require("fs");
-                if(fs.existsSync("./example.html"))
-                    fs.unlinkSync("./example.html");
-
-                return resolve();
             }
         });
     });
