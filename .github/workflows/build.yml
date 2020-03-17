@@ -20,15 +20,17 @@ jobs:
       with:
         node-version: ${{ matrix.node-version }}
     - name: Install Dependencies # runs the npm ci command to install all dependencies
-      run: |
-        npm ci
+      run: npm ci
       env:
         CI: "true"
-    - name: Run Unit Tests and upload Coverage Report # runs the unit tests and uploads the coverage report from the unit tests to codecov.io
+    - name: Run Unit Tests # runs all unit tests
+      run: npm test
+      env:
+        CI: "true"
+    - name: Upload Coverage Report # runs the unit tests and uploads the coverage report from the unit tests to codecov.io
       env:
         CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
-      run: |
-        npx nyc --reporter=lcov npm run test && npx codecov -t $CODECOV_TOKEN
+      run: npx nyc --reporter=lcov npm run test && npx codecov -t $CODECOV_TOKEN
     - name: Discord success notification # sends a Discord notification
       env:
         DISCORD_WEBHOOK: ${{ secrets.DISCORD_WEBHOOK }}
