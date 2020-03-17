@@ -190,6 +190,16 @@ test.noShutdown = () => {
         res.push(true);
     else res.push(false);
 
+    try // 1
+    {
+        jsl.noShutdown();
+        res.push(true);
+    }
+    catch(err) // expected to succeed
+    {
+        res.push(false);
+    }
+
 
     res.forEach((r, i) =>{
         if(r) ok.push(i);
@@ -505,6 +515,12 @@ test.seededRNG.generateSeededNumbers = () => {
         res.push(true);
     else res.push(false);
 
+    // if default seed length of generateRandomSeed() is changed, remember to also change it here:
+    if(jsl.seededRNG.generateSeededNumbers(1).seed.toString().length === 10) // 4
+        res.push(true);
+    else res.push(false);
+
+
     res.forEach((r, i) =>{
         if(r) ok.push(i);
     });
@@ -563,6 +579,17 @@ test.seededRNG.validateSeed = () => {
     if(jsl.seededRNG.validateSeed(seeds[3]) === true) // 3
         res.push(true);
     else res.push(false);
+
+    try // 4
+    {
+        jsl.seededRNG.validateSeed(null);
+        res.push(false);
+    }
+    catch(err) // expected to fail
+    {
+        res.push(true);
+    }
+
 
     res.forEach((r, i) =>{
         if(r) ok.push(i);
@@ -837,17 +864,16 @@ test.inDebugger();
 console.log(`\n\n\x1b[33m\x1b[1m> Classes:\x1b[0m\n`);
 
 
-class ProgressBarUnitTest extends jsl.ProgressBar {
-    constructor(a, b) {super(a, b);}
-    _update(){return;}
-}
-
 test.ProgressBar = () => {
     let res = [];
     let ok = [];
 
 
-    let pb = new ProgressBarUnitTest(5, "b");
+    let oldStdoutWrite = process.stdout.write;
+    process.stdout.write = () => {};
+
+
+    let pb = new jsl.ProgressBar(5, "b");
     pb.next("c");
 
     if(pb.getProgress() === 0.2) // 0
@@ -877,7 +903,12 @@ test.ProgressBar = () => {
         res.push(true);
     else res.push(false);
 
-    pb.next("g");
+    let onFinishWorks = false;
+    pb.onFinish(() => {
+        onFinishWorks = true;
+    });
+    
+    pb.next("");
 
     if(pb.progressDisplay === "*****") // 5
         res.push(true);
@@ -886,6 +917,23 @@ test.ProgressBar = () => {
     if(pb.progressDisplay === "*****") // 6
         res.push(true);
     else res.push(false);
+
+    if(onFinishWorks === true) // 7
+        res.push(true);
+    else res.push(false);
+
+    try // 8
+    {
+        pb.onFinish();
+        res.push(false);
+    }
+    catch(err) // expected to fail
+    {
+        res.push(true);
+    }
+
+
+    process.stdout.write = oldStdoutWrite;
 
 
     res.forEach((r, i) =>{
@@ -897,107 +945,112 @@ test.ProgressBar = () => {
 test.ProgressBar();
 
 
-class MenuPromptUnitTest extends jsl.MenuPrompt {
-    constructor(a, b) {super(a, b);}
-    _clearConsole() {return;}
-    open()
-    {
-        let isEmpty = require("../src/functions/isEmpty");
-        let col = require("../src/objects/colors");
+// class MenuPromptUnitTest extends jsl.MenuPrompt {
+//     constructor(a, b) {super(a, b);}
+//     _clearConsole() {return;}
+//     open()
+//     {
+//         let isEmpty = require("../src/functions/isEmpty");
+//         let col = require("../src/objects/colors");
 
-        if(isEmpty(this._menus))
-            return `No menus were added to the MenuPrompt object. Please use the method "MenuPrompt.addMenu()" or supply the menu(s) in the construction of the MenuPrompt object before calling "MenuPrompt.open()"`;
+//         if(isEmpty(this._menus))
+//             return `No menus were added to the MenuPrompt object. Please use the method "MenuPrompt.addMenu()" or supply the menu(s) in the construction of the MenuPrompt object before calling "MenuPrompt.open()"`;
 
-        this._active = true;
+//         this._active = true;
 
 
-        let openMenu = idx => {
-            if(idx >= this._menus.length || !this._active)
-                return this.close();
-            else
-            {
-                this._currentMenu = idx;
+//         let openMenu = idx => {
+//             if(idx >= this._menus.length || !this._active)
+//                 return this.close();
+//             else
+//             {
+//                 this._currentMenu = idx;
 
-                let currentMenu = {
-                    title: "",
-                    options: ""
-                }
+//                 let currentMenu = {
+//                     title: "",
+//                     options: ""
+//                 }
 
-                currentMenu.title = this._menus[idx].title;
+//                 currentMenu.title = this._menus[idx].title;
 
-                let titleUL = "";
-                currentMenu.title.split("").forEach(() => titleUL += "‾");
+//                 let titleUL = "";
+//                 currentMenu.title.split("").forEach(() => titleUL += "‾");
 
-                let longestOption = 0;
-                this._menus[idx].options.forEach(option => longestOption = option.key.length > longestOption ? option.key.length : longestOption);
+//                 let longestOption = 0;
+//                 this._menus[idx].options.forEach(option => longestOption = option.key.length > longestOption ? option.key.length : longestOption);
 
-                this._menus[idx].options.forEach(option => {
-                    let optionSpacer = "  ";
-                    let neededSpaces = longestOption - option.key.length;
-                    for(let i = 0; i < neededSpaces; i++)
-                        optionSpacer += " ";
+//                 this._menus[idx].options.forEach(option => {
+//                     let optionSpacer = "  ";
+//                     let neededSpaces = longestOption - option.key.length;
+//                     for(let i = 0; i < neededSpaces; i++)
+//                         optionSpacer += " ";
                     
-                    currentMenu.options += `${col.fg.green}${option.key}${col.rst}${this._options.optionSeparator}${optionSpacer}${option.description}\n`;
-                });
+//                     currentMenu.options += `${col.fg.green}${option.key}${col.rst}${this._options.optionSeparator}${optionSpacer}${option.description}\n`;
+//                 });
 
-                if(!isEmpty(this._options.exitKey))
-                {
-                    let exitSpacer = "  ";
-                    let neededExitSpaces = longestOption - this._options.exitKey.length;
-                    for(let i = 0; i < neededExitSpaces; i++)
-                        exitSpacer += " ";
+//                 if(!isEmpty(this._options.exitKey))
+//                 {
+//                     let exitSpacer = "  ";
+//                     let neededExitSpaces = longestOption - this._options.exitKey.length;
+//                     for(let i = 0; i < neededExitSpaces; i++)
+//                         exitSpacer += " ";
                 
-                    currentMenu.options += `\n${col.fg.red}${this._options.exitKey}${col.rst}${this._options.optionSeparator}${exitSpacer}Exit\n`;
-                }
+//                     currentMenu.options += `\n${col.fg.red}${this._options.exitKey}${col.rst}${this._options.optionSeparator}${exitSpacer}Exit\n`;
+//                 }
 
-                let answer = "1";
-                if(!isEmpty(this._options.exitKey) && answer == this._options.exitKey)
-                    return openMenu(++idx);
+//                 let answer = "1";
+//                 if(!isEmpty(this._options.exitKey) && answer == this._options.exitKey)
+//                     return openMenu(++idx);
                 
-                if(isEmpty(answer) && this._options.retryOnInvalid !== false)
-                {
-                    return openMenu(idx, "Please type one of the green options and press enter");
-                }
-                else
-                {
-                    let currentOptions = this._menus[idx].options;
-                    let selectedOption = null;
-                    currentOptions.forEach((opt, i) => {
-                        if(opt.key == answer)
-                        {
-                            selectedOption = opt;
-                            selectedOption["menuTitle"] = this._menus[idx].title;
-                            selectedOption["optionIndex"] = i;
-                            selectedOption["menuIndex"] = idx;
-                        }
-                    });
+//                 if(isEmpty(answer) && this._options.retryOnInvalid !== false)
+//                 {
+//                     return openMenu(idx, "Please type one of the green options and press enter");
+//                 }
+//                 else
+//                 {
+//                     let currentOptions = this._menus[idx].options;
+//                     let selectedOption = null;
+//                     currentOptions.forEach((opt, i) => {
+//                         if(opt.key == answer)
+//                         {
+//                             selectedOption = opt;
+//                             selectedOption["menuTitle"] = this._menus[idx].title;
+//                             selectedOption["optionIndex"] = i;
+//                             selectedOption["menuIndex"] = idx;
+//                         }
+//                     });
 
-                    if(selectedOption != null)
-                    {
-                        if(typeof this._results != "object" || isNaN(parseInt(this._results.length)))
-                            this._results = [selectedOption];
-                        else this._results.push(selectedOption);
+//                     if(selectedOption != null)
+//                     {
+//                         if(typeof this._results != "object" || isNaN(parseInt(this._results.length)))
+//                             this._results = [selectedOption];
+//                         else this._results.push(selectedOption);
 
-                        return openMenu(++idx);
-                    }
-                    else return openMenu(idx, `Invalid option "${answer}" selected`);
-                }
-            }
-        }
+//                         return openMenu(++idx);
+//                     }
+//                     else return openMenu(idx, `Invalid option "${answer}" selected`);
+//                 }
+//             }
+//         }
 
-        openMenu(0);
-        return true;
-    }
-}
+//         openMenu(0);
+//         return true;
+//     }
+// }
 
 test.MenuPrompt = () => {
     let res = [];
     let ok = [];
 
 
-    let mp = new MenuPromptUnitTest({
+    let oldStdoutWrite = process.stdout.write;
+    process.stdout.write = () => {};
+
+
+    let mp = new jsl.MenuPrompt({
         exitKey: "x",
-        retryOnInvalid: true
+        retryOnInvalid: true,
+        autoSubmit: true
     });
 
     mp.localization.wrongOption = "unittest_xyz";
@@ -1050,6 +1103,46 @@ test.MenuPrompt = () => {
         res.push(true);
     else res.push(false);
 
+    let invalidValidation = mp.validateMenu({
+        title: null,
+        options: [
+            {
+                key: undefined,
+                description: Infinity
+            },
+            []
+        ]
+    });
+    if(Array.isArray(invalidValidation) && invalidValidation.length === 6) // 4
+        res.push(true);
+    else res.push(false);
+
+    try // 5
+    {
+        mp.validateMenu();
+        res.push(false);
+    }
+    catch(err) // expected to fail
+    {
+        res.push(true);
+    }
+
+    try // 6
+    {
+        mp.result();
+        res.push(true);
+    }
+    catch(err) // not expected to fail
+    {
+        res.push(false);
+    }
+
+    if(typeof mp.addMenu(null) === "string") // 7
+        res.push(true);
+    else res.push(false);
+
+
+    process.stdout.write = oldStdoutWrite;
 
 
     res.forEach((r, i) =>{

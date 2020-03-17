@@ -188,9 +188,7 @@ ${this._options.cursorPrefix} \
                     console.log();
 
                     if(isEmpty(answer) && this._options.retryOnInvalid !== false)
-                    {
                         return openMenu(idx, this.localization.wrongOption);
-                    }
                     else
                     {
                         let currentOptions = this._menus[idx].options;
@@ -350,7 +348,7 @@ ${this._options.cursorPrefix} \
         if(typeof menu != "object")
             errors.push(`Wrong variable type for parameter "menu". Expected: "object", got "${typeof menu}"`);
 
-        if(!isNaN(parseInt(menu.length)))
+        if(Array.isArray(menu))
             errors.push(`"menu" parameter can't be an array`);
         
         if(isEmpty(menu.title) || typeof menu.title != "string")
@@ -359,7 +357,7 @@ ${this._options.cursorPrefix} \
         if(isEmpty(menu.options))
             errors.push(`"options" property is not present or of the wrong type. Expected: "object", got: "${typeof menu.options}"`);
 
-        if(!isEmpty(menu.options) && (isNaN(parseInt(menu.options.length)) || menu.options.length <= 0))
+        if(!isEmpty(menu.options) && (!Array.isArray(menu.options) || menu.options.length <= 0))
             errors.push(`"options" property has to be an array and has to contain at least one item`);
 
         if(!isEmpty(menu.options))
@@ -377,7 +375,7 @@ ${this._options.cursorPrefix} \
         if(this._options.autoSubmit)
         {
             menu.options.forEach((opt, i) => {
-                if(opt.key.length > 1)
+                if(opt.key && opt.key.length > 1)
                     errors.push(`The option "autoSubmit" was set to true but the key of the option with the array index ${i} is more than a single character in length`);
             });
         }
@@ -395,11 +393,11 @@ ${this._options.cursorPrefix} \
      */
     _clearConsole()
     {
-        try {
-            let isEmpty = require("../functions/isEmpty");
-            if(!isEmpty(console) && !isEmpty(console.clear) && process.stdout.isTTY)
+        try
+        {
+            if(console && console.clear && process.stdout && process.stdout.isTTY)
                 console.clear();
-            else if(!isEmpty(console))
+            else if(console)
                 console.log("\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n");
             else process.stdout.write("\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n");
         }
