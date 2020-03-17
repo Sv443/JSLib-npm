@@ -32,8 +32,11 @@ ${(ok.length != res.length && ok.length > 0) ? `- (${ok} ${ok.length == 1 ? "is"
 };
 
 
+process.stdout.cursorTo = () => {};
+process.stdout.clearLine = () => {};
 
 console.clear();
+
 console.log(`\n\n\x1b[36m\x1b[1mJSLib-npm - Unit Tests:\x1b[0m`);
 
 
