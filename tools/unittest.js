@@ -50,7 +50,6 @@ console.log(`\n\n\x1b[36m\x1b[1mJSLib-npm - Unit Tests:\x1b[0m`);
 
 
 
-
 //#MARKER Functions
 console.log(`\x1b[33m\x1b[1m> Functions:\x1b[0m\n`);
 test.isEmpty = () => {
