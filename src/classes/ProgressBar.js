@@ -51,7 +51,7 @@ const ProgressBar = class {
      */
     _update(message) { // private method to update the console message
         let isEmpty = require("../functions/isEmpty");
-        let escapeRegexChars = s => s.replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\$&');
+        let escapeRegexChars = s => s.replace(/[-/\\^$*+?.()|[\]{}]/g, '\\$&');
 
         if(this.iteration <= this.timesToUpdate) {
             if(!isEmpty(message))

@@ -24,12 +24,7 @@ jobs:
         npm ci
       env:
         CI: "true"
-    - name: Run Unit Tests # runs all unit tests to verify that everything works
-      run: |
-        npm test
-      env:
-        CI: "true"
-    - name: Upload coverage report to Codecov # uploads the coverage report from the unit tests to codecov.io
+    - name: Run Unit Tests and upload Coverage Report # runs the unit tests and uploads the coverage report from the unit tests to codecov.io
       env:
         CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
       run: |
