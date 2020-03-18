@@ -16,6 +16,7 @@ module.exports = {
     replaceAt: require("./src/functions/replaceAt"),
     randRange: require("./src/functions/randRange"),
     randomizeArray: require("./src/functions/randomizeArray"),
+    removeDuplicates: require("./src/functions/removeDuplicates"),
     seededRNG: {
         generateSeededNumbers: require("./src/functions/seededRNG/generateSeededNumbers"),
         generateRandomSeed: require("./src/functions/seededRNG/generateRandomSeed"),
@@ -33,6 +34,8 @@ module.exports = {
     logger: require("./src/functions/logger"),
     readdirRecursive: require("./src/functions/readdirRecursive"),
     readdirRecursiveSync: require("./src/functions/readdirRecursiveSync"),
+    pause: require("./src/functions/pause"),
+    inDebugger: require("./src/functions/inDebugger"),
 
     //#MARKER classes
     ProgressBar: require("./src/classes/ProgressBar"),

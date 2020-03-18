@@ -16,21 +16,28 @@ const options = {
 
 //#MARKER Init
 const jsl = require("../JSLib");
+
 var test = {seededRNG:{},generateUUID:{}};
+var asyncTest = {};
 var allResults = [];
+
 const getColorblindColor = col => "\x1b[1m" + (options.colorblind ? (col == "green" ? "\x1b[34m" : "\x1b[33m") : (col == "green" ? "\x1b[32m" : "\x1b[31m"));
 
 const logOk = (name, ok, res, indent) => {
+
 console.log(`    ${indent === true ? "    " : ""}${ok.length == res.length ? getColorblindColor("green") : getColorblindColor("red")}\x1b[1m■\x1b[0m \
 ${name}: ${ok.length == res.length ? getColorblindColor("green") + "\x1b[1m" : getColorblindColor("red") + "\x1b[1m"}(${ok.length} / ${res.length})\x1b[0m \
 ${(ok.length != res.length && ok.length > 0) ? `- (${ok} ${ok.length == 1 ? "is" : "are"} ok)` : ""}`);
+
 };
 
 
+process.stdout.cursorTo = () => {};
+process.stdout.clearLine = () => {};
 
 console.clear();
-console.log(`\n\n\x1b[36m\x1b[1mJSLib-npm - Unit Tests:\x1b[0m`);
 
+console.log(`\n\n\x1b[36m\x1b[1mJSLib-npm - Unit Tests:\x1b[0m`);
 
 
 
@@ -100,9 +107,47 @@ test.isArrayEmpty = () => {
 test.isArrayEmpty();
 
 
+test.error = () => {
+    let fs = require("fs");
+
+    let res = [];
+    let ok = [];
+    
+
+    try // 0
+    {
+        jsl.error(null);
+        res.push(false);
+    }
+    catch(err) // expected to fail
+    {
+        res.push(true);
+    }
+
+    jsl.error("1234", "./unittest-error-1.log", false, 0, false);
+    if(fs.existsSync("./unittest-error-1.log")) // 1
+    {
+        res.push(true);
+        fs.unlinkSync("./unittest-error-1.log");
+    }
+    else res.push(false);
+
+
+    res.forEach((r, i) =>{
+        if(r) ok.push(i);
+    });
+
+    logOk("error", ok, res);
+    allResults.push(...res);
+}
+test.error();
+
+
 test.allEqual = () => {
     let res = [];
     let ok = [];
+
+
     if(jsl.allEqual([1, 1, 1, 1]) === true) // 0
         res.push(true);
     else res.push(false);
@@ -114,6 +159,17 @@ test.allEqual = () => {
     if(jsl.allEqual(["", "", Symbol()]) === false) // 2
         res.push(true);
     else res.push(false);
+
+    try // 3
+    {
+        jsl.allEqual("I'm a teapot");
+        res.push(false);
+    }
+    catch(err) // expected to fail
+    {
+        res.push(true);
+    }
+
 
     res.forEach((r, i) =>{
         if(r) ok.push(i);
@@ -128,13 +184,23 @@ test.allEqual();
 test.noShutdown = () => {
     let res = [];
     let ok = [];
-    
+
 
     jsl.noShutdown();
 
-    if(process.jsl != undefined && process.jsl.noShutdown === true) // 0
+    if(process.jsl && process.jsl.noShutdown === true) // 0
         res.push(true);
     else res.push(false);
+
+    try // 1
+    {
+        jsl.noShutdown();
+        res.push(true);
+    }
+    catch(err) // expected to succeed
+    {
+        res.push(false);
+    }
 
 
     res.forEach((r, i) =>{
@@ -150,11 +216,18 @@ test.noShutdown();
 test.yesShutdown = () => {
     let res = [];
     let ok = [];
-    
+
 
     jsl.yesShutdown();
-    
-    if(process.jsl != undefined && process.jsl.noShutdown === false) // 0
+
+    process.jsl = undefined;
+    jsl.yesShutdown();
+
+    process.jsl = {};
+    process.jsl.noShutdown = false;
+    jsl.yesShutdown();
+
+    if(process.jsl && process.jsl.noShutdown === false) // 0
         res.push(true);
     else res.push(false);
 
@@ -201,6 +274,8 @@ test.readableArray();
 test.mapRange = () => {
     let res = [];
     let ok = [];
+
+
     if(jsl.mapRange(5, 0, 10, 0, 20) === 10) // 0
         res.push(true);
     else res.push(false);
@@ -217,6 +292,27 @@ test.mapRange = () => {
         res.push(true);
     else res.push(false);
 
+    try // 4
+    {
+        jsl.mapRange(NaN, NaN, NaN, NaN, NaN);
+        res.push(false);
+    }
+    catch(err) // expected to fail
+    {
+        res.push(true);
+    }
+
+    try // 5
+    {
+        jsl.mapRange(0, 0, 0, 0, 0);
+        res.push(false);
+    }
+    catch(err) // expected to fail
+    {
+        res.push(true);
+    }
+
+
     res.forEach((r, i) =>{
         if(r) ok.push(i);
     });
@@ -231,12 +327,16 @@ test.unused = () => {
     let res = [];
     let ok = [];
 
+
     let x = "test";
     let prevType = typeof x;
+
     jsl.unused(x);
+
     if(x === x && typeof x === prevType) // 0
         res.push(true);
     else res.push(false);
+
 
     res.forEach((r, i) =>{
         if(r) ok.push(i);
@@ -289,6 +389,27 @@ test.randRange = () => {
         res.push(true);
     else res.push(false);
 
+    try // 1
+    {
+        jsl.randRange(5, 4);
+        res.push(false);
+    }
+    catch(err) // expected to fail
+    {
+        res.push(true);
+    }
+
+    try // 2
+    {
+        jsl.randRange("Hello", "World");
+        res.push(false);
+    }
+    catch(err) // expected to fail
+    {
+        res.push(true);
+    }
+
+
     res.forEach((r, i) =>{
         if(r) ok.push(i);
     });
@@ -297,7 +418,6 @@ test.randRange = () => {
     allResults.push(...res);
 }
 test.randRange();
-
 
 test.randomizeArray = () => {
     let res = [];
@@ -326,6 +446,35 @@ test.randomizeArray = () => {
 }
 test.randomizeArray();
 
+test.removeDuplicates = () => {
+    let res = [];
+    let ok = [];
+
+    let rdArray1 = jsl.removeDuplicates(["test", "foo", "bar", "test", "baz", 1, 2, 1, 3, 2]);
+    let rdArray1expected = ["test", "foo", "bar", "baz", 1, 2, 3];
+    
+    let rdArray2 = jsl.removeDuplicates(["test", null, undefined, 1, 2, 3, "test"]);
+    let rdArray2expected = ["test", null, undefined, 1, 2, 3, "test"]; // check is expected to fail
+
+
+    if(rdArray1.length === rdArray1expected.length && rdArray1.every((u, i) => u === rdArray1expected[i])) // 0
+        res.push(true);
+    else res.push(false);
+
+    if(rdArray2.length === rdArray2expected.length && rdArray2.every((u, i) => u === rdArray2expected[i])) // 1 - should fail
+        res.push(false);
+    else res.push(true);
+
+
+    res.forEach((r, i) =>{
+        if(r) ok.push(i);
+    });
+
+    logOk("removeDuplicates", ok, res);
+    allResults.push(...res);
+}
+test.removeDuplicates();
+
 
 test.seededRNG.generateSeededNumbers = () => {
     let res = [];
@@ -339,6 +488,12 @@ test.seededRNG.generateSeededNumbers = () => {
     let expected2 = 4105684652;
     let seededNums2 = jsl.seededRNG.generateSeededNumbers(10, seed2).integer;
 
+    let seed3 = "invalid_seed";
+
+    let seed4 = 20; // seed 20 causes special behavior since the generated seed starts with the number 0 so this needs to be tested here too
+    let expected4 = 1340628001;
+    let seededNums4 = jsl.seededRNG.generateSeededNumbers(10, seed4).integer;
+
 
     if(seededNums1 === expected1) // 0
         res.push(true);
@@ -347,6 +502,26 @@ test.seededRNG.generateSeededNumbers = () => {
     if(seededNums2 === expected2) // 1
         res.push(true);
     else res.push(false);
+
+    try // 2 - expected to fail
+    {
+        jsl.seededRNG.generateSeededNumbers(10, seed3);
+        res.push(false);
+    }
+    catch(err)
+    {
+        res.push(true);
+    }
+
+    if(seededNums4 === expected4) // 3
+        res.push(true);
+    else res.push(false);
+
+    // if default seed length of generateRandomSeed() is changed, remember to also change it here:
+    if(jsl.seededRNG.generateSeededNumbers(1).seed.toString().length === 10) // 4
+        res.push(true);
+    else res.push(false);
+
 
     res.forEach((r, i) =>{
         if(r) ok.push(i);
@@ -406,6 +581,17 @@ test.seededRNG.validateSeed = () => {
     if(jsl.seededRNG.validateSeed(seeds[3]) === true) // 3
         res.push(true);
     else res.push(false);
+
+    try // 4
+    {
+        jsl.seededRNG.validateSeed(null);
+        res.push(false);
+    }
+    catch(err) // expected to fail
+    {
+        res.push(true);
+    }
+
 
     res.forEach((r, i) =>{
         if(r) ok.push(i);
@@ -507,6 +693,27 @@ test.generateUUID.binary = () => {
         res.push(true);
     else res.push(false);
 
+    try // 2
+    {
+        jsl.generateUUID.binary(null);
+        res.push(false);
+    }
+    catch(err) // expected to fail
+    {
+        res.push(true);
+    }
+
+    let valid3 = true;
+    jsl.generateUUID.binary("xxxxyyyy", true).forEach(itm => {
+        if(typeof itm !== "boolean")
+            valid3 = false;
+    });
+
+    if(!valid3) // 3
+        res.push(false);
+    else res.push(true);
+
+
     res.forEach((r, i) =>{
         if(r) ok.push(i);
     });
@@ -542,6 +749,62 @@ test.generateUUID.custom = () => {
 test.generateUUID.custom();
 
 
+test.logger = () => {
+    let fs = require("fs");
+
+    let res = [];
+    let ok = [];
+
+    
+    jsl.logger("./unittest-logger-1.log", "1234", {
+        append_bottom: false,
+        timestamp: false
+    });
+
+    if(fs.existsSync("./unittest-logger-1.log"))
+    {
+        if(fs.readFileSync("./unittest-logger-1.log").toString() == "1234") // 0
+            res.push(true);
+        else res.push(false);
+
+        fs.unlinkSync("./unittest-logger-1.log");
+    }
+    else res.push(false);
+
+    try // 1
+    {
+        jsl.logger("./unittest-logger-2.log", null);
+        res.push(false);
+    }
+    catch(err) // expected to throw an error
+    {
+        res.push(true);
+    }
+
+    jsl.logger("./unittest-logger-3.log", "Hello, World!", {
+        timestamp: true,
+        append_bottom: true
+    });
+
+    if(fs.existsSync("./unittest-logger-3.log"))
+    {
+        res.push(true);
+
+        fs.unlinkSync("./unittest-logger-3.log");
+    }
+    else res.push(false);
+
+
+    res.forEach((r, i) =>{
+        if(r) ok.push(i);
+    });
+
+    logOk("logger", ok, res);
+    allResults.push(...res);
+}
+test.logger();
+
+
 test.readdirRecursiveSync = () => {
     let fs = require("fs");
 
@@ -570,6 +833,24 @@ test.readdirRecursiveSync = () => {
 test.readdirRecursiveSync();
 
 
+test.inDebugger = () => {
+    let res = [];
+    let ok = [];
+
+    if(jsl.inDebugger()) // 0
+        res.push(false);
+    else res.push(true);
+
+    res.forEach((r, i) =>{
+        if(r) ok.push(i);
+    });
+
+    logOk("inDebugger", ok, res);
+    allResults.push(...res);
+}
+test.inDebugger();
+
+
 
 
 
@@ -585,17 +866,16 @@ test.readdirRecursiveSync();
 console.log(`\n\n\x1b[33m\x1b[1m> Classes:\x1b[0m\n`);
 
 
-class ProgressBarUnitTest extends jsl.ProgressBar {
-    constructor(a, b) {super(a, b);}
-    _update(){return;}
-}
-
 test.ProgressBar = () => {
     let res = [];
     let ok = [];
 
 
-    let pb = new ProgressBarUnitTest(5, "b");
+    let oldStdoutWrite = process.stdout.write;
+    process.stdout.write = () => {};
+
+
+    let pb = new jsl.ProgressBar(5, "b");
     pb.next("c");
 
     if(pb.getProgress() === 0.2) // 0
@@ -625,7 +905,12 @@ test.ProgressBar = () => {
         res.push(true);
     else res.push(false);
 
-    pb.next("g");
+    let onFinishWorks = false;
+    pb.onFinish(() => {
+        onFinishWorks = true;
+    });
+    
+    pb.next("");
 
     if(pb.progressDisplay === "*****") // 5
         res.push(true);
@@ -634,6 +919,23 @@ test.ProgressBar = () => {
     if(pb.progressDisplay === "*****") // 6
         res.push(true);
     else res.push(false);
+
+    if(onFinishWorks === true) // 7
+        res.push(true);
+    else res.push(false);
+
+    try // 8
+    {
+        pb.onFinish();
+        res.push(false);
+    }
+    catch(err) // expected to fail
+    {
+        res.push(true);
+    }
+
+
+    process.stdout.write = oldStdoutWrite;
 
 
     res.forEach((r, i) =>{
@@ -645,108 +947,23 @@ test.ProgressBar = () => {
 test.ProgressBar();
 
 
-class MenuPromptUnitTest extends jsl.MenuPrompt {
-    constructor(a, b) {super(a, b);}
-    _clearConsole() {return;}
-    open()
-    {
-        let isEmpty = require("../src/functions/isEmpty");
-        let col = require("../src/objects/colors");
-
-        if(isEmpty(this._menus))
-            return `No menus were added to the MenuPrompt object. Please use the method "MenuPrompt.addMenu()" or supply the menu(s) in the construction of the MenuPrompt object before calling "MenuPrompt.open()"`;
-
-        this._active = true;
-
-
-        let openMenu = idx => {
-            if(idx >= this._menus.length || !this._active)
-                return this.close();
-            else
-            {
-                this._currentMenu = idx;
-
-                let currentMenu = {
-                    title: "",
-                    options: ""
-                }
-
-                currentMenu.title = this._menus[idx].title;
-
-                let titleUL = "";
-                currentMenu.title.split("").forEach(() => titleUL += "‾");
-
-                let longestOption = 0;
-                this._menus[idx].options.forEach(option => longestOption = option.key.length > longestOption ? option.key.length : longestOption);
-
-                this._menus[idx].options.forEach(option => {
-                    let optionSpacer = "  ";
-                    let neededSpaces = longestOption - option.key.length;
-                    for(let i = 0; i < neededSpaces; i++)
-                        optionSpacer += " ";
-                    
-                    currentMenu.options += `${col.fg.green}${option.key}${col.rst}${this._options.optionSeparator}${optionSpacer}${option.description}\n`;
-                });
-
-                if(!isEmpty(this._options.exitKey))
-                {
-                    let exitSpacer = "  ";
-                    let neededExitSpaces = longestOption - this._options.exitKey.length;
-                    for(let i = 0; i < neededExitSpaces; i++)
-                        exitSpacer += " ";
-                
-                    currentMenu.options += `\n${col.fg.red}${this._options.exitKey}${col.rst}${this._options.optionSeparator}${exitSpacer}Exit\n`;
-                }
-
-                let answer = "1";
-                if(!isEmpty(this._options.exitKey) && answer == this._options.exitKey)
-                    return openMenu(++idx);
-                
-                if(isEmpty(answer) && this._options.retryOnInvalid !== false)
-                {
-                    return openMenu(idx, "Please type one of the green options and press enter");
-                }
-                else
-                {
-                    let currentOptions = this._menus[idx].options;
-                    let selectedOption = null;
-                    currentOptions.forEach((opt, i) => {
-                        if(opt.key == answer)
-                        {
-                            selectedOption = opt;
-                            selectedOption["menuTitle"] = this._menus[idx].title;
-                            selectedOption["optionIndex"] = i;
-                            selectedOption["menuIndex"] = idx;
-                        }
-                    });
-
-                    if(selectedOption != null)
-                    {
-                        if(typeof this._results != "object" || isNaN(parseInt(this._results.length)))
-                            this._results = [selectedOption];
-                        else this._results.push(selectedOption);
-
-                        return openMenu(++idx);
-                    }
-                    else return openMenu(idx, `Invalid option "${answer}" selected`);
-                }
-            }
-        }
-
-        openMenu(0);
-        return true;
-    }
-}
 
 test.MenuPrompt = () => {
     let res = [];
     let ok = [];
 
 
-    let mp = new MenuPromptUnitTest({
+    let oldStdoutWrite = process.stdout.write;
+    process.stdout.write = () => {};
+
+
+    let mp = new jsl.MenuPrompt({
         exitKey: "x",
-        retryOnInvalid: true
+        retryOnInvalid: true,
+        autoSubmit: true
     });
+
+    mp.localization.wrongOption = "unittest_xyz";
 
     mp.addMenu({
         title: "Hello World!",
@@ -792,6 +1009,50 @@ test.MenuPrompt = () => {
         res.push(true);
     else res.push(false);
 
+    if(mp.localization.wrongOption === "unittest_xyz") // 3
+        res.push(true);
+    else res.push(false);
+
+    let invalidValidation = mp.validateMenu({
+        title: null,
+        options: [
+            {
+                key: undefined,
+                description: Infinity
+            },
+            []
+        ]
+    });
+    if(Array.isArray(invalidValidation) && invalidValidation.length === 6) // 4
+        res.push(true);
+    else res.push(false);
+
+    try // 5
+    {
+        mp.validateMenu();
+        res.push(false);
+    }
+    catch(err) // expected to fail
+    {
+        res.push(true);
+    }
+
+    try // 6
+    {
+        mp.result();
+        res.push(true);
+    }
+    catch(err) // not expected to fail
+    {
+        res.push(false);
+    }
+
+    if(typeof mp.addMenu(null) === "string") // 7
+        res.push(true);
+    else res.push(false);
+
+
+    process.stdout.write = oldStdoutWrite;
 
 
     res.forEach((r, i) =>{
@@ -829,7 +1090,7 @@ test.info = () => {
         res.push(true);
     else res.push(false);
 
-    if(typeof jsl.info.contributors === "object" && !isNaN(parseInt(jsl.info.contributors.length))) // 1
+    if(typeof jsl.info.contributors === "object" && Array.isArray(jsl.info.contributors)) // 1
         res.push(true);
     else res.push(false);
 
@@ -889,18 +1150,184 @@ test.colors();
 
 
 
-//#MARKER End
-let allTrue = 0;
-let allFalse = 0;
-allResults.forEach(res => {
-    if(res) allTrue++;
-    if(!res) allFalse++;
+//#MARKER async
+asyncTest.ping = () => {
+    return new Promise((resolve) => {
+        let res = [];
+        let ok = [];
+
+        try // 0
+        {
+            jsl.ping(null);
+            res.push(false);
+        }
+        catch(err) // expected to fail
+        {
+            res.push(true);
+        }
+
+        let pingURLmalformatted = `http:example org`;
+        try // 1
+        {
+            jsl.ping(pingURLmalformatted);
+            res.push(false);
+        }
+        catch(err) // expected to fail
+        {
+            res.push(true);
+        }
+
+        let pingURLsuccess = "http://www.example.org/";
+        let pingURLfail = `https://www.sv443.net/i_should_return_404`;
+
+        jsl.ping(pingURLsuccess, 10).then(retV => {
+            if(retV.statusCode < 400) // 2
+                res.push(true);
+            else res.push(false);
+
+            jsl.ping(pingURLfail).then(retV2 => {
+                if(retV2.statusCode >= 400) // 3
+                    res.push(true);
+                else res.push(false);
+
+                res.forEach((r, i) =>{
+                    if(r) ok.push(i);
+                });
+            
+                logOk("ping", ok, res);
+                allResults.push(...res);
+    
+                return resolve();
+            });
+        });
+    });
+}
+
+
+asyncTest.downloadFile = () => {
+    return new Promise((resolve) => {
+        let res = [];
+        let ok = [];
+
+        let finishDL = () => {
+            res.forEach((r, i) =>{
+                if(r) ok.push(i);
+            });
+        
+            logOk("downloadFile", ok, res);
+            allResults.push(...res);
+
+            let fs = require("fs");
+            if(fs.existsSync("./example.html"))
+                fs.unlinkSync("./example.html");
+
+            return resolve();
+        };
+
+        let downloadFileUrl = "https://www.example.org/";
+
+        jsl.downloadFile(downloadFileUrl, "./", {
+            fileName: "example.html",
+            finishedCallback: (err) => {
+                if(err) // 0
+                    res.push(false);
+                else res.push(true);
+
+                try // 1
+                {
+                    jsl.downloadFile(downloadFileUrl, "./i-do-not-exist-1234567/", {
+                        fileName: "example.html"
+                    });
+                    res.push(false);
+                }
+                catch(err) // expected to fail
+                {
+                    res.push(true);
+                }
+
+                jsl.downloadFile("https://google.com/", "./", { // URL is a 301 redirect
+                    fileName: "example.html",
+                    finishedCallback: (err) => {
+                        if(err) // 2
+                            res.push(false);
+                        else res.push(true);
+
+                        jsl.downloadFile("https://www.google.com/this-page-doesnt-exist-jslunittests-1234567", "./", { // URL is a 301 redirect
+                            fileName: "example.html",
+                            finishedCallback: (err) => {
+                                if(err) // 2
+                                    res.push(true);
+                                else res.push(false);
+
+                                return finishDL();
+                            }
+                        });
+                    }
+                });
+            }
+        });
+    });
+}
+
+
+asyncTest.readdirRecursive = () => {
+    return new Promise((resolve) => {
+        let res = [];
+        let ok = [];
+
+        jsl.readdirRecursive("./", (err, result) => {
+            if(err) // 0
+                res.push(false);
+            else res.push(true);
+
+            if(!err && Array.isArray(result)) // 1
+                res.push(true);
+            else res.push(false);
+
+            res.forEach((r, i) =>{
+                if(r) ok.push(i);
+            });
+        
+            logOk("readdirRecursive", ok, res);
+            allResults.push(...res);
+
+            return resolve();
+        });
+    });
+}
+
+
+
+let runAsyncTests = () => {
+    return new Promise((resolve, reject) => {
+        let promises = [];
+        Object.keys(asyncTest).forEach(key => {
+            promises.push(asyncTest[key]());
+        });
+
+        console.log(`\n\n\x1b[33m\x1b[1m> Async Tests:\x1b[0m\n`);
+        Promise.all(promises).then(() => {
+            return resolve();
+        }).catch(err => {
+            return reject(err);
+        });
+    });
+};
+
+runAsyncTests().then(() => {
+    //#MARKER End
+    let allTrue = 0;
+    let allFalse = 0;
+    allResults.forEach(res => {
+        if(res) allTrue++;
+        if(!res) allFalse++;
+    });
+
+    console.log(`\n\n\n\x1b[36m\x1b[1m════════════════════════════════════════════════\x1b[0m\n`);
+    console.log(`${allTrue == allTrue + allFalse ? getColorblindColor("green") : getColorblindColor("red")}\x1b[1m►>\x1b[0m  Result:\x1b[0m ${allTrue == allTrue + allFalse ? getColorblindColor("green") + "\x1b[1m" : getColorblindColor("red") + "\x1b[1m"}${allTrue} / ${allTrue + allFalse}\x1b[0m${allFalse > 0 ? `  ${getColorblindColor("red")}\x1b[1m(${allFalse} failed)\x1b[0m` : `  ${getColorblindColor("green")}\x1b[1m(success)\x1b[0m`}`);
+    console.log(`\n\x1b[36m\x1b[1m════════════════════════════════════════════════\x1b[0m`);
+
+    if(allTrue < allFalse)
+        process.exit(1);
+    else process.exit(0);
 });
-
-console.log(`\n\n\n\x1b[36m\x1b[1m════════════════════════════════════════════════\x1b[0m\n`);
-console.log(`${allTrue == allTrue + allFalse ? getColorblindColor("green") : getColorblindColor("red")}\x1b[1m►>\x1b[0m  Result:\x1b[0m ${allTrue == allTrue + allFalse ? getColorblindColor("green") + "\x1b[1m" : getColorblindColor("red") + "\x1b[1m"}${allTrue} / ${allTrue + allFalse}\x1b[0m${allFalse > 0 ? `  ${getColorblindColor("red")}\x1b[1m(${allFalse} failed)\x1b[0m` : `  ${getColorblindColor("green")}\x1b[1m(success)\x1b[0m`}`);
-console.log(`\n\x1b[36m\x1b[1m════════════════════════════════════════════════\x1b[0m`);
-
-if(allTrue < allFalse)
-    process.exit(1);
-else process.exit(0);

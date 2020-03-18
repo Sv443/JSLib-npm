@@ -4,7 +4,8 @@
  * @since 1.5.0
  */
 const noShutdown = () => {
-    if(process.jsl != undefined && process.jsl.noShutdown) return;
+    if(process.jsl != undefined && process.jsl.noShutdown)
+        return;
 
     if(process.jsl == undefined)
         process.jsl = {};

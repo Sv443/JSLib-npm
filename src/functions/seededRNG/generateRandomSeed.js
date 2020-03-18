@@ -13,8 +13,11 @@ const generateRandomSeed = (digitCount = 10) => {
 
     if(seed.startsWith("0"))
     {
+        // this is impossible to test reliably since it is dependant on random chance, so it is skipped in the istanbul tests
+        /* istanbul ignore next */
         seed = seed.substring(1); // make sure the first item is not 0, so we can parse it as an int without losing the first digit
-        seed = (Math.floor(Math.random() * (9 - 1)) + 1).toString() + seed;
+        /* istanbul ignore next */
+        seed = randRange(1, 9).toString() + seed.toString();
     }
 
     return parseInt(seed);

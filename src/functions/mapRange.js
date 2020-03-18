@@ -10,10 +10,8 @@
  * @since 1.8.0
  */
 const mapRange = (value, range_1_min, range_1_max, range_2_min, range_2_max) => {
-    let isEmpty = require("./isEmpty");
-
     [value, range_1_min, range_1_max, range_2_min, range_2_max].forEach(arg => {
-        if(isEmpty(arg) || isNaN(parseInt(arg)) || typeof arg != "number")
+        if(isNaN(parseInt(arg)) || typeof arg != "number")
             throw new Error("Wrong argument(s) provided for mapRange() - (expected: \"Number\", got: \"" + typeof arg + "\")");
     });
 

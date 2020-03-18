@@ -12,7 +12,8 @@ const ProgressBar = class {
      * @since 1.7.0
      */
     constructor(timesToUpdate, initialMessage) {
-        if(initialMessage == undefined) initialMessage = "";
+        if(!initialMessage)
+            initialMessage = "";
         this.timesToUpdate = timesToUpdate;
         this.iteration = 1;
         this.progress = 0.0;
@@ -50,6 +51,7 @@ const ProgressBar = class {
      */
     _update(message) { // private method to update the console message
         let isEmpty = require("../functions/isEmpty");
+        let escapeRegexChars = s => s.replace(/[-/\\^$*+?.()|[\]{}]/g, '\\$&');
 
         if(this.iteration <= this.timesToUpdate) {
             if(!isEmpty(message))
@@ -58,8 +60,10 @@ const ProgressBar = class {
 
             process.stdout.cursorTo(0);
             process.stdout.clearLine();
-            process.stdout.write(`${(this.progress != 1.0 ? "\x1b[33m" : "\x1b[32m")}\x1b[1m${Math.round(this.progress * 100)}%\x1b[0m ${(Math.round(this.progress * 100) < 10 ? "  " : (Math.round(this.progress * 100) < 100 ? " " : ""))}[${this.progressDisplay.replace(new RegExp(this.filledChar, "gm"), "\x1b[32m\x1b[1m" + this.filledChar + "\x1b[0m")}] ${message}${(this.progress != 1.0 ? "" : "\n")}`);
-            if(this.progress == 1.0 && this.finishFunction != undefined) this.finishFunction();
+            process.stdout.write(`${(this.progress != 1.0 ? "\x1b[33m" : "\x1b[32m")}\x1b[1m${Math.round(this.progress * 100)}%\x1b[0m ${(Math.round(this.progress * 100) < 10 ? "  " : (Math.round(this.progress * 100) < 100 ? " " : ""))}[${this.progressDisplay.replace(new RegExp(escapeRegexChars(this.filledChar), "gm"), "\x1b[32m\x1b[1m" + this.filledChar + "\x1b[0m")}] ${message}${(this.progress != 1.0 ? "" : "\n")}`);
+
+            if(this.progress == 1.0 && this.finishFunction)
+                this.finishFunction();
         }
     }
 

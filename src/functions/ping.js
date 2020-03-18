@@ -11,7 +11,7 @@
  * @param {String} url The URL that should be pinged
  * @param {Number} [timeout=5000] time in milliseconds after which the ping will time out and return a 404 error
  * @returns {Promise<pingReturnValues>} Promise gets passed the HTTP status code (for example 200 or 404), the status message and the response duration in ms; if errored returns a string with the error message
- * @throws Throws an error if the `url` parameter is not present
+ * @throws Throws an error if the `url` parameter is not present or malformatted
  * @since 1.6.0
  * @version 1.6.1 changed attributes
  * @version 1.6.5 changed time measurement dependency due to deprecation
@@ -30,8 +30,19 @@ const ping = (url, timeout) => {
 
     let http_version = (url.match(/(http:\/\/)/gm) || url.match(/(https:\/\/)/gm))[0].replace("://", "");
 
-    let host = url.split("://")[1].split("/")[0];
-    let path = url.split("://")[1].split("/");
+
+    let host = "", path = "";
+    try
+    {
+        host = url.split("://")[1].split("/")[0];
+        path = url.split("://")[1].split("/");
+    }
+    catch(err)
+    {
+        throw new Error("URL is formatted incorrectly");
+    }
+
+
     if(isEmpty(path[1]))
         path = "/";
     else {
@@ -46,8 +57,6 @@ const ping = (url, timeout) => {
     else http = require("http");
 
     return new Promise((resolve, reject) => {
-        if(isEmpty(host))
-            return reject("URL is formatted incorrectly");
         try {
             http.get({
                 host: host,

@@ -6,11 +6,12 @@
  */
 const validateSeed = (seed) => {
     let isEmpty = require("../isEmpty");
-    let digitCount;
+    let digitCount = null;
     
     if(typeof seed == "string")
         digitCount = parseInt(seed.length);
-    else digitCount = parseInt(seed.toString().length);
+    else if(seed != null)
+        digitCount = parseInt(seed.toString().length);
 
     if(isEmpty(seed) || isEmpty(digitCount) || isNaN(parseInt(digitCount)))
         throw new Error(`Invalid argument provided for validateSeed() - make sure it is not empty / null / undefined and is of the correct type.\nExpected: "number" or "string", got: "${typeof seed}"`);

@@ -36,7 +36,8 @@
  */
 
  /**
-  * 🔹 Creates an interactive prompt with one or many menus - add them using `MenuPrompt.addMenu()` 🔹
+  * 🔹 Creates an interactive prompt with one or many menus - add them using `MenuPrompt.addMenu()`.
+  * To translate the messages, you can use the `MenuPrompt.localization` object, which is where all localization variables are stored. 🔹
   * ⚠️ Warning: Make sure to use the `new` keyword to create an object of this class - example: `let mp = new jsl.MenuPrompt()` ⚠️
   * @class
   * @since 1.8.0
@@ -44,13 +45,15 @@
 //#MARKER constructor
 const MenuPrompt = class {
     /**
-     * 🔹 Creates an interactive prompt with one or many menus - add them using `MenuPrompt.addMenu()` 🔹
+     * 🔹 Creates an interactive prompt with one or many menus - add them using `MenuPrompt.addMenu()`.
+     * To translate the messages, you can use the `MenuPrompt.localization` object, which is where all localization variables are stored. 🔹
      * ⚠️ Warning: After creating a MenuPrompt object, the process will no longer exit automatically until the MenuPrompt has finished or was explicitly closed. You have to explicitly use process.exit() until the menu has finished or is closed
      * @param {MenuPromptOptions} options The options for the prompt
      * @returns {(Boolean|String)} Returns true, if the MenuPrompt was successfully created, a string containing the error message, if not
      * @constructor
      * @since 1.8.0
      * @version 1.8.2 Removed second parameter - use `MenuPrompt.addMenu()` instead
+     * @version 1.9.0 The construction of a MenuPrompt object will now set the process.stdin raw mode to true + There is now a `localization` property you can use to translate some messages
      */
     constructor(options)
     {
@@ -90,6 +93,16 @@ const MenuPrompt = class {
         this._results = [];
 
         this._currentMenu = -1;
+
+        if(!process.stdin.isRaw && typeof process.stdin.setRawMode === "function") // need the extra check for GitHub CI which fails since it doesn't provide a stdin
+            process.stdin.setRawMode(true);
+
+        
+        this.localization = {
+            wrongOption: "Please type one of the green options and press <Return>",
+            invalidOptionSelected: "Invalid option selected:"
+        };
+
 
         return true;
     }
@@ -175,9 +188,7 @@ ${this._options.cursorPrefix} \
                     console.log();
 
                     if(isEmpty(answer) && this._options.retryOnInvalid !== false)
-                    {
-                        return openMenu(idx, "Please type one of the green options and press enter");
-                    }
+                        return openMenu(idx, this.localization.wrongOption);
                     else
                     {
                         let currentOptions = this._menus[idx].options;
@@ -202,7 +213,7 @@ ${this._options.cursorPrefix} \
                         }
                         else
                         {
-                            return openMenu(idx, `Invalid option "${answer.replace(/\n|\r\n/gm, "\\\\n")}" selected`.toString());
+                            return openMenu(idx, `${this.localization.invalidOptionSelected} "${answer.replace(/\n|\r\n/gm, "\\\\n")}"`.toString());
                         }
                     }
                 }
@@ -337,7 +348,7 @@ ${this._options.cursorPrefix} \
         if(typeof menu != "object")
             errors.push(`Wrong variable type for parameter "menu". Expected: "object", got "${typeof menu}"`);
 
-        if(!isNaN(parseInt(menu.length)))
+        if(Array.isArray(menu))
             errors.push(`"menu" parameter can't be an array`);
         
         if(isEmpty(menu.title) || typeof menu.title != "string")
@@ -346,7 +357,7 @@ ${this._options.cursorPrefix} \
         if(isEmpty(menu.options))
             errors.push(`"options" property is not present or of the wrong type. Expected: "object", got: "${typeof menu.options}"`);
 
-        if(!isEmpty(menu.options) && (isNaN(parseInt(menu.options.length)) || menu.options.length <= 0))
+        if(!isEmpty(menu.options) && (!Array.isArray(menu.options) || menu.options.length <= 0))
             errors.push(`"options" property has to be an array and has to contain at least one item`);
 
         if(!isEmpty(menu.options))
@@ -364,7 +375,7 @@ ${this._options.cursorPrefix} \
         if(this._options.autoSubmit)
         {
             menu.options.forEach((opt, i) => {
-                if(opt.key.length > 1)
+                if(opt.key && opt.key.length > 1)
                     errors.push(`The option "autoSubmit" was set to true but the key of the option with the array index ${i} is more than a single character in length`);
             });
         }
@@ -382,11 +393,11 @@ ${this._options.cursorPrefix} \
      */
     _clearConsole()
     {
-        try {
-            let isEmpty = require("../functions/isEmpty");
-            if(!isEmpty(console) && !isEmpty(console.clear) && process.stdout.isTTY)
+        try
+        {
+            if(console && console.clear && process.stdout && process.stdout.isTTY)
                 console.clear();
-            else if(!isEmpty(console))
+            else if(console)
                 console.log("\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n");
             else process.stdout.write("\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n");
         }

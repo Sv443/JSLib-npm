@@ -274,6 +274,25 @@
 
 
 
+# removeDuplicates()
+> Removes duplicate items in an array and returns it.  
+> ```js
+> jsl.removeDuplicates(array: Array<Any>) -> Array
+> ```
+> 
+> **<details><summary>Example</summary>**
+> 
+> ```js
+> var array = ["foo", 1, "test", "bar", "baz", "foo", "test", 1, 2, 3, 1];
+> jsl.removeDuplicates(array); // [ "foo", 1, "test", "bar", "baz", 2, 3 ]
+> ```
+> 
+> </details>
+
+<br><br><br><br>
+
+
+
 # seededRNG.generateSeededNumbers()
 > Generates a set of numbers based on a seed. As long as the seed stays the same, the random numbers will be the same, no matter when and how the function is executed.  
 > If no `seed` parameter is provided, a random seed will be generated using [seededRNG.generateRandomSeed()](#seededrng-generaterandomseed) and passed in the returned object. The seed needs to be a number that can't start with the digit `0`.  
@@ -643,6 +662,57 @@
 >     "C:\\Users\\Sv443\\Desktop\\test\\folder2\\baz.bin",
 >     "C:\\Users\\Sv443\\Desktop\\test\\hello world.txt"
 > ]
+> ```
+> 
+> </details>
+
+<br><br><br><br>
+
+
+
+# pause()
+> Waits for the user to press a key in the console window and then resolves a Promise.  
+> If the `text` parameter is omitted, it will default to the string "Press any key to continue... "  
+> The Promise resolution is passed the pressed key as a single parameter. The rejection gets passed the error message.  
+>
+> ```js
+> jsl.pause([text: String]) -> Promise<String>
+> ```
+> 
+> **<details><summary>Example</summary>**
+> 
+> ```js
+> jsl.pause().then(key => {
+>     console.log(`Pressed key: ${key}`);
+>     continueWithOtherCode();
+> }).catch(err => {
+>     console.error(`Error: ${err}`);
+> });
+> ```
+> 
+> </details>
+
+<br><br><br><br>
+
+
+
+# inDebugger()
+> This function checks if the process is currently running in a debugger environment.  
+> This can be useful because some features like child processes and reading from stdin do not work in a debugger.  
+>
+> ```js
+> jsl.inDebugger() -> Boolean
+> ```
+> 
+> **<details><summary>Example</summary>**
+> 
+> ```js
+> // only create a MenuPrompt object if the process is not running in the debugger, since MenuPrompt requires the user to input stuff in the stdin
+> if(!jsl.inDebugger())
+> {
+>     let mp = new jsl.MenuPrompt();
+>     // ...
+> }
 > ```
 > 
 > </details>

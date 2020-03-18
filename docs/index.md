@@ -29,6 +29,7 @@ const jsl = require("svjsl");
     - [replaceAt()](./features/functions.md#replaceat)
     - [randRange()](./features/functions.md#randrange)
     - [randomizeArray()](./features/functions.md#randomizearray)
+    - [removeDuplicates()](./features/functions.md#removeduplicates)
     - [seededRNG.generateSeededNumbers()](./features/functions.md#seededrng-generateseedednumbers)
     - [seededRNG.generateRandomSeed()](./features/functions.md#seededrng-generaterandomseed)
     - [seededRNG.validateSeed()](./features/functions.md#seededrng-validateseed)
@@ -42,6 +43,8 @@ const jsl = require("svjsl");
     - [logger()](./features/functions.md#logger)
     - [readdirRecursive()](./features/functions.md#readdirrecursive)
     - [readdirRecursiveSync()](./features/functions.md#readdirrecursivesync)
+    - [pause()](./features/functions.md#pause)
+    - [inDebugger()](./features/functions.md#indebugger)
 - **Classes:**
     - [ProgressBar](./features/classes.md#progress-bar)
     - [MenuPrompt](./features/classes.md#menu-prompt)

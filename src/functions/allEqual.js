@@ -7,10 +7,8 @@
  * @version 1.8.0 Throwing error now instead of returning string
  */
 const allEqual = array => {
-    let isEmpty = require("./isEmpty");
-
-    if(isEmpty(array) || typeof array != "object") 
-        throw new Error(`Wrong arguments provided for jsl.allEqual() - (expected: "Object/Array", got: "${typeof array}")`);
+    if(!Array.isArray(array)) 
+        throw new Error(`Wrong arguments provided for jsl.allEqual() - (expected: "Object", got: "${typeof array}")`);
 
     return array.every(v => v === array[0]);
 }

@@ -7,7 +7,8 @@
 <br>
 
 # JSLib (npm) by [Sv443](https://sv443.net/)
-## A multi-purpose, lightweight and dependency-free JavaScript library that makes coding a bit faster by providing many easy to use functions and classes <br>[![MIT License](https://img.shields.io/npm/l/svjsl)](https://sv443.net/LICENSE) [![](https://img.shields.io/npm/v/svjsl)](https://npmjs.com/package/svjsl) [![](https://img.shields.io/github/issues/Sv443/JSLib-npm)](https://github.com/Sv443/JSLib-npm/issues) ![Snyk Vulnerabilities](https://img.shields.io/snyk/vulnerabilities/npm/svjsl) [![GitHub watchers](https://img.shields.io/github/watchers/Sv443/JSLib-npm?style=social)](https://github.com/Sv443/JSLib-npm/watchers) [![GitHub stars](https://img.shields.io/github/stars/Sv443/JSLib-npm?style=social)](https://github.com/Sv443/JSLib-npm/stargazers)
+## A multi-purpose, lightweight and dependency-free JavaScript library that makes coding a bit faster by providing many easy to use functions and classes <br>[![MIT License](https://img.shields.io/npm/l/svjsl)](https://sv443.net/LICENSE) [![build](https://github.com/Sv443/JSLib-npm/workflows/build/badge.svg)](https://github.com/Sv443/JSLib-npm/actions) [![coverage](https://codecov.io/gh/Sv443/JSLib-npm/branch/master/graph/badge.svg)](https://codecov.io/gh/Sv443/JSLib-npm) [![](https://img.shields.io/github/issues/Sv443/JSLib-npm)](https://github.com/Sv443/JSLib-npm/issues) ![Snyk Vulnerabilities](https://img.shields.io/snyk/vulnerabilities/npm/svjsl)  
+[![GitHub watchers](https://img.shields.io/github/watchers/Sv443/JSLib-npm?style=social)](https://github.com/Sv443/JSLib-npm/watchers) [![GitHub stars](https://img.shields.io/github/stars/Sv443/JSLib-npm?style=social)](https://github.com/Sv443/JSLib-npm/stargazers)
 
 <br><br><br>
 
@@ -53,7 +54,7 @@ const jsl = require("svjsl");
 <br>
 
 ### If you need any help, feel free to join my Discord server and I will help you as soon as possible:
-[![Discord Invite](https://sv443.net/cdn/jsl/doc/discord_invite.png)](https://discord.gg/aBH4uRG)
+[![Discord Invite](https://sv443.net/cdn/jsl/doc/discord_invite.png)](https://sv443.net/discord)
 
 </div>
 

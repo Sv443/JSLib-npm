@@ -7,7 +7,10 @@
  * @since 1.5.0
  */
 const randRange = (min, max) => {
-    let {performance} = require("perf_hooks");
+    let { performance } = require("perf_hooks");
+
+    if(typeof min != "number" || typeof max != "number")
+        throw new Error(`Wrong parameter provided for "min" and/or "max" in jsl.randRange() - (expected: "number" and "number", got: "${typeof min}" and "${typeof max}")`);
 
     min = parseInt(min);
     max = parseInt(max);
@@ -15,8 +18,6 @@ const randRange = (min, max) => {
     if(min > max)
         throw new Error(`Invalid parameters provided for "min" and/or "max" in jsl.randRange() - make sure "min" is not bigger than "max"`);
     max++;
-    if(typeof min != "number" || typeof max != "number")
-        throw new Error(`Wrong parameter provided for "min" and/or "max" in jsl.randRange() - (expected: "number" and "number", got: "${typeof min}" and "${typeof max}")`);
 
     let d = new Date().getTime();
     if (typeof performance !== "undefined" && typeof performance.now === "function")
