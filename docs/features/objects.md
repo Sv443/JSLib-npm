@@ -7,8 +7,8 @@
 > This object looks like this:
 > ```json
 > {
->     "version": "1.8.0",
->     "intVersion": [1, 8, 0],
+>     "version": "x.x.x",
+>     "intVersion": [x, x, x],
 >     "name": "JSLib",
 >     "desc": "A multi-purpose, lightweight and dependency-free JavaScript library that makes coding a bit faster by providing many easy to use functions and classes",
 >     "author": "Sv443",
