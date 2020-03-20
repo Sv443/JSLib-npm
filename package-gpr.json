@@ -1,47 +1,46 @@
 {
-    "name": "@sv443/svjsl",
-    "description": "A multi-purpose, lightweight and dependency-free JavaScript library that makes coding a bit faster by providing many easy to use functions and classes",
-    "version": "1.8.4",
-    "main": "JSLib.js",
-    "license": "MIT",
-    "repository": {
-      "type": "git",
-      "url": "git+https://github.com/Sv443/JSLib-npm.git"
-    },
-    "author": {
-      "name": "Sv443",
-      "email": "sven.fehler@web.de",
-      "url": "https://sv443.net/"
-    },
-    "bugs": {
-      "url": "https://github.com/Sv443/JSLib-npm/issues"
-    },
-    "deprecated": false,
-    "homepage": "https://github.com/Sv443/JSLib-npm#readme",
-    "keywords": [
-      "javascript",
-      "js",
-      "library",
-      "general-purpose",
-      "multi-purpose",
-      "miscellaneous",
-      "miscellaneous-utilities",
-      "miscellaneous-functions",
-      "network",
-      "networking",
-      "download-file",
-      "files",
-      "filesystem",
-      "math"
-    ],
-    "scripts": {
-      "lint": "eslint ./",
-      "test": "node tools/unittest.js"
-    },
-    "devDependencies": {
-      "eslint": "^6.8.0"
-    },
-    "publishConfig": {
-      "registry": "https://npm.pkg.github.com/@Sv443"
-    }
+  "name": "@sv443/svjsl",
+  "description": "A multi-purpose, lightweight and dependency-free JavaScript library that makes coding a bit faster by providing many easy to use functions and classes",
+  "version": "1.9.1",
+  "main": "JSLib.js",
+  "license": "MIT",
+  "author": {
+    "name": "Sv443",
+    "email": "sven.fehler@web.de",
+    "url": "https://github.com/Sv443"
+  },
+  "scripts": {
+    "lint": "eslint ./",
+    "test": "node tools/unittest.js",
+    "coverage": "nyc npm test --reporter=clover"
+  },
+  "bugs": {
+    "url": "https://github.com/Sv443/JSLib-npm/issues"
+  },
+  "deprecated": false,
+  "homepage": "https://github.com/Sv443/JSLib-npm#readme",
+  "keywords": [
+    "javascript",
+    "js",
+    "library",
+    "general-purpose",
+    "multi-purpose",
+    "miscellaneous",
+    "miscellaneous-utilities",
+    "miscellaneous-functions",
+    "network",
+    "networking",
+    "download-file",
+    "files",
+    "filesystem",
+    "math"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Sv443/JSLib-npm.git"
+  },
+  "devDependencies": {
+    "eslint": "^6.8.0",
+    "nyc": "^15.0.0"
   }
+}
