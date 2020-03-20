@@ -56,6 +56,10 @@ jobs:
         registry-url: https://npm.pkg.github.com
         scope: "@sv443"
     - name: Publish to GPR
-      run: npm publish
+      run: |
+        mv package.json package-npm.json
+        mv package-gpr.json package.json
+        npm publish
       env:
         NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
