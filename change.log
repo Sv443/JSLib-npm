@@ -1,7 +1,7 @@
 =====================
 
 JSLib (npm) Changelog
-Version 1.9.0
+Version 1.9.1
 
 =====================
 
@@ -11,7 +11,11 @@ Version 1.9.0
     - Fix visual glitch when using "autoSubmit" and pressing Enter in MenuPrompt
 
 
-> [1.9.0]:
+CURRENT > [1.9.1]:
+    - `jsl.pause()` now correctly unregisters events
+
+
+[1.9.0]:
     - `jsl.unused()` now has a rest parameter instead of a single parameter
     - Added `jsl.removeDuplicates()` to remove duplicate entries in an array
     - Added `jsl.pause()` to wait until user confirmation before continuing code execution
