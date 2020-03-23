@@ -100,7 +100,8 @@ const MenuPrompt = class {
         
         this.localization = {
             wrongOption: "Please type one of the green options and press <Return>",
-            invalidOptionSelected: "Invalid option selected:"
+            invalidOptionSelected: "Invalid option selected:",
+            exitOptionText: "Exit"
         };
 
 
@@ -170,7 +171,7 @@ const MenuPrompt = class {
                     for(let i = 0; i < neededExitSpaces; i++)
                         exitSpacer += " ";
                 
-                    currentMenu.options += `\n${col.fg.red}${this._options.exitKey}${col.rst}${this._options.optionSeparator}${exitSpacer}Exit\n`;
+                    currentMenu.options += `\n${col.fg.red}${this._options.exitKey}${col.rst}${this._options.optionSeparator}${exitSpacer}${this.localization.exitOptionText}\n`;
                 }
 
                 let menuText = `\
