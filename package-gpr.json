@@ -1,7 +1,7 @@
 {
   "name": "@sv443/svjsl",
   "description": "A multi-purpose, lightweight and dependency-free JavaScript library that makes coding a bit faster by providing many easy to use functions and classes",
-  "version": "1.9.1",
+  "version": "1.9.2",
   "main": "JSLib.js",
   "license": "MIT",
   "author": {

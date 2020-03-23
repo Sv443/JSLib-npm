@@ -604,7 +604,7 @@
 
 
 # readdirRecursive()
-> Asynchronously and recursively reads a directory, calling a callback function with an array of all subdirectories and files that were found in that directory.  
+> Asynchronously and recursively reads a directory, calling a callback function or resolving a Promise with an array of all subdirectories and files that were found in that directory.  
 > Note that the resulting array is not sorted in any way and the files could be randomly indexed.  
 > ```js
 > jsl.readdirRecursive(folder: String, callback: Function) -> void
@@ -613,21 +613,30 @@
 > **<details><summary>Example</summary>**
 > 
 > ```js
-> jsl.readdirRecursive("C:/Users/Sv443/Desktop/test", (err, res) => {
+> jsl.readdirRecursive("C:/Users/Foo/Desktop/test", (err, res) => {
 >     if(!err)
 >         console.log(res); // (see below)
 >     else
->         console.log(`Error! ${err}`);
+>         console.error(`Error: ${err}`);
 > });
 > ```
 > The resulting array might look something like this:
 > ```json
 > [
->     "C:\\Users\\Sv443\\Desktop\\test\\folder1\\foo.txt",
->     "C:\\Users\\Sv443\\Desktop\\test\\folder1\\bar.zip",
->     "C:\\Users\\Sv443\\Desktop\\test\\folder2\\baz.bin",
->     "C:\\Users\\Sv443\\Desktop\\test\\hello world.txt"
+>     "C:\\Users\\Foo\\Desktop\\test\\folder1\\foo.txt",
+>     "C:\\Users\\Foo\\Desktop\\test\\folder1\\bar.zip",
+>     "C:\\Users\\Foo\\Desktop\\test\\folder2\\baz.bin",
+>     "C:\\Users\\Foo\\Desktop\\test\\hello world.txt"
 > ]
+> ```  
+>   
+> Alternatively, using the [Promise API](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise):  
+> ```js 
+> jsl.readdirRecursive("/home/").then(result => {
+>     console.log(res);
+> }).catch(err => {
+>     console.error(`Error: ${err}`);
+> });
 > ```
 > 
 > </details>

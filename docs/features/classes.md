@@ -64,6 +64,8 @@
 > It could look like this:  
 >   
 > ![image](https://sv443.net/cdn/jsl/doc/menu_prompt.png)
+>
+> If you want to know how to translate a MenuPrompt, please go to the example section underneath [MenuPrompt.validateMenu()](#menupromptvalidatemenu)
 > 
 > <br>
 > 
@@ -188,13 +190,14 @@
 > 
 > 
 > var mp = new jsl.MenuPrompt(options); // this constructs the MenuPrompt object - you can call this without actually opening the menu prompt
-> menus.forEach(function(menu) { // add each menu to the MenuPrompt object
+> menus.forEach(menu => { // add each menu to the MenuPrompt object
 >     mp.addMenu(menu);
 > });
 >
 > mp.localization = { // you can use this object to translate the default messages:
 >     wrongOption: "Bitte gib eine der grünen Optionen ein und drücke <Eingabe>",
->     invalidOptionSelected: "Inkorrekte Option ausgewählt:"
+>     invalidOptionSelected: "Inkorrekte Option ausgewählt:",
+>     exitOptionText: "Beenden"
 > }
 >
 > var newMenu = {
@@ -249,8 +252,8 @@
 > 
 > ## Type MenuPromptMenu:
 > > This object describes a single menu prompt menu.  
-> > It has to be structured similar to this:  
-> > ```json
+> > It has to be structured like this:  
+> > ```js
 > > {
 > >     "title": "The title of the menu",
 > >     "options": [ // an array containing all selectable options of the menu
