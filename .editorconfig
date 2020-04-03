@@ -10,8 +10,8 @@ insert_final_newline = true
 curly_bracket_next_line = true
 spaces_around_operators = true
 
-# 2-space indentation for all YAML files
-[**.yml]
+# 2-space indentation for all YAML files, package.json and package-lock.json
+[{**.yml,package.json,package-lock.json}]
 indent_style = space
 indent_size = 2
 tab_width = 2
