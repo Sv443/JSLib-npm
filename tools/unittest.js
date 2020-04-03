@@ -1233,36 +1233,38 @@ asyncTest.downloadFile = () => {
                     res.push(false);
                 else res.push(true);
 
-                try // 1
-                {
-                    jsl.downloadFile(downloadFileUrl, "./i-do-not-exist-1234567/", {
-                        fileName: "example.html"
+                let continueWith2 = () => {
+                    jsl.downloadFile("https://google.com/", "./", { // URL is a 301 redirect
+                        fileName: "example.html",
+                        finishedCallback: (err) => {
+                            if(err) // 2
+                                res.push(false);
+                            else res.push(true);
+
+                            jsl.downloadFile("https://www.google.com/this-page-doesnt-exist-jslunittests-1234567", "./", { // URL is a 301 redirect
+                                fileName: "example.html",
+                                finishedCallback: (err) => {
+                                    if(err) // 2
+                                        res.push(true);
+                                    else res.push(false);
+
+                                    return finishDL();
+                                }
+                            });
+                        }
                     });
-                    res.push(false);
-                }
-                catch(err) // expected to fail
-                {
-                    res.push(true);
-                }
+                };
 
-                jsl.downloadFile("https://google.com/", "./", { // URL is a 301 redirect
+                // 1
+                jsl.downloadFile(downloadFileUrl, "./i-do-not-exist-1234567/", {
                     fileName: "example.html",
-                    finishedCallback: (err) => {
-                        if(err) // 2
-                            res.push(false);
-                        else res.push(true);
-
-                        jsl.downloadFile("https://www.google.com/this-page-doesnt-exist-jslunittests-1234567", "./", { // URL is a 301 redirect
-                            fileName: "example.html",
-                            finishedCallback: (err) => {
-                                if(err) // 2
-                                    res.push(true);
-                                else res.push(false);
-
-                                return finishDL();
-                            }
-                        });
+                    finishedCallback: () => {
+                        res.push(false);
+                        continueWith2();
                     }
+                }).catch(() => {
+                    res.push(true); // expected to fail
+                    continueWith2();
                 });
             }
         });
