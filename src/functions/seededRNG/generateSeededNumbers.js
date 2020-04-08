@@ -1,8 +1,8 @@
 /**
  * @typedef {Object} SeededRandomNumbers
  * @prop {Array<Number>} numbers An array of the random numbers
- * @param {String} stringified The random numbers, but as a string
- * @param {Number} integer The random numbers, but as an integer
+ * @prop {String} stringified The random numbers, but as a string
+ * @prop {Number} integer The random numbers, but as an integer
  * @prop {Number} seed The seed that was used to create the random numbers
  */
 
