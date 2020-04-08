@@ -6,5 +6,5 @@ docs/
 .eslintrc.json
 tools/
 .editorconfig
-package-gpr.json
+package-npm.json
 .vscode/

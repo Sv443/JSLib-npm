@@ -57,8 +57,7 @@ jobs:
         scope: "@sv443"
     - name: Publish to GPR
       run: |
-        mv package.json package-npm.json
-        mv package-gpr.json package.json
+        npm run create-gpr-config
         npm publish
       env:
         NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
