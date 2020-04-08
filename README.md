@@ -1,6 +1,6 @@
 <div align="center" style="text-align: center;">
 
-[![JSLib Banner](https://sv443.net/cdn/jsl/icons/github_banner_abstract_slim_1700x309.png)](https://github.com/Sv443/JSLib-npm)
+[![JSLib Banner](https://sv443.net/cdn/jsl/icons/github_banner_abstract_slim_1700x309.png)](https://github.com/Sv443/JSLib-npm#readme)
 
 </div>
 
