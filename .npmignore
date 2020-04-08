@@ -4,3 +4,7 @@ SECURITY.md
 docs/
 .github/
 .eslintrc.json
+tools/
+.editorconfig
+package-gpr.json
+.vscode/
