@@ -14,8 +14,11 @@ function pause(text = "Press any key to continue...")
         process.stdout.write(`${text} `);
         process.stdin.resume();
 
-        let onData = function(chunk)
-        {
+        let onError = err => {
+            return reject(err);
+        }
+
+        let onData = chunk => {
             if(/\u0003/gu.test(chunk)) // eslint-disable-line no-control-regex
                 process.exit(0);
 
@@ -23,14 +26,13 @@ function pause(text = "Press any key to continue...")
             process.stdin.pause();
 
             process.stdin.removeListener("data", onData);
+            process.stdin.removeListener("error", onError);
+
             return resolve(chunk.toString());
         }
 
         process.stdin.on("data", onData);
-
-        process.stdin.on("error", err => {
-            return reject(err);
-        });
+        process.stdin.on("error", onError);
     });
 }
 module.exports = pause;
