@@ -1,6 +1,6 @@
 {
   "name": "svjsl",
-  "description": "A multi-purpose, lightweight and dependency-free JavaScript library that makes coding a bit faster by providing many easy to use functions and classes",
+  "description": "A multi-purpose, lightweight and dependency-free JavaScript library that makes coding faster by providing many easy to use functions and classes",
   "version": "1.9.3",
   "main": "JSLib.js",
   "license": "MIT",
