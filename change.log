@@ -1,7 +1,7 @@
 =====================
 
 JSLib (npm) Changelog
-Version 1.9.1
+Version 1.9.3
 
 =====================
 
@@ -12,7 +12,11 @@ Planned for the next version:
 
 
 CURRENT > [1.9.3]:
-    - Decreased size of bundle by 
+    - Decreased size of package by adding some files to the `.npmignore` (GitHub issue #45)
+    - Fixed memory leak issues as all events in `jsl.pause()` are now correctly unregistered (GitHub issue #43)
+    - Fixed the JSDoc documentation comments for `jsl.seededRNG.generateSeededNumbers()` and some other functions (GitHub issue #44)
+    - Improved handling of the two separate `package.json` files, for NPM and GPR (GitHub issue #47)
+    - Modified the `.editorconfig` a bit
 
 
 [1.9.2]:
@@ -22,7 +26,7 @@ CURRENT > [1.9.3]:
 
 
 [1.9.1]:
-    - `jsl.pause()` now correctly unregisters events
+    - `jsl.pause()` now correctly unregisters events, fixing memory leak issues
 
 
 [1.9.0]:
