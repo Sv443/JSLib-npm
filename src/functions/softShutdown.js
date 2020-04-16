@@ -9,6 +9,7 @@
  * @since 1.5.0
  * @version 1.8.0 Added "code" parameter to specify an exit code
  * @version 1.9.0 Function will now still be called when `jsl.noShutdown()` was used
+ * @version 1.9.4 Removed signal SIGKILL because it caused crashes on Linux
  */
 const softShutdown = (funct, code) => {
     code = parseInt(code);
@@ -23,8 +24,8 @@ const softShutdown = (funct, code) => {
             process.exit(exitCode);
         return;
     }
+    
     process.on("SIGINT", ()=>onbeforeshutdown(code));
     process.on("SIGTERM", ()=>onbeforeshutdown(code));
-    process.on("SIGKILL", ()=>onbeforeshutdown(code));
 }
 module.exports = softShutdown;
