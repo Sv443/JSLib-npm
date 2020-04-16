@@ -16,6 +16,7 @@ module.exports = {
     replaceAt: require("./src/functions/replaceAt"),
     randRange: require("./src/functions/randRange"),
     randomizeArray: require("./src/functions/randomizeArray"),
+    randomItem: require("./src/functions/randomItem"),
     removeDuplicates: require("./src/functions/removeDuplicates"),
     seededRNG: {
         generateSeededNumbers: require("./src/functions/seededRNG/generateSeededNumbers"),

@@ -274,6 +274,25 @@
 
 
 
+# randomItem()
+> Chooses a random item in an array and returns it.  
+> ```js
+> jsl.randomItem(array: Array<Any>) -> Any
+> ```
+> 
+> **<details><summary>Example</summary>**
+> 
+> ```js
+> var array = [2.6, undefined, {"foo": "bar"}, 6, "baz"];
+> jsl.randomItem(array); // {"foo": "bar"}
+> ```
+> 
+> </details>
+
+<br><br><br><br>
+
+
+
 # removeDuplicates()
 > Removes duplicate items in an array and returns it.  
 > ```js
