@@ -1,7 +1,7 @@
 =====================
 
 JSLib (npm) Changelog
-Version 1.9.3
+Version 1.9.4
 
 =====================
 
@@ -11,7 +11,12 @@ Planned for the next version:
     - Fix visual glitch when using "autoSubmit" and pressing Enter in MenuPrompt
 
 
-CURRENT > [1.9.3]:
+CURRENT > [1.9.4]:
+    - Fixed invalid usage of the "SIGKILL" signal in `jsl.softShutdown()` (GitHub issue #49)
+    - Added function `jsl.randomItem()` that returns a random item of an array
+
+
+[1.9.3]:
     - Decreased size of package by adding some files to the `.npmignore` (GitHub issue #45)
     - Fixed memory leak issues as all events in `jsl.pause()` are now correctly unregistered (GitHub issue #43)
     - Fixed the JSDoc documentation comments for `jsl.seededRNG.generateSeededNumbers()` and some other functions (GitHub issue #44)

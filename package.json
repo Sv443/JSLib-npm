@@ -1,7 +1,7 @@
 {
   "name": "svjsl",
   "description": "A multi-purpose, lightweight and dependency-free JavaScript library that makes coding faster by providing many easy to use functions and classes",
-  "version": "1.9.3",
+  "version": "1.9.4",
   "main": "JSLib.js",
   "license": "MIT",
   "author": {
@@ -13,7 +13,8 @@
     "lint": "eslint ./",
     "test": "node tools/unittest",
     "coverage": "nyc npm test --reporter=clover",
-    "create-gpr-config": "node tools/create_gpr_config"
+    "create-gpr-config": "node tools/create_gpr_config",
+    "vulns": "snyk test"
   },
   "bugs": {
     "url": "https://github.com/Sv443/JSLib-npm/issues"
@@ -42,7 +43,8 @@
   },
   "devDependencies": {
     "eslint": "^6.8.0",
-    "nyc": "^15.0.0"
+    "nyc": "^15.0.0",
+    "snyk": "^1.305.1"
   },
   "nyc": {
     "include": [

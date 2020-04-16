@@ -29,6 +29,7 @@ const jsl = require("svjsl");
     - [replaceAt()](./features/functions.md#replaceat)
     - [randRange()](./features/functions.md#randrange)
     - [randomizeArray()](./features/functions.md#randomizearray)
+    - [randomItem()](./features/functions.md#randomitem)
     - [removeDuplicates()](./features/functions.md#removeduplicates)
     - [seededRNG.generateSeededNumbers()](./features/functions.md#seededrng-generateseedednumbers)
     - [seededRNG.generateRandomSeed()](./features/functions.md#seededrng-generaterandomseed)

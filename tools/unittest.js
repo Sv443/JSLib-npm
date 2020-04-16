@@ -446,6 +446,57 @@ test.randomizeArray = () => {
 }
 test.randomizeArray();
 
+test.randomItem = () => {
+    let res = [];
+    let ok = [];
+
+    let initialArray1 = [0, 1, 2, 3, 4, 5];
+    let randomItem1 = jsl.randomItem(initialArray1);
+
+    let initialArray2 = [5];
+    let randomItem2 = jsl.randomItem(initialArray2);
+
+
+    if(typeof randomItem1 === "number" && initialArray1.includes(randomItem1)) // 0
+        res.push(true);
+    else res.push(false);
+
+    if(randomItem2 === 5) // 1
+        res.push(true);
+    else res.push(false);
+
+    try // 2
+    {
+        jsl.randomItem([]);
+        res.push(false);
+    }
+    catch(err) // expected to fail
+    {
+        jsl.unused(err);
+        res.push(true);
+    }
+
+    try // 3
+    {
+        jsl.randomItem(1);
+        res.push(false);
+    }
+    catch(err) // expected to fail
+    {
+        jsl.unused(err);
+        res.push(true);
+    }
+
+
+    res.forEach((r, i) =>{
+        if(r) ok.push(i);
+    });
+
+    logOk("randomItem", ok, res);
+    allResults.push(...res);
+}
+test.randomItem();
+
 test.removeDuplicates = () => {
     let res = [];
     let ok = [];
