@@ -37,6 +37,7 @@ module.exports = {
     readdirRecursiveSync: require("./src/functions/readdirRecursiveSync"),
     pause: require("./src/functions/pause"),
     inDebugger: require("./src/functions/inDebugger"),
+    reserialize: require("./src/functions/reserialize"),
 
     //#MARKER classes
     ProgressBar: require("./src/classes/ProgressBar"),
@@ -48,6 +49,5 @@ module.exports = {
     colors: require("./src/objects/colors"),
 
     //#MARKER deprecated
-    version: require("./src/deprecated").version,
-    consoleColor: require("./src/deprecated").consoleColor,
+    
 };

@@ -902,6 +902,51 @@ test.inDebugger = () => {
 test.inDebugger();
 
 
+test.reserialize = () => {
+    let res = [];
+    let ok = [];
+
+    let obj = { foo: "bar" };
+    let copiedObj = jsl.reserialize(obj);
+    let frozenObj = jsl.reserialize(obj, true);
+    obj.foo = "test";
+
+    if(obj.foo == "test" && copiedObj.foo == "bar") // 0
+        res.push(true);
+    else res.push(false);
+
+    frozenObj.foo = "xy";
+
+    if(frozenObj.foo == "bar") // 1
+        res.push(true);
+    else res.push(false);
+
+    if(jsl.reserialize("test") == "test") // 2
+        res.push(true);
+    else res.push(false);
+
+    let jsObject = { x: Symbol() };
+
+    if(jsl.reserialize(jsObject).x == undefined) // 3
+        res.push(true);
+    else res.push(false);
+
+    let circularObj = { };
+    circularObj.a = circularObj;
+
+    if(jsl.reserialize(circularObj)) // 4
+        res.push(true);
+    else res.push(false);
+
+    res.forEach((r, i) =>{
+        if(r) ok.push(i);
+    });
+
+    logOk("reserialize", ok, res);
+    allResults.push(...res);
+}
+test.reserialize();
+
 
 
 

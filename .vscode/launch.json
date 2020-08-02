@@ -5,6 +5,17 @@
     "version": "0.2.0",
     "configurations": [
         {
+            "name": "Unit Tests",
+            "type": "node",
+            "request": "launch",
+            "cwd": "${workspaceRoot}",
+            "runtimeExecutable": "npm",
+            "runtimeArgs": [
+                "run-script", "test"
+            ],
+            "port": 5858
+        },
+        {
             "type": "node",
             "request": "launch",
             "name": "Launch Program",

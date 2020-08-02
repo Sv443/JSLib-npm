@@ -746,3 +746,51 @@
 > </details>
 
 <br><br><br><br>
+
+
+
+# reserialize()
+> Reserializes a JSON-compatible object. Circular structures and JavaScript-specific values are not supported (yet).  
+> This means it copies the value of an object and loses the internal reference to it.  
+> If `immutable` is set to `true`, the resulting object will be made immutable (its values can't be changed anymore).
+>
+> ```js
+> jsl.reserialize(obj: Object[, immutable: Boolean]) -> Object
+> ```
+> 
+> **<details><summary>Example 1</summary>**
+> 
+> ```js
+> let foo = {
+>     bar: "baz"
+> };
+> 
+> let newObj = jsl.reserialize(foo);
+>
+> foo.bar = "hello world";
+> 
+> console.log(foo.bar);    // "hello world"
+> console.log(newObj.bar); // "baz" - with vanilla JS, this would be tied to "foo.bar"
+> ```
+> 
+> </details>
+>
+> **<details><summary>Example 2 (immutable)</summary>**
+> 
+> ```js
+> let foo = {
+>     bar: "baz"
+> };
+> 
+> let newObj = jsl.reserialize(foo, true); // this will now reserialize and then set the object as immutable
+>
+> foo.bar = "hello world";
+> newObj.bar = "test123"; // object is immutable, this assignment is skipped
+> 
+> console.log(foo.bar);    // "hello world"
+> console.log(newObj.bar); // "baz" - with vanilla JS, this would be tied to "foo.bar"
+> ```
+> 
+> </details>
+
+<br><br><br><br>
