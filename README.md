@@ -6,6 +6,10 @@
 
 <br>
 
+## This project now has a new home - https://github.com/Sv443/SvCoreLib is a continuation of this library
+
+<br><br><br>
+
 # JSLib (npm) by [Sv443](https://sv443.net/)
 ## A multi-purpose, lightweight and dependency-free JavaScript library that makes coding faster by providing many easy to use functions and classes <br>[![MIT License](https://img.shields.io/npm/l/svjsl)](https://sv443.net/LICENSE) [![build](https://github.com/Sv443/JSLib-npm/workflows/build/badge.svg)](https://github.com/Sv443/JSLib-npm/actions) [![coverage](https://codecov.io/gh/Sv443/JSLib-npm/branch/master/graph/badge.svg)](https://codecov.io/gh/Sv443/JSLib-npm) [![](https://img.shields.io/github/issues/Sv443/JSLib-npm)](https://github.com/Sv443/JSLib-npm/issues) ![Snyk Vulnerabilities](https://img.shields.io/snyk/vulnerabilities/npm/svjsl)  
 [![GitHub watchers](https://img.shields.io/github/watchers/Sv443/JSLib-npm?style=social)](https://github.com/Sv443/JSLib-npm/watchers) [![GitHub stars](https://img.shields.io/github/stars/Sv443/JSLib-npm?style=social)](https://github.com/Sv443/JSLib-npm/stargazers)
